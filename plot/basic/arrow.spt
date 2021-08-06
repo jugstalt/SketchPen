@@ -1,0 +1,7 @@
+// Big Circle
+pen.color("#82C828");
+pen.width(8);
+
+line.draw(-42, 0, 42, 0);
+line.draw(-42, 0, -30,-12);
+line.draw(-42, 0, -30, 12);

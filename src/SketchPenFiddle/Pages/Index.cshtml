@@ -1,0 +1,102 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div id="toolbar" style="position:absolute;left:0px;top:60px;height:30px;right:0px">
+    <button onclick="run()">Run</button>
+</div>
+<div id="spn-editor" style="position:absolute;left:0px;top:90px;bottom:60px;width:600px">
+
+</div>
+
+<div style="position:absolute;left:600px;top:90px;bottom:60px;right:0px">
+    <table>
+        <tr>
+            <td>
+                <select id="image-size">
+                    <option value="26">26 x 26</option>
+                    <option value="64">32 x 32</option>
+                    <option value="64">64 x 64</option>
+                    <option value="128">128 x 128</option>
+                    <option value="256">256 x 256</option>
+                    <option value="512" selected>512 x 512</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img id="result-image" />
+            </td>
+        </tr>
+    </table>
+    
+</div>
+
+@section Scripts { 
+    
+    <script type="text/javascript">
+    var spnEditor;
+    (function () {
+        window.onload = function () {
+            /*
+            monaco.languages.register({ id: 'spn' });
+            monaco.languages.setMonarchTokensProvider('spn', {
+                defaultToken: 'invalid',
+                tokenPostfix: '.js',
+
+                keywords: [
+                    'pen',
+                    'brush',
+                    'circle'
+                ],
+                typeKeywords: [],
+                comments: {
+                    lineComment: '//'
+                },
+
+                brackets: [
+                    ['(', ')']
+				],
+				operators: [ "." ],
+                //symbols: tsLanguage.symbols,
+                //escapes: tsLanguage.escapes,
+                //digits: tsLanguage.digits,
+                //hexdigits: tsLanguage.hexdigits,
+                //regexpctl: tsLanguage.regexpctl,
+                //regexpesc: tsLanguage.regexpesc,
+                tokenizer: {
+                    root: [
+                        
+                    ]
+                }
+            });*/
+
+            console.log('create editor');
+
+            spnEditor = monaco.editor.create(document.getElementById("spn-editor"), {
+                value: "",
+                language: "javascript"
+            });
+
+            $('#image-size').change(function () { run() });
+        }
+    })();
+
+        function run() {
+            var code = spnEditor.getValue();
+
+            $.ajax({
+                method: 'post',
+                url: '/api/plot/base64?size='+$('#image-size').val(),
+                data: code,
+                processData: false,
+                contentType: 'application/json',
+                success: function (result) {
+                    $('#result-image').attr('src', 'data:image/png;base64, ' + result);
+                }
+            })
+        }
+    </script>
+}

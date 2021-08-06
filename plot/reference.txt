@@ -1,0 +1,55 @@
+Coordsys
+========
+                        -50 
+                         ^
+                         |
+                         |
+                         |
+                         |
+                         | 0/0
+    -50 <----------------+---------------> +50 
+                         |
+                         |
+                         |
+                         |
+                         |
+                         +50
+
+Positions
+=========
+
+Circles (Ellipses) and Rectangles are draw inside a rectangle.
+Circles has diameters => same as width and height of rectangles.
+
+Circle and Rectangles insert position is always its center point
+
+Posistions are defined as numbers (1 to 4 numbers): 
+50,                 [diameter/width]  => height same as width, center coordinates are uses
+50, 0, 0            [diameter/width], [x], [y]  => height same as width
+50, 50              [diameter/width], [diameter/height]  => center coordinates are uses
+50, 50, 0, 0        [diameter/width], [diameter/height], [x], [y]
+all this positions results in the exact eqaul rectangle
+
+Kewwords
+========
+
+pen
+---
+
+pen.color("html-style");  // #ff0000  #f00  red
+pen.color("html-style", <int>alpha);
+pen.color(<int>red, <int> green, <int>blue);
+pen.color(<int>red, <int> green, <int>blue, <int>alpha);   // red, green, blue => 0..255
+
+pen.width(<float>width);
+
+brush
+-----
+
+brush.color("html-style");  // #ff0000  #f00  red
+brush.color("html-style", <int>alpha);
+brush.color(<int>red, <int> green, <int>blue);
+brush.color(<int>red, <int> green, <int>blue, <int>alpha);   // red, green, blue => 0..255
+
+circle
+------

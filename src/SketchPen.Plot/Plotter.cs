@@ -1,0 +1,102 @@
+﻿using SketchPen.Parse.Lexer;
+using SketchPen.Plot.Extensions;
+using System.Reflection;
+using System.Linq;
+using SketchPen.Plot.Abstraction;
+using System.Collections.Generic;
+using System;
+using SketchPen.Plot.Reflection;
+using System.Drawing;
+using System.IO;
+using SketchPen.Plot.Compile;
+
+namespace SketchPen.Plot
+{
+    public class Plotter
+    {
+        #region Static Constructor & Fields
+
+        static internal IEnumerable<Type> PlotCommandTypes = null;
+        static internal Color TransparentColor = Color.Transparent; // Color.FromArgb(1, 0, 0);
+        static internal System.Drawing.Drawing2D.SmoothingMode DefaultSmothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+        static Plotter()
+        {
+            PlotCommandTypes = Assembly.GetAssembly(typeof(Plotter))
+                                       .GetTypes()
+                                       .Where(t => 
+                                                t.IsClass && 
+                                                t.GetCustomAttribute<PlotCommandKeywordAttribute>()!=null &&
+                                                typeof(IPlotCommand).IsAssignableFrom(t));
+        }
+
+        #endregion
+
+        private readonly int _canvasWith, _canvasHeight;
+
+        public Plotter(int canvasWidth, int canvasHeight)
+        {
+            _canvasWith = canvasWidth;
+            _canvasHeight = canvasHeight;
+        }
+
+        public byte[] Plot(string fileName)
+        {
+            var code = File.ReadAllText(fileName).Trim();
+
+            #region Pre Compile
+
+            var preCompiler = new PreComplier(fileName);
+            code = preCompiler.Compile();
+
+            #endregion
+
+            var syntax = new SketchPenSyntax();
+            var lexicalAnalyser = new LexicalAnalyser(syntax);
+            var tokens = lexicalAnalyser.Tokenize(code);
+
+            var commands = tokens.GetStatements(syntax)
+                                 .GetPlotCommands();
+
+            using (var bitmap = new Bitmap(Math.Max(_canvasWith, 100), Math.Max(_canvasHeight, 100)))
+            {
+                bitmap.MakeTransparent();
+
+                using (var plotContext = new PlotContext(bitmap))
+                {
+                    plotContext.GraphicsContext.SmoothingMode = Plotter.DefaultSmothingMode;
+                    plotContext.GraphicsContext.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+
+                    //plotContext.GraphicsContext.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+                    plotContext.GraphicsContext.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                    plotContext.GraphicsContext.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+
+                    foreach(var command in commands)
+                    {
+                        command.Execute(plotContext);
+                    }
+                }
+
+                var ms = new MemoryStream();
+                if (_canvasWith < 100)
+                {
+                    using(var bm = new Bitmap(_canvasWith, _canvasHeight))
+                    using (var gr = Graphics.FromImage(bm))
+                    {
+                        gr.DrawImage(bitmap, new Rectangle(0, 0, _canvasWith, _canvasHeight),
+                                             new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                                             GraphicsUnit.Pixel);
+
+                        bm.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                    }
+                }
+                else
+                {
+                    bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                }
+
+                return ms.ToArray();
+            }
+        }
+    }
+}

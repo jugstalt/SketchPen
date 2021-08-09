@@ -10,12 +10,12 @@ namespace SketchPen.Plot.Commands
     [PlotCommandKeyword("brush")]
     class BrushCommand : GeneralPlotCommand
     {
-        public override void Execute(IPlotContext context)
+        protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
         {
             switch (Method?.ToLower())
             {
                 case "color":
-                    context.BrushColor = Parameters.ToColor();
+                    context.BrushColor = parameters.ToColor();
                     break;
             }
         }

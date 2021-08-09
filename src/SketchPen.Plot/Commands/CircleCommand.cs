@@ -11,7 +11,7 @@ namespace SketchPen.Plot.Commands
     [PlotCommandKeyword("circle")]
     class CircleCommand : GeneralPlotCommand
     {
-        public override void Execute(IPlotContext context)
+        protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
         {
             RectangleF pos;
             
@@ -19,10 +19,10 @@ namespace SketchPen.Plot.Commands
             {
                 case "arc":
                 case "pie":
-                    pos = Parameters.Skip(2).ToRectPos();
+                    pos = parameters.Skip(2).ToRectPos();
                     break;
                 default:
-                    pos = Parameters.ToRectPos();
+                    pos = parameters.ToRectPos();
                     break;
             }
             
@@ -46,8 +46,8 @@ namespace SketchPen.Plot.Commands
                     {
                         context.GraphicsContext.DrawArc(pen.Pen, 
                                                         context.Project(pos),
-                                                        Parameters.Get<float>(0),
-                                                        Parameters.Get<float>(1));
+                                                        parameters.Get<float>(0),
+                                                        parameters.Get<float>(1));
                     }
                     break;
                 case "pie":
@@ -55,8 +55,8 @@ namespace SketchPen.Plot.Commands
                     {
                         context.GraphicsContext.FillPie(brush.Brush,
                                                         context.Project(pos).ToRectangle(),
-                                                        Parameters.Get<float>(0),
-                                                        Parameters.Get<float>(1));
+                                                        parameters.Get<float>(0),
+                                                        parameters.Get<float>(1));
                     }
                     break;
             }

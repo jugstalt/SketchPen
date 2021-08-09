@@ -11,16 +11,16 @@ namespace SketchPen.Plot.Commands
     [PlotCommandKeyword("gradientbrush")]
     class GradientBrushCommand : GeneralPlotCommand
     {
-        public override void Execute(IPlotContext context)
+        protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
         {
             switch(Method?.ToLower())
             {
                 case "color":
-                    context.GradientBrushColor = Parameters.ToColor();
+                    context.GradientBrushColor = parameters.ToColor();
                     break;
                 case "points":
-                    context.GradientBrushPoint1 = Parameters.ToPoints().FirstOrDefault();
-                    context.GradientBrushPoint2 = Parameters.ToPoints().Skip(1).FirstOrDefault();
+                    context.GradientBrushPoint1 = parameters.ToPoints().FirstOrDefault();
+                    context.GradientBrushPoint2 = parameters.ToPoints().Skip(1).FirstOrDefault();
                     break;
             }
         }

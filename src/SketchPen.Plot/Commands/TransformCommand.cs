@@ -11,17 +11,17 @@ namespace SketchPen.Plot.Commands
     [PlotCommandKeyword("transform")]
     class TransformCommand : GeneralPlotCommand
     {
-        public override void Execute(IPlotContext context)
+        protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
         {
             switch(Method?.ToLower())
             {
                 case "translate":
                     context.GraphicsContext.TranslateTransform(
-                        context.Project(Parameters.Get<float>(0)),
-                        context.Project(Parameters.Get<float>(1)));
+                        context.Project(parameters.Get<float>(0)),
+                        context.Project(parameters.Get<float>(1)));
                     break;
                 case "rotate":
-                    context.GraphicsContext.RotateTransform(Parameters.Get<float>(0));
+                    context.GraphicsContext.RotateTransform(parameters.Get<float>(0));
                     break;
                 case "reset":
                     context.ResetTransform();

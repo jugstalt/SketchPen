@@ -9,10 +9,37 @@ namespace SketchPen.Plot.Compile
         private readonly string _fileName;
         private readonly string _code;
 
-        public PreComplier(string fileName)
+        public PreComplier(string fileName, string customGlobalsName = "", bool appendGlobals = false)
         {
             _fileName = fileName;
-            _code = File.ReadAllText(_fileName);
+
+            StringBuilder code = new StringBuilder();
+
+            DirectoryInfo di = new FileInfo(fileName).Directory;
+
+            if (!String.IsNullOrEmpty(customGlobalsName))
+            {
+                var customGlobalsFi = new FileInfo($"{ di.FullName }/{ customGlobalsName }.globals");
+                if (customGlobalsFi.Exists)
+                {
+                    code.Append(File.ReadAllText(customGlobalsFi.FullName));
+                    code.Append(Environment.NewLine);
+                }
+            }
+
+            if (appendGlobals)
+            {
+                var globalsFi = new FileInfo($"{ di.FullName }/_.globals");
+                if (globalsFi.Exists)
+                {
+                    code.Append(File.ReadAllText(globalsFi.FullName));
+                    code.Append(Environment.NewLine);
+                }
+            }
+
+            code.Append(File.ReadAllText(_fileName));
+
+            _code = code.ToString();
         }
 
         public string Compile()

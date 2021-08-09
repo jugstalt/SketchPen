@@ -8,7 +8,7 @@ namespace SketchPen.Parse.Lexer
 
         #region Const
 
-        private string[] _keywords = new[] { "pen", "brush", "line", "rect", "circle", "text", "transform", "path", "line", "gradientbrush" };
+        private string[] _keywords = new[] { "globals", "pen", "brush", "line", "rect", "circle", "text", "transform", "path", "line", "gradientbrush" };
 
         private string[] _separator = new[] { StatementSeparator, "\r", "\n", "\r\n" };
 

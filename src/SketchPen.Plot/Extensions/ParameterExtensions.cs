@@ -37,6 +37,7 @@ namespace SketchPen.Plot.Extensions
             }
 
             var p = parameters.Skip(index).First();
+
             if (p?.GetType() == typeof(T))
             {
                 return (T)p;

@@ -1,0 +1,4 @@
+globals.set(penColor, "#82C828");
+globals.set(brushColor, "#fff");
+globals.set(gradientbrushColor, "#b5dbad")
+globals.set(penWidth, 8);

@@ -12,15 +12,15 @@ namespace SketchPen.Plot.Commands
     [PlotCommandKeyword("pen")]
     class PenCommand : GeneralPlotCommand
     {
-        public override void Execute(IPlotContext context)
+        protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
         {
             switch (Method?.ToLower())
             {
                 case "color":
-                    context.PenColor = Parameters.ToColor();
+                    context.PenColor = parameters.ToColor();
                     break;
                 case "width":
-                    context.PenWidth = Parameters.ToTypedParameters<float>().First();
+                    context.PenWidth = parameters.ToTypedParameters<float>().First();
                     break;
             }
         }

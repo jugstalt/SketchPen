@@ -40,13 +40,13 @@ namespace SketchPen.Plot
             _canvasHeight = canvasHeight;
         }
 
-        public byte[] Plot(string fileName)
+        public byte[] Plot(string fileName, string customGlobalsName="")
         {
             var code = File.ReadAllText(fileName).Trim();
 
             #region Pre Compile
 
-            var preCompiler = new PreComplier(fileName);
+            var preCompiler = new PreComplier(fileName, customGlobalsName, true);
             code = preCompiler.Compile();
 
             #endregion

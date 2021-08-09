@@ -1,0 +1,4 @@
+#include "zoom.spt"
+
+// plus
+line.draw(-10,0, 10,0);

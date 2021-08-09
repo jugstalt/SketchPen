@@ -1,0 +1,10 @@
+globals.tryset(penColor, "#000");
+globals.tryset(brushColor, "#fff");
+globals.tryset(gradientbrushColor, "#aaa")
+globals.tryset(penWidth, 8);
+
+// Pens & Brushes
+pen.color(@@penColor);
+pen.width(@@penWidth);
+brush.color(@@brushColor);
+gradientbrush.color(@@gradientbrushColor);

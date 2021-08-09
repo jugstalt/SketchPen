@@ -1,0 +1,12 @@
+transform.translate(-15,-15);
+
+// Handle
+pen.width(14);
+line.draw(32,32, 55,55);
+pen.width(@@penWidth);
+line.draw(0, 0, 55,55);
+
+// Circle
+circle.fill(60);
+
+circle.draw(60);

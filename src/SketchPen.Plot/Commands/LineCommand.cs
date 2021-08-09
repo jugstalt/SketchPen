@@ -11,12 +11,12 @@ namespace SketchPen.Plot.Commands
     [PlotCommandKeyword("line")]
     class LineCommand : GeneralPlotCommand
     {
-        public override void Execute(IPlotContext context)
+        protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
         {
             switch(Method?.ToLower())
             {
                 case "draw":
-                    var points = Parameters.ToPoints().Take(2).ToArray();
+                    var points = parameters.ToPoints().Take(2).ToArray();
                     if (points.Length == 2)
                     {
                         using (var pen = context.CreatePen())

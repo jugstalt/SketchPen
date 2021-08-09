@@ -15,6 +15,7 @@ namespace SketchPen
                 string path = args.FirstOrDefault();
                 List<int> sizes = new List<int>();
                 string outFolder = String.Empty;
+                string customGlobalsName = String.Empty;
 
                 for (int i = 1; i < args.Length - 1; i++)
                 {
@@ -22,6 +23,9 @@ namespace SketchPen
                     {
                         case "-outfolder":
                             outFolder = args[++i];
+                            break;
+                        case "-custom_globals":
+                            customGlobalsName = args[++i];
                             break;
                     }
                 }
@@ -71,7 +75,7 @@ namespace SketchPen
                         Console.Write(targetFile);
 
                         var plotter = new Plotter(size, size);
-                        var imageData = plotter.Plot(fileName);
+                        var imageData = plotter.Plot(fileName, customGlobalsName);
 
                         var targetFileInfo = new FileInfo($"{ outFolder }{ targetFile }");
                         if (!targetFileInfo.Directory.Exists)

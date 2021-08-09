@@ -2,6 +2,7 @@
 using SketchPen.Plot.Extensions;
 using SketchPen.Plot.Reflection;
 using System;
+using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Linq;
 
@@ -12,7 +13,7 @@ namespace SketchPen.Plot.Commands
     {
         static private GraphicsPath _path = null;
 
-        public override void Execute(IPlotContext context)
+        protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
         {
             switch (Method?.ToLower())
             {
@@ -31,7 +32,7 @@ namespace SketchPen.Plot.Commands
                         throw new Exception("Start path before add points");
                     }
 
-                    _path.AddLines(Parameters.ToPoints().Select(p => context.Project(p)).ToArray());
+                    _path.AddLines(parameters.ToPoints().Select(p => context.Project(p)).ToArray());
                     break;
                 case "draw":
                     if (_path == null)

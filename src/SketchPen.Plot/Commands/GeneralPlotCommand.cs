@@ -27,6 +27,8 @@ namespace SketchPen.Plot.Commands
 
         #region IPlotCommand
 
+        virtual public void Init() { }
+
         public void Execute(IPlotContext context)
         {
             ExecuteCommand(context, Parameters.Select(p =>

@@ -15,31 +15,43 @@ namespace SketchPen.Plot.Commands
 
         protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
         {
+            if (_path == null && Method?.ToLower() != "begin")
+            {
+                _path = new GraphicsPath();
+                _path.StartFigure();
+            }
+
             switch (Method?.ToLower())
             {
-                case "start":
-                    if (_path != null)
+                case "begin":
+                    if(_path!=null)
                     {
                         _path.Dispose();
                     }
-
                     _path = new GraphicsPath();
                     _path.StartFigure();
                     break;
+                case "start":
+                    _path.StartFigure();
+                    break;
                 case "addlines":
-                    if (_path == null)
-                    {
-                        throw new Exception("Start path before add points");
-                    }
-
                     _path.AddLines(parameters.ToPoints().Select(p => context.Project(p)).ToArray());
                     break;
+                case "addarc":
+                    var pos = parameters.Skip(2).ToRectPos();
+                    _path.AddArc(context.Project(pos),
+                                 parameters.Get<float>(0),
+                                 parameters.Get<float>(1));
+                    break;
+                case "addpoint":
+                    _path.AddLine(
+                        parameters.ToPoints().Select(p => context.Project(p)).First(),
+                        parameters.ToPoints().Select(p => context.Project(p)).First());
+                    break;
+                case "close":
+                    _path.CloseFigure();
+                    break;
                 case "draw":
-                    if (_path == null)
-                    {
-                        throw new Exception("Start path before draw it");
-                    }
-
                     using (var pen = context.CreatePen())
                     {
                         //CustomLineCap cap = new CustomLineCap(null, _path);
@@ -52,16 +64,22 @@ namespace SketchPen.Plot.Commands
                     }
                     break;
                 case "fill":
-                    if (_path == null)
-                    {
-                        throw new Exception("Start path before fill it");
-                    }
-
                     using (var brush = context.CreateBrush())
                     {
                         context.GraphicsContext.FillPath(brush.Brush, _path);
                     }
                     break;
+            }
+        }
+
+        public override void Init()
+        {
+            base.Init();
+
+            if (_path != null)
+            {
+                _path.Dispose();
+                _path = null;
             }
         }
 

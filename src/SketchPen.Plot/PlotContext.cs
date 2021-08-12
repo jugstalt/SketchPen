@@ -14,7 +14,7 @@ namespace SketchPen.Plot
         public PlotContext(Bitmap bitmap)
         {
             _bitmap = bitmap;
-            _projectingFactor = (float)_bitmap.Width / 100f;
+            _projectingFactor = _bitmap.Width / 100f;
 
             this.GraphicsContext = Graphics.FromImage(_bitmap);
             this.ResetTransform();
@@ -22,6 +22,10 @@ namespace SketchPen.Plot
             this.GradientBrushColor = Plotter.TransparentColor;
             this.GradientBrushPoint2 = new PointF(_bitmap.Width / 2f, _bitmap.Height / 2f);
             this.GradientBrushPoint1 = new PointF(-_bitmap.Width / 2f, -_bitmap.Height / 2f);
+
+            MinPenWidth = 1f;
+            MaxPenWidth = float.MaxValue;
+            PenCap = PenCap.Round;
 
             this.Globals = new Dictionary<string, object>();
         }
@@ -34,22 +38,59 @@ namespace SketchPen.Plot
 
         public Color PenColor { private get; set; }
         public float PenWidth { private get; set; }
+        public PenCap PenCap { private get; set; }
+        public float MaxPenWidth { private get; set; }
+        public float MinPenWidth { private get; set; }
+
+
         public Color BrushColor { private get; set; }
 
         public Color GradientBrushColor { private get; set; }
         public PointF GradientBrushPoint1 { private get; set; }
-        public PointF GradientBrushPoint2 { private get;  set; }
+        public PointF GradientBrushPoint2 { private get; set; }
 
         public IDictionary<string, object> Globals { get; }
 
-        public IPen CreatePen()
+        public IPen CreatePen(float widthFactor = 1)
         {
-            var pen = new Pen(this.PenColor, Project(this.PenWidth));
-            pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
-            pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-            
+            var penWidth = this.PenWidth;
+            if (penWidth >= MinPenWidth && penWidth <= MaxPenWidth)
+            {
+                penWidth = Project(this.PenWidth * widthFactor);
+                if (penWidth < MinPenWidth)
+                {
+                    penWidth = MinPenWidth;
+                }
+                else if (penWidth > MaxPenWidth)
+                {
+                    penWidth = MaxPenWidth;
+                }
+            }
+            var pen = new Pen(this.PenColor, penWidth);
+
+            switch (this.PenCap)
+            {
+                case PenCap.Round:
+                    pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                    pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                    pen.LineJoin = LineJoin.Round;
+                    break;
+                case PenCap.Square:
+                    pen.StartCap = System.Drawing.Drawing2D.LineCap.Square;
+                    pen.EndCap = System.Drawing.Drawing2D.LineCap.Square;
+                    pen.LineJoin = LineJoin.Bevel;
+                    break;
+                case PenCap.Flat:
+                    pen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
+                    pen.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
+                    pen.LineJoin = LineJoin.Bevel;
+                    break;
+            }
+
+
             return new PlotPen(this, pen, this.PenColor.Equals(Plotter.TransparentColor));
         }
+
         public IBrush CreateBrush()
         {
             Brush brush = null;

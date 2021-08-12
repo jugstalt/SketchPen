@@ -11,6 +11,10 @@ namespace SketchPen.Plot.Abstraction
 
         Color PenColor { set; }
         float PenWidth { set; }
+        PenCap PenCap { set; }
+
+        float MaxPenWidth { set; }
+        float MinPenWidth { set; }
 
         Color BrushColor { set; }
 
@@ -20,7 +24,7 @@ namespace SketchPen.Plot.Abstraction
 
         IDictionary<string, object> Globals { get; }
 
-        IPen CreatePen();
+        IPen CreatePen(float widthFactor = 1);
         IBrush CreateBrush();
 
         PointF Project(PointF point);

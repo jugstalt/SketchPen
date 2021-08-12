@@ -20,6 +20,8 @@ namespace SketchPen.Plot
         static internal Color TransparentColor = Color.Transparent; // Color.FromArgb(1, 0, 0);
         static internal System.Drawing.Drawing2D.SmoothingMode DefaultSmothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
+        private const int MinPlotSize= 10;
+
         static Plotter()
         {
             PlotCommandTypes = Assembly.GetAssembly(typeof(Plotter))
@@ -58,8 +60,9 @@ namespace SketchPen.Plot
             var commands = tokens.GetStatements(syntax)
                                  .GetPlotCommands();
 
-            using (var bitmap = new Bitmap(Math.Max(_canvasWith, 100), Math.Max(_canvasHeight, 100)))
+            using (var bitmap = new Bitmap(Math.Max(_canvasWith, MinPlotSize), Math.Max(_canvasHeight, MinPlotSize)))
             {
+                bitmap.SetResolution(96f, 96f);
                 bitmap.MakeTransparent();
 
                 using (var plotContext = new PlotContext(bitmap))
@@ -78,11 +81,12 @@ namespace SketchPen.Plot
                 }
 
                 var ms = new MemoryStream();
-                if (_canvasWith < 100)
+                if (_canvasWith < MinPlotSize)
                 {
                     using(var bm = new Bitmap(_canvasWith, _canvasHeight))
                     using (var gr = Graphics.FromImage(bm))
                     {
+                        bm.SetResolution(96f, 96f);
                         gr.DrawImage(bitmap, new Rectangle(0, 0, _canvasWith, _canvasHeight),
                                              new Rectangle(0, 0, bitmap.Width, bitmap.Height),
                                              GraphicsUnit.Pixel);

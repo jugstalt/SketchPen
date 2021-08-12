@@ -18,8 +18,7 @@ namespace SketchPen.Plot.Commands
                 case "set":
                     if (parameters.Count() == 2)
                     {
-                        context.Globals.Add(parameters.Get<string>(0), 
-                                            parameters.Get<object>(1));
+                        context.Globals[parameters.Get<string>(0)] = parameters.Get<object>(1);
                     } else
                     {
                         throw new Exception("Syntax error: declare.globals");

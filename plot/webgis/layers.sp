@@ -1,5 +1,20 @@
-path.start();
-path.addlines(-42, 0, 0, 10, 30, 0, 0, -10, -42, 0);
-path.draw();
+transform.translate(0,20);
+path.begin();
+#include "layer.spt"
 path.fill();
+path.draw();
 
+transform.reset();
+transform.translate(0,0);
+path.begin();
+#include "layer.spt"
+path.fill();
+path.draw();
+
+
+transform.reset();
+transform.translate(0,-20);
+path.begin();
+#include "layer.spt"
+path.fill();
+path.draw();

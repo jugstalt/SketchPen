@@ -1,0 +1,4 @@
+#include "marker.spt"
+
+path.fill();
+path.draw();

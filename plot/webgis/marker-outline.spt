@@ -1,0 +1,9 @@
+#include "marker.spt"
+
+brush.color("#fefefe");
+gradientbrush.color("#fefefe");
+path.fill();
+path.draw();
+
+brush.color(@@brushColor);
+gradientbrush.color(@@gradientbrushColor);

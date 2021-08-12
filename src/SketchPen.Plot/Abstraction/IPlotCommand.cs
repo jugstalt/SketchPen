@@ -9,6 +9,8 @@ namespace SketchPen.Plot.Abstraction
     {
         void SetStatement(string method, IEnumerable<object> parameters);
 
+        void Init();
+
         void Execute(IPlotContext context);
     }
 }

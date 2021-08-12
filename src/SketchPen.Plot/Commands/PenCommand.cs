@@ -22,6 +22,26 @@ namespace SketchPen.Plot.Commands
                 case "width":
                     context.PenWidth = parameters.ToTypedParameters<float>().First();
                     break;
+                case "minwidth":
+                    context.MinPenWidth = parameters.ToTypedParameters<float>().First();
+                    break;
+                case "maxwidth":
+                    context.MaxPenWidth = parameters.ToTypedParameters<float>().First();
+                    break;
+                case "cap":
+                    switch(parameters.ToTypedParameters<string>().First().ToLower().Trim())
+                    {
+                        case "square":
+                            context.PenCap = PenCap.Square;
+                            break;
+                        case "flat":
+                            context.PenCap = PenCap.Flat;
+                            break;
+                        default:
+                            context.PenCap = PenCap.Round;
+                            break;
+                    }
+                    break;
             }
         }
     }

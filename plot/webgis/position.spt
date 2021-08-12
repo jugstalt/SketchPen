@@ -1,0 +1,16 @@
+circle.fill(76);
+circle.draw(76);
+
+transform.rest();
+line.draw(0 ,-46, 0,-28);
+
+transform.rotate(90);
+line.draw(0 ,-46, 0,-28);
+
+transform.rotate(90);
+line.draw(0 ,-46, 0,-28);
+
+transform.rotate(90);
+line.draw(0 ,-46, 0,-28);
+
+transform.reset();

@@ -219,6 +219,7 @@ namespace SketchPen.Plot.Extensions
                     }
                 }
 
+                command.Init();
                 command.SetStatement(method, parameters.Select(t => t.ParameterValue()));
                 commands.Add(command);
             }

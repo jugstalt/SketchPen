@@ -1,0 +1,9 @@
+
+path.begin();
+path.addarc(150,240, 60,60,0,-10);
+path.addpoint(0, 45);
+path.close();
+
+path.start();
+path.addarc(0, 360, 20,20, 0,-10);
+path.close();

@@ -4,6 +4,7 @@ using SketchPen.Plot.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 
 namespace SketchPen.Plot.Commands
@@ -13,7 +14,7 @@ namespace SketchPen.Plot.Commands
     {
         protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
         {
-            switch(Method?.ToLower())
+            switch (Method?.ToLower())
             {
                 case "translate":
                     context.GraphicsContext.TranslateTransform(
@@ -22,6 +23,11 @@ namespace SketchPen.Plot.Commands
                     break;
                 case "rotate":
                     context.GraphicsContext.RotateTransform(parameters.Get<float>(0));
+                    break;
+                case "scale":
+                    context.GraphicsContext.ScaleTransform(
+                        parameters.Get<float>(0),
+                        parameters.Get<float>(parameters.Count() > 1 ? 1 : 0));
                     break;
                 case "reset":
                     context.ResetTransform();

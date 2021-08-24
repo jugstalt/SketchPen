@@ -1,8 +1,8 @@
 transform.translate(15,0);
-#include "marker-outline.spt"
+#include "templates/marker-outline.spt"
 
 transform.translate(-15,0);
-#include "marker-outline.spt"
+#include "templates/marker-outline.spt"
 
 transform.translate(-15,0);
-#include "marker-filled.spt"
+#include "templates/marker-filled.spt"

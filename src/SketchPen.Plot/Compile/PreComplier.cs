@@ -19,7 +19,7 @@ namespace SketchPen.Plot.Compile
 
             if (!String.IsNullOrEmpty(customGlobalsName))
             {
-                var customGlobalsFi = new FileInfo($"{ di.FullName }/{ customGlobalsName }.globals");
+                var customGlobalsFi = new FileInfo($"{ di.FullName }/_{ customGlobalsName }.globals");
                 if (customGlobalsFi.Exists)
                 {
                     code.Append(File.ReadAllText(customGlobalsFi.FullName));

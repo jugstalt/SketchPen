@@ -56,7 +56,7 @@ namespace SketchPen
 
                 if (sizes.Count() == 0)
                 {
-                    sizes.AddRange(new int[] { 16, 26, 32, 64, 128, 256, 512 });
+                    sizes.AddRange(new int[] { 16, 26, 32, 64, 128 });
                 }
 
                 if (!String.IsNullOrEmpty(outFolder))
@@ -71,21 +71,24 @@ namespace SketchPen
 
                     foreach (var size in sizes)
                     {
-                        string targetFile = $"{ fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf(".")) }_{ size }.png";
-                        Console.Write(targetFile);
-
-                        var plotter = new Plotter(size, size);
-                        var imageData = plotter.Plot(fileName, customGlobalsName);
-
-                        var targetFileInfo = new FileInfo($"{ outFolder }{ targetFile }");
-                        if (!targetFileInfo.Directory.Exists)
+                        for (int ratio = 1; ratio <= 3; ratio++)
                         {
-                            targetFileInfo.Directory.Create();
+                            string targetFile = $"{ fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf(".")) }_{ size }@{ ratio }.png";
+                            Console.Write(targetFile);
+
+                            var plotter = new Plotter(size * ratio, size * ratio);
+                            var imageData = plotter.Plot(fileName, customGlobalsName);
+
+                            var targetFileInfo = new FileInfo($"{ outFolder }{ targetFile }");
+                            if (!targetFileInfo.Directory.Exists)
+                            {
+                                targetFileInfo.Directory.Create();
+                            }
+
+                            File.WriteAllBytes(targetFileInfo.FullName, imageData);
+
+                            Console.WriteLine("...done");
                         }
-
-                        File.WriteAllBytes(targetFileInfo.FullName, imageData);
-
-                        Console.WriteLine("...done");
                     }
                 }
 

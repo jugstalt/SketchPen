@@ -1,4 +1,4 @@
-#include "zoom.spt"
+#include "templates/zoom.spt"
 
 // marker
 brush.color(@@penColor);

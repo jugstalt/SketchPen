@@ -1,4 +1,4 @@
-globals.set(penColor, "#82C828");
+//globals.set(penColor, "#007fc2");
 //globals.set(penColor, "#406314");
 //globals.set(penColor, "#1f2e0a");
 globals.set(penColor,"#777");
@@ -6,7 +6,7 @@ globals.set(penColor,"#777");
 
 globals.set(brushColor, "#fff");
 globals.set(gradientbrushColor, "#b5dbad")
-globals.set(penWidth, 2);
-globals.set(minPenWidth, 1);
+globals.set(penWidth, 6);
+globals.set(minPenWidth, 3);
 //globals.set(maxPenWidth, 4);
 globals.set(penCap, "round");

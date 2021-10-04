@@ -1,0 +1,7 @@
+#include "round.spt"
+
+pen.width(@@penWidthBold);
+
+line.draw(-20,0, 20,0);
+
+pen.width(@@penWidth);

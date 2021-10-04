@@ -1,8 +1,8 @@
 path.begin();
 
-path.addarc(90,180, 35,35, -20,10);
-path.addarc(190, 170, 40,40, 0, -5);
-path.addarc(270,180, 30,30, 20, 12);
+path.addarc(90,177, 45,45, -22,10);
+path.addarc(196, 158, 50,50, 0, -5);
+path.addarc(270,180, 40,40, 25, 12);
 path.close();
 
 path.fill();

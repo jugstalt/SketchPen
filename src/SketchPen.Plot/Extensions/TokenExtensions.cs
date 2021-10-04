@@ -2,6 +2,7 @@
 using SketchPen.Parse.Lexer.Abstrations;
 using SketchPen.Parse.Lexer.Exceptions;
 using SketchPen.Plot.Abstraction;
+using SketchPen.Plot.Platform;
 using SketchPen.Plot.Reflection;
 using System;
 using System.Collections.Generic;
@@ -180,7 +181,8 @@ namespace SketchPen.Plot.Extensions
             switch(token.TokenType)
             {
                 case TokenType.NumericalConstant:
-                    return float.Parse(token.TokenValue);
+                    //return float.Parse(token.TokenValue);
+                    return token.TokenValue.ToFloat();
                 default:
                     return token.TokenValue;
             }

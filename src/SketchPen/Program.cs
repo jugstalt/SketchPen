@@ -100,7 +100,7 @@ namespace SketchPen
                 Console.WriteLine($"Exception: { ex.Message }");
 #if DEBUG
                 Console.WriteLine("Stacktrace:");
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
 #endif
                 return 1;
             }

@@ -1,5 +1,5 @@
-brush.color(@@penColor);
-gradientbrush.color(@@penColor);
+brush.color("#fefefe");
+gradientbrush.color("#fefefe");
 
 path.begin();
 path.addlines(-45,40, -45,-40);
@@ -11,6 +11,8 @@ path.addlines(40,45, -40,45);
 path.addarc(90,90, 10,10, -40,40);
 path.close();
 path.fill();
+path.draw();
+
 
 brush.color(@@brushColor);
 gradientbrush.color(@@gradientbrushColor);

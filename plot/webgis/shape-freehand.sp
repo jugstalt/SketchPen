@@ -4,4 +4,7 @@ transform.rotate(-45);
 
 transform.reset();
 
-line.draw(-45,40, 45,40);
+path.begin();
+path.addarc(270,-185, 20,80, -35,0);
+
+path.draw();

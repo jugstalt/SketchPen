@@ -1,0 +1,11 @@
+
+
+pen.width(@@penWidthBold);
+line.draw(0,-14, 0,40);
+pen.width(@@penWidth);
+
+path.begin();
+path.addlines(0,-55, 20,-5, 0,-14, -20,-5);
+path.close();
+path.fill();
+path.draw();

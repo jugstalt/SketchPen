@@ -1,12 +1,12 @@
-pen.width(8);
+pen.width(12);
 pen.cap("flat")
-line.draw(15,-30, 15,0);
+line.draw(25,-45, 25,0);
 
 pen.width(@@penWidth);
 pen.cap(@@penCap);
 path.start();
-path.addlines(-30,30, -10,30, -10,5, 10,5, 10, 30, 30, 30);
-path.addlines(30, 30, 30,-10, 0,-30, -30,-10, -30, 30);
+path.addlines(-45,45, -15,45, -15,5, 15,5, 15,45, 45,45);
+path.addlines(45,45, 45,-10, 0,-45, -45,-10, -45, 45);
 
 path.fill();
 path.draw();

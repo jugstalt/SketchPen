@@ -1,0 +1,11 @@
+#include "round.spt"
+
+brush.color(@@penColor);
+gradientbrush.color(@@penColor);
+
+circle.fill(14,14,  -20,0);
+circle.fill(14,14,  0,0);
+circle.fill(14,14,  20,0);
+
+brush.color(@@brushColor);
+gradientbrush.color(@@gradientbrushColor);

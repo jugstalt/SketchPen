@@ -52,7 +52,7 @@ namespace SketchPen.Plot.Commands
                     _path.CloseFigure();
                     break;
                 case "draw":
-                    using (var pen = context.CreatePen())
+                    using (var pen = context.CreatePen(parameters))
                     {
                         //CustomLineCap cap = new CustomLineCap(null, _path);
                         //cap.SetStrokeCaps(LineCap.Round, LineCap.Round);
@@ -64,7 +64,7 @@ namespace SketchPen.Plot.Commands
                     }
                     break;
                 case "fill":
-                    using (var brush = context.CreateBrush())
+                    using (var brush = context.CreateBrush(parameters))
                     {
                         context.GraphicsContext.FillPath(brush.Brush, _path);
                     }

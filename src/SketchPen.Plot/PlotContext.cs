@@ -1,8 +1,10 @@
 ﻿using SketchPen.Plot.Abstraction;
+using SketchPen.Plot.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 
 namespace SketchPen.Plot
 {
@@ -32,7 +34,7 @@ namespace SketchPen.Plot
 
         internal Bitmap Bitmap => _bitmap;
 
-        #region
+        #region IPlotContext
 
         public Graphics GraphicsContext { get; }
 
@@ -51,12 +53,13 @@ namespace SketchPen.Plot
 
         public IDictionary<string, object> Globals { get; }
 
-        public IPen CreatePen(float widthFactor = 1)
+        public IPen CreatePen(IEnumerable<object> parameters = null)
         {
-            var penWidth = this.PenWidth;
+            float penWidth = parameters.Slice(1)?.ToTypedParameters<float>().FirstOrDefault() ?? this.PenWidth;
+
             if (penWidth >= MinPenWidth && penWidth <= MaxPenWidth)
             {
-                penWidth = Project(this.PenWidth * widthFactor);
+                penWidth = Project(this.PenWidth);
                 if (penWidth < MinPenWidth)
                 {
                     penWidth = MinPenWidth;
@@ -66,7 +69,9 @@ namespace SketchPen.Plot
                     penWidth = MaxPenWidth;
                 }
             }
-            var pen = new Pen(this.PenColor, penWidth);
+
+            var penColor = parameters.Slice(0)?.ToColor() ?? this.PenColor;
+            var pen = new Pen(penColor, penWidth);
 
             switch (this.PenCap)
             {
@@ -88,10 +93,10 @@ namespace SketchPen.Plot
             }
 
 
-            return new PlotPen(this, pen, this.PenColor.Equals(Plotter.TransparentColor));
+            return new PlotPen(this, pen, penColor.Equals(Plotter.TransparentColor));
         }
 
-        public IBrush CreateBrush()
+        public IBrush CreateBrush(IEnumerable<object> parameters = null)
         {
             Brush brush = null;
             if (!this.GradientBrushColor.Equals(Plotter.TransparentColor) &&

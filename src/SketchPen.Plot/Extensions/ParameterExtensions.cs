@@ -37,7 +37,7 @@ namespace SketchPen.Plot.Extensions
             }
 
             var p = parameters.Skip(index).First();
-   
+
             if (p?.GetType() == typeof(T))
             {
                 return (T)p;
@@ -85,14 +85,17 @@ namespace SketchPen.Plot.Extensions
         static public RectangleF ToRectPos(this IEnumerable<object> parameters)
         {
             var coords = parameters.ToTypedParameters<float>();
-            
-            if (coords.Length == 1) {
+
+            if (coords.Length == 1)
+            {
                 return new RectangleF(-coords[0] / 2f, -coords[0] / 2f, coords[0], coords[0]);
             }
-            if (coords.Length == 2) {
+            if (coords.Length == 2)
+            {
                 return new RectangleF(-coords[0] / 2f, -coords[0] / 2f, coords[0], coords[1]);
             }
-            if (coords.Length == 3) {
+            if (coords.Length == 3)
+            {
                 return new RectangleF(coords[1] - coords[0] / 2f, coords[2] - coords[0] / 2f, coords[0], coords[0]);
             }
             if (coords.Length >= 4)
@@ -125,6 +128,16 @@ namespace SketchPen.Plot.Extensions
         static public Rectangle ToRectangle(this RectangleF rectangleF)
         {
             return new Rectangle((int)rectangleF.X, (int)rectangleF.Y, (int)rectangleF.Width, (int)rectangleF.Height);
+        }
+
+        static public IEnumerable<object> Slice(this IEnumerable<object> parameters, int from, int count = 1)
+        {
+            if (parameters == null || from >= parameters.Count())
+            {
+                return null;
+            }
+
+            return parameters.Skip(from).Take(1);
         }
     }
 }

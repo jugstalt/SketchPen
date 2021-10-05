@@ -24,8 +24,8 @@ namespace SketchPen.Plot.Abstraction
 
         IDictionary<string, object> Globals { get; }
 
-        IPen CreatePen(float widthFactor = 1);
-        IBrush CreateBrush();
+        IPen CreatePen(IEnumerable<object> parameters = null);
+        IBrush CreateBrush(IEnumerable<object> parameters = null);
 
         PointF Project(PointF point);
         RectangleF Project(RectangleF rect);

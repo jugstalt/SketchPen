@@ -1,0 +1,7 @@
+circle.fill(84,84);
+
+path.begin();
+path.addarc(290,320, 84,84, 0,0);
+path.start();
+path.addlines(0,-42, 0,0);
+path.draw();

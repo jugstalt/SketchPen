@@ -1,0 +1,351 @@
+transform.reset();
+transform.translate(-30,-30);
+#include "qr-edge.spt"
+#include "qr-dot.spt"
+
+transform.reset();
+transform.translate(30,-30);
+#include "qr-edge.spt"
+#include "qr-dot.spt"
+
+transform.reset();
+transform.translate(-30,30);
+#include "qr-edge.spt"
+#include "qr-dot.spt"
+
+//
+transform.reset();
+transform.translate(-10,-40);
+#include "qr-dot.spt"
+
+
+
+transform.reset();
+transform.translate(5,-40);
+#include "qr-dot.spt"
+
+transform.reset();
+transform.translate(10,-40);
+#include "qr-dot.spt"
+
+//
+
+
+transform.reset();
+transform.translate(0,-35);
+#include "qr-dot.spt"
+
+
+transform.reset();
+transform.translate(10,-35);
+#include "qr-dot.spt"
+
+//
+transform.reset();
+transform.translate(-10,-30);
+#include "qr-dot.spt"
+
+transform.reset();
+transform.translate(5,-30);
+#include "qr-dot.spt"
+
+
+//
+transform.reset();
+transform.translate(-10,-25);
+#include "qr-dot.spt"
+
+transform.reset();
+transform.translate(-5,-25);
+#include "qr-dot.spt"
+
+transform.reset();
+transform.translate(10,-25);
+#include "qr-dot.spt"
+
+//
+transform.reset();
+transform.translate(0,-20);
+#include "qr-dot.spt"
+
+
+//
+transform.reset();
+transform.translate(-10,-15);
+#include "qr-dot.spt"
+
+transform.reset();
+transform.translate(5,-15);
+#include "qr-dot.spt"
+
+
+//
+transform.reset();
+transform.translate(-40,-10);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-25,-10);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-20,-10);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-5,-10);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(0,-10);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(10,-10);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(20,-10);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(25,-10);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(35,-10);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+
+//
+transform.reset();
+transform.translate(-25,-5);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-20,-5);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-5,-5);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(0,-5);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(10,-5);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(20,-5);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(30,-5);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(35,-5);
+#include "qr-dot.spt"
+
+//
+transform.reset();
+transform.translate(-40,0);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-15,0);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-10,0);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-5,0);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(10,0);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(15,0);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(20,0);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(25,0);
+#include "qr-dot.spt"
+transform.reset();
+
+//
+transform.reset();
+transform.translate(-40,5);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-30,5);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-25,5);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-20,5);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-15,5);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-5,5);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(0,5);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(5,5);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(15,5);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(20,5);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(25,5);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(30,5);
+#include "qr-dot.spt"
+
+//
+transform.translate(-20,10);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-15,10);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-10,10);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(-5,10);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(5,10);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(10,10);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(15,10);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(25,10);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(30,10);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(40,10);
+#include "qr-dot.spt"
+
+//
+transform.reset();
+transform.translate(-10,15);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(0,15);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(5,15);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(15,15);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(20,15);
+#include "qr-dot.spt"
+
+//
+transform.reset();
+transform.translate(-10,20);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(0,20);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(5,20);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(20,20);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(30,20);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(35,20);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(40,20);
+#include "qr-dot.spt"
+
+//
+transform.reset();
+transform.translate(5,25);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(10,25);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(15,25);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(30,25);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(35,25);
+#include "qr-dot.spt"
+
+//
+transform.reset();
+transform.translate(-10,30);
+transform.reset();
+transform.translate(15,30);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(20,30);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(25,30);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(30,30);
+#include "qr-dot.spt"
+
+//
+transform.reset();
+transform.translate(-10,35);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(20,35);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(25,35);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(40,35);
+#include "qr-dot.spt"
+
+//
+transform.reset();
+transform.translate(5,40);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(10,40);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(20,40);
+#include "qr-dot.spt"
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(25,40);
+#include "qr-dot.spt"
+transform.reset();
+transform.translate(40,40);
+#include "qr-dot.spt"

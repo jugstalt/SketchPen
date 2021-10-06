@@ -1,0 +1,1 @@
+#include "templates/square-medium.spt"

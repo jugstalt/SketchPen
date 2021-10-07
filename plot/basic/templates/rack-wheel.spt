@@ -1,0 +1,62 @@
+path.begin();
+path.addarc(0,360, 61,61);
+path.start();
+path.addarc(0,360, 25,25);
+path.fill();
+
+path.begin();
+path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
+path.fill();
+path.addarc(285, 15, 60,60, 0,0);
+path.draw();
+
+transform.rotate(45);
+path.begin();
+path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
+path.fill();
+path.addarc(285, 15, 60,60, 0,0);
+path.draw();
+
+transform.rotate(45);
+path.begin();
+path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
+path.fill();
+path.addarc(285, 15, 60,60, 0,0);
+path.draw();
+
+transform.rotate(45);
+path.begin();
+path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
+path.fill();
+path.addarc(285, 15, 60,60, 0,0);
+path.draw();
+
+transform.rotate(45);
+path.begin();
+path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
+path.fill();
+path.addarc(285, 15, 60,60, 0,0);
+path.draw();
+
+transform.rotate(45);
+path.begin();
+path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
+path.fill();
+path.addarc(285, 15, 60,60, 0,0);
+path.draw();
+
+transform.rotate(45);
+path.begin();
+path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
+path.fill();
+path.addarc(285, 15, 60,60, 0,0);
+path.draw();
+
+transform.rotate(45);
+path.begin();
+path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
+path.fill();
+path.addarc(285, 15, 60,60, 0,0);
+path.draw();
+
+circle.draw(25,25);

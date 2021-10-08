@@ -1,0 +1,2 @@
+transform.rotate(180);
+#include "templates/triangle-small.spt"

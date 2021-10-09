@@ -8,55 +8,55 @@ path.begin();
 path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
 path.fill();
 path.addarc(285, 15, 60,60, 0,0);
-path.draw();
+path.draw(@@outlinePenColor);
 
 transform.rotate(45);
 path.begin();
 path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
 path.fill();
 path.addarc(285, 15, 60,60, 0,0);
-path.draw();
+path.draw(@@outlinePenColor);
 
 transform.rotate(45);
 path.begin();
 path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
 path.fill();
 path.addarc(285, 15, 60,60, 0,0);
-path.draw();
+path.draw(@@outlinePenColor);
 
 transform.rotate(45);
 path.begin();
 path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
 path.fill();
 path.addarc(285, 15, 60,60, 0,0);
-path.draw();
+path.draw(@@outlinePenColor);
 
 transform.rotate(45);
 path.begin();
 path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
 path.fill();
 path.addarc(285, 15, 60,60, 0,0);
-path.draw();
+path.draw(@@outlinePenColor);
 
 transform.rotate(45);
 path.begin();
 path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
 path.fill();
 path.addarc(285, 15, 60,60, 0,0);
-path.draw();
+path.draw(@@outlinePenColor);
 
 transform.rotate(45);
 path.begin();
 path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
 path.fill();
 path.addarc(285, 15, 60,60, 0,0);
-path.draw();
+path.draw(@@outlinePenColor);
 
 transform.rotate(45);
 path.begin();
 path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
 path.fill();
 path.addarc(285, 15, 60,60, 0,0);
-path.draw();
+path.draw(@@outlinePenColor);
 
-circle.draw(25,25);
+circle.draw(25,25, 0,0, @@outlinePenColor);

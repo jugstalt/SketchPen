@@ -5,7 +5,7 @@ path.addarc(  0,90, 42,42,  20, 20);
 path.addarc( 90,90, 42,42, -20, 20);
 path.close();
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);
 
 brush.color("#fefefe");
 gradientbrush.color("#fefefe");

@@ -5,11 +5,11 @@ path.addarc(180,-180, 80,20, 0,35);
 path.close();
 
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);
 
 path.begin();
 path.addarc(180,180, 80,20, 0,-35);
-path.draw();
+path.draw(@@outlinePenColor);
 
 path.begin();
 path.addarc(180,-180, 80,20, 0,-11.67);
@@ -18,3 +18,11 @@ path.draw();
 path.begin();
 path.addarc(180,-180, 80,20, 0,11.67);
 path.draw();
+
+path.begin();
+path.addarc(0,180, 80,20, 0,-35);
+path.addlines(-40,-35, -40,35);
+path.addarc(180,-180, 80,20, 0,35);
+path.close();
+
+path.draw(@@outlinePenColor);

@@ -1,5 +1,5 @@
-brush.color("#fefefe");
-gradientbrush.color("#fefefe");
+line.draw(-40,0, 40,0);
+line.draw(0,-40, 0,40);
 
 path.begin();
 path.addlines(0,0, -30,0);
@@ -8,11 +8,8 @@ path.close();
 path.addlines(0,0, 30,0);
 path.addarc(0,90, 60,60, 0,0);
 path.close();
-path.fill();
-path.draw();
-
-brush.color(@@brushColor);
-gradientbrush.color(@@gradientbrushColor);
+path.fill("#fefefe");
+path.draw(@@outlinePenColor);
 
 path.begin();
 path.addlines(0,0, 0,-30);
@@ -22,7 +19,4 @@ path.addlines(0,0, 0,30);
 path.addarc(90,90, 60,60, 0,0);
 path.close();
 path.fill();
-path.draw();
-
-line.draw(-35,0, 35,0);
-line.draw(0,-35, 0,35);
+path.draw(@@outlinePenColor);

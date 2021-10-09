@@ -1,7 +1,7 @@
 path.begin();
 path.addarc(0,360, 84,84, 0,0);
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);
 
 pen.width(10);
 path.begin();

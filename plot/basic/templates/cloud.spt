@@ -6,4 +6,4 @@ path.addarc(270,180, 40,40, 25, 12);
 path.close();
 
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);

@@ -12,7 +12,7 @@ path.start();
 path.addarc(0,360, 7,7, -35,-10)
 
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);
 
 // Paper
 brush.color("#fff");

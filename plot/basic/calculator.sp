@@ -6,7 +6,7 @@ path.addlines(-25,-35, 25,-35, 25,-25, -25,-25);
 path.close();
 
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);
 
 brush.color(@@penColor);
 gradientbrush.color(@@penColor);

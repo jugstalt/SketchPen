@@ -98,23 +98,37 @@ namespace SketchPen.Plot
 
         public IBrush CreateBrush(IEnumerable<object> parameters = null)
         {
+            var brushColor = this.BrushColor;
+            var gradientBrushColor = this.GradientBrushColor;
+
+            if (parameters.CountElements() == 1)
+            {
+                brushColor = parameters.Slice(0).ToColor();
+                gradientBrushColor = Plotter.TransparentColor;
+            }
+            else if (parameters.CountElements() == 2)
+            {
+                brushColor = parameters.Slice(0).ToColor();
+                gradientBrushColor = parameters.Slice(1).ToColor();
+            }
+
             Brush brush = null;
-            if (!this.GradientBrushColor.Equals(Plotter.TransparentColor) &&
+            if (!gradientBrushColor.Equals(Plotter.TransparentColor) &&
                this.GradientBrushPoint1 != null &&
                this.GradientBrushPoint2 != null)
             {
                 brush = new LinearGradientBrush(
                     this.GradientBrushPoint1,
                     this.GradientBrushPoint2,
-                    this.BrushColor,
-                    this.GradientBrushColor);
+                    brushColor,
+                    gradientBrushColor);
             }
             else
             {
-                brush = new SolidBrush(this.BrushColor);
+                brush = new SolidBrush(brushColor);
             }
 
-            return new PlotBrush(this, brush, this.BrushColor.Equals(Plotter.TransparentColor));
+            return new PlotBrush(this, brush, brushColor.Equals(Plotter.TransparentColor));
         }
 
         public PointF Project(PointF point)

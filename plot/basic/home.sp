@@ -9,6 +9,6 @@ path.addlines(-42,42, -15,42, -15,5, 15,5, 15,42, 42,42);
 path.addlines(42,42, 42,-10, 0,-42, -42,-10, -42, 42);
 
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);
 
 line.draw(-45,42, 45,42);

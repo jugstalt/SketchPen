@@ -1,4 +1,4 @@
 #include "marker.spt"
 
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);

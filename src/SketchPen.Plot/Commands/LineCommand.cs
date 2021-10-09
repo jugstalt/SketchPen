@@ -19,7 +19,7 @@ namespace SketchPen.Plot.Commands
                     var points = parameters.ToPoints().Take(2).ToArray();
                     if (points.Length == 2)
                     {
-                        using (var pen = context.CreatePen())
+                        using (var pen = context.CreatePen(parameters.Skip(4)))
                             context.GraphicsContext.DrawLine(pen.Pen,
                                 context.Project(points[0]),
                                 context.Project(points[1]));

@@ -24,7 +24,7 @@ path.addlines(-35,0, 35,0);
 path.addlines(35,0, 35,35);
 path.addlines(35,35, -35,35);
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);
 
 // hole
 path.begin();
@@ -34,4 +34,4 @@ path.start();
 path.addlines(2,-38, 12,-38, 12,-22, 2,-22);
 path.close();
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);

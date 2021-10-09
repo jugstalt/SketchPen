@@ -2,15 +2,18 @@ path.begin();
 path.addlines(-45,0, -45,20, 45,20, 45,0);
 path.close();
 path.fill();
-path.draw();
 
-line.draw(-35,0, -35,5);
-line.draw(-25,0, -25,8);
-line.draw(-15,0, -15,5);
-line.draw(-5,0, -5,8);
+line.draw(-35,0, -35,8);
+line.draw(-25,0, -25,12);
+line.draw(-15,0, -15,8);
+line.draw(-5,0, -5,12);
 
-line.draw(35,0, 35,8);
-line.draw(25,0, 25,5);
-line.draw(15,0, 15,8);
-line.draw(5,0, 5,5);
+line.draw(35,0, 35,12);
+line.draw(25,0, 25,8);
+line.draw(15,0, 15,12);
+line.draw(5,0, 5,8);
+
+path.draw(@@outlinePenColor);
+
+
 

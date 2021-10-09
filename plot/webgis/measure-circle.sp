@@ -1,5 +1,5 @@
 circle.fill(84);
-circle.draw(84);
+circle.draw(84,84, 0,0, @@outlinePenColor);
 
 transform.rotate(135);
 

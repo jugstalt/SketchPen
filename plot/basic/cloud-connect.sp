@@ -10,7 +10,7 @@ path.addarc(0,360, 20,20, -35,-35);
 path.start();
 path.addarc(0,360, 20,20,  35,-35);
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);
 
 
 transform.reset();

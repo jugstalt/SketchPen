@@ -1,5 +1,5 @@
 circle.fill(76);
-circle.draw(76);
+circle.draw(76,76, 0,0, @@outlinePenColor);
 
 transform.rest();
 line.draw(0 ,-46, 0,-28);

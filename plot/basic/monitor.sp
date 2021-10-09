@@ -7,7 +7,7 @@ path.begin();
 path.addlines(-42,-42, 42,-42, 42,14, -42,14);
 path.close();
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);
 
 line.draw(30, 22, 33,22);
 

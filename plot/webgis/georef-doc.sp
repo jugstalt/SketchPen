@@ -3,7 +3,7 @@ path.begin();
 path.addlines(-45,-10, 0,-10, 0,45, -45,45);
 path.close();
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);
 
 line.draw(-35,3.75, -10,3.75);
 line.draw(-35,17.5, -10,17.5);

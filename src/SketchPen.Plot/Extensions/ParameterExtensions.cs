@@ -29,6 +29,40 @@ namespace SketchPen.Plot.Extensions
             }).Select(v => (T)v).ToArray();
         }
 
+        static public T[] TakeFirstTypedParameterBlock<T>(this IEnumerable<object> parameters)
+        {
+            List<T> typedParamters = new List<T>();
+
+            foreach (var parameter in parameters)
+            {
+                try
+                {
+                    if (parameter?.GetType() == typeof(T))
+                    {
+                        typedParamters.Add((T)parameter);
+                    }
+                    else if (typeof(T) == typeof(float))
+                    {
+                        typedParamters.Add((T)(object)parameter.ToString().ToFloat());
+                    }
+                    else if (typeof(T) == typeof(double))
+                    {
+                        typedParamters.Add((T)(object)parameter.ToString().ToDouble());
+                    }
+                    else
+                    {
+                        typedParamters.Add((T)Convert.ChangeType(parameter, typeof(T)));
+                    }
+                }
+                catch
+                {
+                    break;
+                }
+            }
+
+            return typedParamters.ToArray();
+        }
+
         static public T Get<T>(this IEnumerable<object> parameters, int index)
         {
             if (index < 0 || index > parameters.Count() - 1)
@@ -84,7 +118,7 @@ namespace SketchPen.Plot.Extensions
 
         static public RectangleF ToRectPos(this IEnumerable<object> parameters)
         {
-            var coords = parameters.ToTypedParameters<float>();
+            var coords = parameters.TakeFirstTypedParameterBlock<float>();
 
             if (coords.Length == 1)
             {
@@ -108,7 +142,7 @@ namespace SketchPen.Plot.Extensions
 
         static public IEnumerable<PointF> ToPoints(this IEnumerable<object> parameters)
         {
-            var coords = parameters.ToTypedParameters<float>();
+            var coords = parameters.TakeFirstTypedParameterBlock<float>();
 
             if (coords.Length % 2 != 0)
             {
@@ -138,6 +172,16 @@ namespace SketchPen.Plot.Extensions
             }
 
             return parameters.Skip(from).Take(1);
+        }
+
+        static public int CountElements(this IEnumerable<object> parameters)
+        {
+            if (parameters == null)
+            {
+                return 0;
+            }
+
+            return parameters.Count();
         }
     }
 }

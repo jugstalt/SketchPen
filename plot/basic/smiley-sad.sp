@@ -1,7 +1,6 @@
 // Head
 circle.fill(84);
-
-circle.draw(84);
+circle.draw(84, 84, 0,0, @@outlinePenColor);
 
 // Eyes
 circle.draw(10, -16,-16);

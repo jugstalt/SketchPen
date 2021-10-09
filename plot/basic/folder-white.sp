@@ -29,4 +29,4 @@ path.addlines(45,-10, 30,45);
 path.addlines(30,45, -45,45);
 
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);

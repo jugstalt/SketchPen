@@ -8,4 +8,4 @@ line.draw(0, 0, 55,55);
 
 // Circle
 circle.fill(60);
-circle.draw(60);
+circle.draw(60, 60, 0,0, @@outlinePenColor);

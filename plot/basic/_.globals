@@ -1,4 +1,5 @@
 globals.tryset(penColor, "#000");
+globals.tryset(outlinePenColor, "#000");
 globals.tryset(brushColor, "#fff");
 globals.tryset(gradientbrushColor, "#aaa")
 globals.tryset(penWidth, 6);

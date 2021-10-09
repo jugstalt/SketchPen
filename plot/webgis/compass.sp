@@ -1,12 +1,13 @@
 path.begin();
 path.addarc(0,360, 90,90);
 path.fill();
-path.draw();
 
 line.draw(-45,0, -35,0);
 line.draw( 45,0,  35,0);
 line.draw(0,-45, 0,-35);
 line.draw(0, 45, 0, 35);
+
+path.draw(@@outlinePenColor);
 
 transform.reset();
 transform.rotate(45);

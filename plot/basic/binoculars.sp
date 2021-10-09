@@ -9,13 +9,13 @@ path.addlines(30,0, 30,35);
 path.addarc(0,-180, 30,15, 15,35);
 path.close();
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);
 
-line.draw(3,-40, 12,-40);
+line.draw(3,-40, 12,-40, @@outlinePenColor);
 
 path.begin();
 path.addarc(180,-180, 30,15, 15,35);
-path.draw();
+path.draw(@@outlinePenColor);
 
 // left
 transform.reset();
@@ -29,15 +29,15 @@ path.addlines(30,0, 30,35);
 path.addarc(0,-180, 30,15, 15,35);
 path.close();
 path.fill();
-path.draw();
+path.draw(@@outlinePenColor);
 
-line.draw(3,-40, 12,-40);
+line.draw(3,-40, 12,-40, @@outlinePenColor);
 
 path.begin();
 path.addarc(180,-180, 30,15, 15,35);
-path.draw();
+path.draw(@@outlinePenColor);
 
 // connection
 transform.reset();
-line.draw(-10,-10, 10,-10);
-line.draw(-10,0, 10,0);
+line.draw(-10,-10, 10,-10, @@outlinePenColor);
+line.draw(-10,0, 10,0, @@outlinePenColor);

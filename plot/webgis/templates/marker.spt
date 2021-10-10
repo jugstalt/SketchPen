@@ -1,4 +1,3 @@
-
 path.begin();
 path.addarc(150,240, 60,60,0,-10);
 path.addpoint(0, 45);

@@ -1,9 +1,6 @@
 #include "marker.spt"
+path.fill("#fefefe");
+path.draw(@@outlinePenColor);
 
-brush.color("#fefefe");
-gradientbrush.color("#fefefe");
-path.fill();
+include "marker-hole.spt"
 path.draw();
-
-brush.color(@@brushColor);
-gradientbrush.color(@@gradientbrushColor);

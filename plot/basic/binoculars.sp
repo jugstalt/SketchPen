@@ -1,6 +1,11 @@
+// connection
+transform.reset();
+line.draw(-10,-10, 10,-10);
+line.draw(-10,0, 10,0);
+
 // right
 transform.reset();
-transform.translate(10,0);
+transform.translate(10,-3);
 
 path.begin();
 path.addlines(0,-30, 15,-30, 15,-15);
@@ -11,15 +16,15 @@ path.close();
 path.fill();
 path.draw(@@outlinePenColor);
 
-line.draw(3,-40, 12,-40, @@outlinePenColor);
+line.draw(3,-38, 12,-38);
 
 path.begin();
-path.addarc(180,-180, 30,15, 15,35);
-path.draw(@@outlinePenColor);
+path.addarc(0,360, 30,15, 15,35);
+path.draw();
 
 // left
 transform.reset();
-transform.translate(-10,0);
+transform.translate(-10,-3);
 transform.scale(-1,1);
 
 path.begin();
@@ -31,13 +36,8 @@ path.close();
 path.fill();
 path.draw(@@outlinePenColor);
 
-line.draw(3,-40, 12,-40, @@outlinePenColor);
+line.draw(3,-38, 12,-38);
 
 path.begin();
-path.addarc(180,-180, 30,15, 15,35);
-path.draw(@@outlinePenColor);
-
-// connection
-transform.reset();
-line.draw(-10,-10, 10,-10, @@outlinePenColor);
-line.draw(-10,0, 10,0, @@outlinePenColor);
+path.addarc(0,360, 30,15, 15,35);
+path.draw();

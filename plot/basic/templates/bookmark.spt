@@ -1,7 +1,9 @@
-path.begin();
-
-path.addlines(-30,-45, 30,-45, 30,45, 0,20, -30,45);
-path.close();
-
+#include "bookmark-path.spt"
 path.fill();
+
+path.begin();
+path.addlines(-30,-30, 30,-30);
+path.draw();
+
+#include "bookmark-path.spt"
 path.draw(@@outlinePenColor);

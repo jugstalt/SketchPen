@@ -59,4 +59,7 @@ path.fill();
 path.addarc(285, 15, 60,60, 0,0);
 path.draw(@@outlinePenColor);
 
-circle.draw(25,25, 0,0, @@outlinePenColor);
+circle.draw(25,25, 0,0);
+
+transform.reset();
+

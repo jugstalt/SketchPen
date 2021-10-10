@@ -1,0 +1,7 @@
+path.begin();
+path.addarc(180,220, 30,30, 0,-10);
+path.addlines(0,10, 0,15);
+path.start();
+path.addlines(0,28, 0,30);
+
+path.draw();

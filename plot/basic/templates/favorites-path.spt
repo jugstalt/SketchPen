@@ -1,0 +1,4 @@
+bath.begin();
+path.addarc(180,210, 42,42, 21,-21);
+path.addpoint(0,42);
+path.addarc(150,210, 42,42, -21,-21);

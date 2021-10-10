@@ -1,0 +1,11 @@
+path.begin();
+path.addarc(0,360, 84,84, 0,0);
+path.fill();
+
+line.draw(-42,0, 42,0);
+line.draw(0,-42, 0,42);
+circle.arc(240,60, 120,120, 0,75);
+circle.arc(120,-60, 120,120, 0,-75);
+circle.draw(42,84, 0,0);
+
+path.draw(@@outlinePenColor);

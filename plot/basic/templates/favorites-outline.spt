@@ -1,0 +1,3 @@
+#include "favorites-path.spt"
+
+path.draw();

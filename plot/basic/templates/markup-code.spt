@@ -1,0 +1,10 @@
+path.begin();
+path.addlines(20,-30, 40,0, 20,30);
+path.draw();
+
+transform.scale(-1,1);
+path.begin();
+path.addlines(20,-30, 40,0, 20,30);
+path.draw();
+
+line.draw(10,30, -10,-30);

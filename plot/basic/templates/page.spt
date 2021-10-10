@@ -1,0 +1,11 @@
+path.begin();
+path.addlines(-31.5,-45,  5,-45, 31.5,-15, 31.5,45, -31.5,45);
+path.close();
+path.fill();
+path.draw(@@outlinePenColor);
+
+path.begin();
+path.addlines(31.5,-15, 5,-15, 5,-45);
+path.close();
+path.fill();
+path.draw(@@outlinePenColor);

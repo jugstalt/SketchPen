@@ -1,6 +1,6 @@
 //globals.set(penColor, "#406314");
 //globals.set(penColor, "#1f2e0a");
-globals.set(penColor,"#777");
+globals.set(penColor,"#555");
 globals.set(outlinePenColor, "#82C828");
 //globals.set(penColor,"#fff");
 

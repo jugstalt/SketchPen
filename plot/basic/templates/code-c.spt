@@ -1,0 +1,13 @@
+path.begin();
+path.addarc( 90, 90, 20,20, -10, 25);
+path.addarc(  0,-90, 20,20, -30, 10);
+path.addarc( 90,-90, 20,20, -30,-10);
+path.addarc(180, 90, 20,20, -10,-25);
+path.draw();
+
+path.begin();
+path.addarc( 90,-90, 20,20, 10, 25);
+path.addarc(180, 90, 20,20, 30, 10);
+path.addarc( 90, 90, 20,20, 30,-10);
+path.addarc( 0,-90, 20,20, 10,-25);
+path.draw();

@@ -1,9 +1,9 @@
 pen.width(@@penWidthBold);
 
 line.draw(-42, 0, 42, 0);
-line.draw(-42, 0, -25,-17);
-line.draw(-42, 0, -25, 17);
-line.draw( 42, 0,  25,-17);
-line.draw( 42, 0,  25, 17);
+line.draw(-42, 0, -30,-12);
+line.draw(-42, 0, -30, 12);
+line.draw( 42, 0,  30,-12);
+line.draw( 42, 0,  30, 12);
 
 pen.width(@@penWidth);

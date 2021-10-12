@@ -1,7 +1,8 @@
 globals.tryset(penColor, "#000");
 globals.tryset(outlinePenColor, "#000");
 globals.tryset(brushColor, "#fff");
-globals.tryset(gradientbrushColor, "#aaa")
+globals.tryset(gradientbrushColor, "#aaa");
+globals.tryset(backgroundBrushColor, "#fefefe");
 globals.tryset(penWidth, 6);
 globals.tryset(penWidthBold, 9);
 globals.set(minPenWidth, 1);

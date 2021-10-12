@@ -1,0 +1,27 @@
+path.begin();
+
+path.addarc(180, 90, 20,20, -18,-35);
+path.addarc(270, 90, 20,20,  18,-35);
+path.addarc(  0, 90, 20,20,  18, 35);
+path.addarc( 90, 90, 20,20, -18, 35);
+path.close();
+
+path.fill();
+path.draw(@@outlinePenColor);
+
+//circle.fill(8,8, 0,38, @@backgroundBrushColor);
+//circle.draw(8,8, 0,38);
+
+line.draw(-4,38, 4,38);
+
+path.begin();
+path.addarc(180, 90, 10,10, -15,-26);
+path.addarc(270, 90, 10,10,  15,-26);
+path.addarc(  0, 90, 10,10,  15, 24);
+path.addarc( 90, 90, 10,10, -15, 24);
+path.close();
+
+path.fill(@@backgroundBrushColor);
+path.draw();
+
+line.draw(-8,-38, 8,-38);

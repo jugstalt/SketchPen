@@ -1,6 +1,6 @@
 #include "templates/rack-wheel.spt"
 
-circle.fill(42,42, 0,0, "#efefef");
+circle.fill(42,42, 0,0, @@backgroundBrushColor);
 circle.draw(42);
 
 path.begin();

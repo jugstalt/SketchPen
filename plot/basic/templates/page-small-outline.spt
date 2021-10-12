@@ -1,11 +1,11 @@
 path.begin();
 path.addlines(-21,-30,  5,-30, 21,-15, 21,30, -21,30);
 path.close();
-path.fill("#fefefe");
+path.fill(@@backgroundBrushColor);
 path.draw();
 
 path.begin();
 path.addlines(21,-15, 5,-15, 5,-30);
 path.close();
-path.fill("#fefefe");
+path.fill(@@backgroundBrushColor);
 path.draw();

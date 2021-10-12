@@ -5,7 +5,7 @@ transform.rotate(45);
 path.begin();
 path.addlines(0,10, 22,30, 21,45, 12,40, -12,40, -21,45, -22,30);
 path.close();
-path.fill("#fefefe");
+path.fill(@@backgroundBrushColor);
 path.draw();
 
 // fuel

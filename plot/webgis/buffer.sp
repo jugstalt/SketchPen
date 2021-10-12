@@ -7,13 +7,10 @@ path.close();
 path.fill();
 path.draw(@@outlinePenColor);
 
-brush.color("#fefefe");
-gradientbrush.color("#fefefe");
-
 path.begin();
 path.addlines(-15,-15, 15,-15, 15,15, -15,15);
 path.close();
-path.fill();
+path.fill(@@backgroundBrushColor);
 path.draw();
 
 

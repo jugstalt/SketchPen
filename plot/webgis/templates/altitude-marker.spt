@@ -8,7 +8,7 @@ path.close();
 path.addlines(0,0, 30,0);
 path.addarc(0,90, 60,60, 0,0);
 path.close();
-path.fill("#fefefe");
+path.fill(@@backgroundBrushColor);
 path.draw(@@outlinePenColor);
 
 path.begin();

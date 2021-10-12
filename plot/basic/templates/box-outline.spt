@@ -8,5 +8,5 @@ path.addarc( 90, 90, 20,20, -35, 35);
 
 path.close();
 
-path.fill("#fefefe");
+path.fill(@@backgroundBrushColor);
 path.draw();

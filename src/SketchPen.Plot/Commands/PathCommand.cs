@@ -1,4 +1,5 @@
-﻿using SketchPen.Plot.Abstraction;
+﻿using SketchPen.Parse.Lexer;
+using SketchPen.Plot.Abstraction;
 using SketchPen.Plot.Extensions;
 using SketchPen.Plot.Reflection;
 using System;
@@ -69,12 +70,14 @@ namespace SketchPen.Plot.Commands
                         context.GraphicsContext.FillPath(brush.Brush, _path);
                     }
                     break;
+                default:
+                    throw new Exception($"Unknown method: { Method  }");
             }
         }
 
-        public override void Init()
+        public override void Init(IEnumerable<Token> statement)
         {
-            base.Init();
+            base.Init(statement);
 
             if (_path != null)
             {

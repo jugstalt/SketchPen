@@ -42,6 +42,8 @@ namespace SketchPen.Plot.Commands
                             break;
                     }
                     break;
+                default:
+                    throw new Exception($"Unknown method: { Method  }");
             }
         }
     }

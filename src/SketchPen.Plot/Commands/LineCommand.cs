@@ -25,6 +25,8 @@ namespace SketchPen.Plot.Commands
                                 context.Project(points[1]));
                     }
                     break;
+                default:
+                    throw new Exception($"Unknown method: { Method  }");
             }
         }
     }

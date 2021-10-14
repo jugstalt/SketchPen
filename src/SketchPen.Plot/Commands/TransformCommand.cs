@@ -32,6 +32,8 @@ namespace SketchPen.Plot.Commands
                 case "reset":
                     context.ResetTransform();
                     break;
+                default:
+                    throw new Exception($"Unknown method: { Method  }");
             }
         }
     }

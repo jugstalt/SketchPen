@@ -6,6 +6,7 @@ globals.set(outlinePenColor, "#007fc2");
 
 globals.set(brushColor, "#fff");
 globals.set(gradientbrushColor, "#1eb6ea");
+//globals.set(gradientbrushColor, "#3dffff");
 globals.set(penWidth, 6);
 globals.set(penWidthBold, 9);
 globals.set(minPenWidth, 3);

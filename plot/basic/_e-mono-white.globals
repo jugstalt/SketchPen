@@ -1,12 +1,12 @@
+globals.set(penColor, "#82C828");
 //globals.set(penColor, "#406314");
 //globals.set(penColor, "#1f2e0a");
-globals.set(penColor,"#555");
-globals.set(outlinePenColor, "#007fc2");
+globals.set(penColor,"#fefefe");
+globals.set(outlinePenColor,"#fefefe");
 //globals.set(penColor,"#fff");
 
-globals.set(brushColor, "#fff");
-globals.set(gradientbrushColor, "#1eb6ea");
-//globals.set(gradientbrushColor, "#3dffff");
+globals.set(brushColor, "#00fefefe");
+globals.set(gradientbrushColor, "#00fefefe");
 globals.set(penWidth, 6);
 globals.set(penWidthBold, 9);
 globals.set(minPenWidth, 3);

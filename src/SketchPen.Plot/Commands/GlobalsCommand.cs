@@ -38,6 +38,8 @@ namespace SketchPen.Plot.Commands
                         throw new Exception("Syntax error: declare.globals");
                     }
                     break;
+                default:
+                    throw new Exception($"Unknown method: { Method  }");
             }
         }
     }

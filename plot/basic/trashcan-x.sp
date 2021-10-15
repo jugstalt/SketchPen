@@ -2,7 +2,7 @@ path.begin();
 path.addlines(-32,-25, 32,-25, 27,42, -27,42);
 path.close();
 path.fill();
-path.draw(@@outlinePenColor);
+path.draw(@@outlinePenColor1);
 
 path.begin();
 path.addarc(180,180, 25,18, 0,-35);

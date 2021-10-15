@@ -1,4 +1,5 @@
 ﻿using SketchPen.Plot;
+using SketchPen.Plot.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -93,6 +94,15 @@ namespace SketchPen
                 }
 
                 return 0;
+            }
+            catch (SyntaxErrorException see)
+            {
+                Console.WriteLine(Environment.NewLine);
+                Console.WriteLine($"ERROR: { see.Message }");
+                Console.WriteLine("Statement:");
+                Console.WriteLine(see.Statement);
+
+                return 1;
             }
             catch (Exception ex)
             {

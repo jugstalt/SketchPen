@@ -194,7 +194,6 @@ namespace SketchPen.Plot.Extensions
 
             foreach (var statement in statements)
             {
-
                 var keyword = statement.First().TokenValue; // must be keyword
 
                 var commandType = Plotter.PlotCommandTypes.Where(t => t.GetCustomAttribute<PlotCommandKeywordAttribute>().Keyword == keyword).FirstOrDefault();
@@ -213,15 +212,15 @@ namespace SketchPen.Plot.Extensions
 
                 string method = tokens[2].TokenValue;
                 List<Token> parameters = null;
-                for(int i=2;i<tokens.Length;i++)
+                for (int i = 2; i < tokens.Length; i++)
                 {
-                    if(tokens[i].TokenType == TokenType.Operator)
+                    if (tokens[i].TokenType == TokenType.Operator)
                     {
                         parameters = tokens.CollectParameters(ref i);
                     }
                 }
 
-                command.Init();
+                command.Init(statement);
                 command.SetStatement(method, parameters.Select(t => t.ParameterValue()));
                 commands.Add(command);
             }

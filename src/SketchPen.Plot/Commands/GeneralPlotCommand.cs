@@ -1,4 +1,6 @@
-﻿using SketchPen.Plot.Abstraction;
+﻿using SketchPen.Parse.Lexer;
+using SketchPen.Plot.Abstraction;
+using SketchPen.Plot.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,8 @@ namespace SketchPen.Plot.Commands
     {
         private string _method = null;
         private IEnumerable<object> _parameters = null;
+
+        private IEnumerable<Token> _statement;
 
         protected string Method => _method;
         protected IEnumerable<object> Parameters => _parameters;
@@ -27,21 +31,41 @@ namespace SketchPen.Plot.Commands
 
         #region IPlotCommand
 
-        virtual public void Init() { }
+        virtual public void Init(IEnumerable<Token> statement) 
+        {
+            _statement = statement;
+        }
 
         public void Execute(IPlotContext context)
         {
-            ExecuteCommand(context, Parameters.Select(p =>
+            try
             {
-                if (p != null && p.ToString().StartsWith("@@"))
+                ExecuteCommand(context, Parameters.Select(p =>
                 {
-                    return context.Globals[p?.ToString().Substring(2)];
-                } 
-                else
-                {
-                    return p;
-                }
-            }));
+                    if (p != null && p.ToString().StartsWith("@@"))
+                    {
+                        var variableName = p?.ToString().Substring(2);
+                        if (!context.Globals.ContainsKey(variableName))
+                        {
+                            throw new SyntaxErrorException($"Unknown variable: { variableName }", _statement);
+                        }
+
+                        return context.Globals[variableName];
+                    }
+                    else
+                    {
+                        return p;
+                    }
+                }));
+            } 
+            catch (SyntaxErrorException see)
+            {
+                throw see;
+            }
+            catch(Exception ex)
+            {
+                throw new SyntaxErrorException(ex.Message, _statement);
+            }
         }
 
         public void SetStatement(string method, IEnumerable<object> parameters)

@@ -22,6 +22,8 @@ namespace SketchPen.Plot.Commands
                     context.GradientBrushPoint1 = parameters.ToPoints().FirstOrDefault();
                     context.GradientBrushPoint2 = parameters.ToPoints().Skip(1).FirstOrDefault();
                     break;
+                default:
+                    throw new Exception($"Unknown method: { Method  }");
             }
         }
     }

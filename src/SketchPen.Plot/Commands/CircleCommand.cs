@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using SketchPen.Plot.Extensions;
 using System.Drawing;
+using System;
 
 namespace SketchPen.Plot.Commands
 {
@@ -59,6 +60,8 @@ namespace SketchPen.Plot.Commands
                                                         parameters.Get<float>(1));
                     }
                     break;
+                default:
+                    throw new Exception($"Unknown method: { Method  }");
             }
         }
     }

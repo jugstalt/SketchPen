@@ -17,6 +17,8 @@ namespace SketchPen.Plot.Commands
                 case "color":
                     context.BrushColor = parameters.ToColor();
                     break;
+                default:
+                    throw new Exception($"Unknown method: { Method  }");
             }
         }
     }

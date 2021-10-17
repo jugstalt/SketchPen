@@ -99,8 +99,9 @@ namespace SketchPen
             {
                 Console.WriteLine(Environment.NewLine);
                 Console.WriteLine($"ERROR: { see.Message }");
-                Console.WriteLine("Statement:");
-                Console.WriteLine(see.Statement);
+                Console.WriteLine(">>");
+                Console.WriteLine($">> { see.Statement }");
+                Console.WriteLine(">>");
 
                 return 1;
             }

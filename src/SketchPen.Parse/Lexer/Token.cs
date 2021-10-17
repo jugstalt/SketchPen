@@ -15,6 +15,8 @@ namespace SketchPen.Parse.Lexer
         public TokenType TokenType { get; set; }
         public string TokenValue { get; set; }
 
+        public int LineNumber { get; set; }
+
         public override string ToString()
         {
             return $"{ this.TokenType }: { this.TokenValue }";

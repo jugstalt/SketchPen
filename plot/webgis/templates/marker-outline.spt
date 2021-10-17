@@ -2,5 +2,5 @@
 path.fill("#fefefe");
 path.draw(@@outlinePenColor);
 
-include "marker-hole.spt"
+#include "marker-hole.spt"
 path.draw();

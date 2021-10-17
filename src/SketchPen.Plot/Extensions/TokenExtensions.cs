@@ -2,6 +2,7 @@
 using SketchPen.Parse.Lexer.Abstrations;
 using SketchPen.Parse.Lexer.Exceptions;
 using SketchPen.Plot.Abstraction;
+using SketchPen.Plot.Exceptions;
 using SketchPen.Plot.Platform;
 using SketchPen.Plot.Reflection;
 using System;
@@ -47,8 +48,13 @@ namespace SketchPen.Plot.Extensions
 
             List<Token> statement = new List<Token>();
             bool inComment = false;
-            foreach (var token in tokens)
+            var tokensArray = tokens.ToArray();
+            int lineNumber = 1;
+
+            for (int t = 0, to = tokensArray.Length; t < to; t++)
             {
+                var token = tokensArray[t];
+
                 if (inComment)
                 {
                     if (token.TokenType == TokenType.NewLine)
@@ -76,15 +82,25 @@ namespace SketchPen.Plot.Extensions
                 {
                     if (statement.Count > 0)
                     {
+                        statement.First().LineNumber = lineNumber;
                         statements.Add(statement);
                         statement = new List<Token>();
                     }
+
+                    lineNumber++;
                 }
                 else
                 {
                     if (statement.Count > 0 || token.TokenType == TokenType.Keyword)
                     {
                         statement.Add(token);
+                    }
+                    else if (statement.Count == 0 && token.TokenType != TokenType.NewLine)
+                    {
+                        throw new SyntaxErrorException($"Unkown Keyword/{ token.TokenType }: { token.TokenValue }",
+                            tokensArray
+                                .Skip(t)
+                                .NextStatement(lineNumber));
                     }
                 }
             }
@@ -178,7 +194,7 @@ namespace SketchPen.Plot.Extensions
 
         static public object ParameterValue(this Token token)
         {
-            switch(token.TokenType)
+            switch (token.TokenType)
             {
                 case TokenType.NumericalConstant:
                     //return float.Parse(token.TokenValue);
@@ -206,9 +222,14 @@ namespace SketchPen.Plot.Extensions
 
                 var tokens = statement.ToArray();
                 if (!tokens[1].IsPointOperator())
+                {
                     throw new Exception("Synatx error");
+                }
+
                 if (tokens[2].TokenType != TokenType.Identifier)
+                {
                     throw new Exception("Synatx error");
+                }
 
                 string method = tokens[2].TokenValue;
                 List<Token> parameters = null;
@@ -226,6 +247,29 @@ namespace SketchPen.Plot.Extensions
             }
 
             return commands;
+        }
+
+        static public IEnumerable<Token> NextStatement(this IEnumerable<Token> tokens, int lineNumber)
+        {
+            List<Token> statement = new List<Token>();
+
+            foreach (var token in tokens)
+            {
+                if (token.TokenType == TokenType.Separator ||
+                   token.TokenType == TokenType.NewLine)
+                {
+                    break;
+                }
+
+                statement.Add(token);
+            }
+
+            if (statement.Count > 0)
+            {
+                statement.First().LineNumber = lineNumber;
+            }
+
+            return statement;
         }
     }
 }

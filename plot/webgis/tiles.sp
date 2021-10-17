@@ -2,7 +2,7 @@ transform.reset();
 transform.scale(0.75, 0.5);
 transform.rotate(45);
 
-bath.begin();
+path.begin();
 path.addlines(-45,-45, -23,-45, -23,-23, -45,-23);
 path.close();
 path.addlines(-11,-45, 11,-45, 11,-23, -11,-23);

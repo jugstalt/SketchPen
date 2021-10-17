@@ -10,8 +10,8 @@ namespace SketchPen.Plot.Exceptions
     {
         private readonly IEnumerable<Token> _statement;
 
-        public SyntaxErrorException(string errorMessage, IEnumerable<Token> statement) 
-            :base(errorMessage)
+        public SyntaxErrorException(string errorMessage, IEnumerable<Token> statement)
+            : base(errorMessage)
         {
             _statement = statement;
         }
@@ -20,7 +20,12 @@ namespace SketchPen.Plot.Exceptions
         {
             get
             {
-                return $"{ String.Concat(_statement?.Select(s => s.TokenValue).ToArray()) };";
+                int? lineNumber = _statement?
+                            .Where(s => s.LineNumber > 0)
+                            .FirstOrDefault()?
+                            .LineNumber;
+
+                return $"{ (lineNumber.HasValue ? lineNumber.Value.ToString() : "") }: { String.Concat(_statement?.Select(s => s.TokenValue).ToArray()) }";
             }
         }
     }

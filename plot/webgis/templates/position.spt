@@ -1,7 +1,7 @@
 circle.fill(76);
 circle.draw(76,76, 0,0, @@outlinePenColor);
 
-transform.rest();
+transform.reset();
 line.draw(0 ,-46, 0,-28);
 
 transform.rotate(90);

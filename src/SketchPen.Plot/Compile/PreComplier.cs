@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SketchPen.Plot.Extensions;
+using System;
 using System.IO;
 using System.Text;
 
@@ -22,6 +23,7 @@ namespace SketchPen.Plot.Compile
                 var customGlobalsFi = new FileInfo($"{ di.FullName }/_{ customGlobalsName }.globals");
                 if (customGlobalsFi.Exists)
                 {
+                    code.AppendCodefileComment(customGlobalsFi.FullName);
                     code.Append(File.ReadAllText(customGlobalsFi.FullName));
                     code.Append(Environment.NewLine);
                 }
@@ -32,11 +34,13 @@ namespace SketchPen.Plot.Compile
                 var globalsFi = new FileInfo($"{ di.FullName }/_.globals");
                 if (globalsFi.Exists)
                 {
+                    code.AppendCodefileComment(globalsFi.FullName);
                     code.Append(File.ReadAllText(globalsFi.FullName));
                     code.Append(Environment.NewLine);
                 }
             }
 
+            code.AppendCodefileComment(_fileName);
             code.Append(File.ReadAllText(_fileName));
 
             _code = code.ToString();
@@ -53,19 +57,19 @@ namespace SketchPen.Plot.Compile
             {
                 #region Empty Lines
 
-                if (String.IsNullOrWhiteSpace(codeLine))
-                {
-                    continue;
-                }
+                //if (String.IsNullOrWhiteSpace(codeLine))
+                //{
+                //    continue;
+                //}
 
                 #endregion
 
                 #region Remove Comment Lines
 
-                if (codeLine.Trim().StartsWith("//"))
-                {
-                    continue;
-                }
+                //if (codeLine.Trim().StartsWith("//"))
+                //{
+                //    continue;
+                //}
 
                 #endregion
 
@@ -75,6 +79,7 @@ namespace SketchPen.Plot.Compile
                 {
                     IncludeFile(codeLine.Substring("#include ".Length), preComipiedCode);
                     preComipiedCode.Append(Environment.NewLine);
+
                     continue;
                 }
 
@@ -82,13 +87,20 @@ namespace SketchPen.Plot.Compile
 
                 #region Spaces (no need for spaces in this language => dirty remove all)
 
-                codeLine = codeLine.Replace(" ", "").Replace("\t", "").Trim();
+                if (!codeLine.Trim().StartsWith("//"))
+                {
+                    codeLine = codeLine.Replace(" ", "").Replace("\t", "").Trim();
+                } 
+                else if(!codeLine.Trim().StartsWith("// "))
+                {
+                    codeLine = $"// { codeLine.Substring(2) }";
+                }
 
                 #endregion
 
                 #region Auto Append Semicolon
 
-                if(!codeLine.EndsWith(";"))
+                if (!codeLine.EndsWith(";"))
                 {
                     codeLine = $"{ codeLine };";
                 }
@@ -125,6 +137,8 @@ namespace SketchPen.Plot.Compile
             }
 
             var preCompiler = new PreComplier(includeFileInfo.FullName);
+
+            preComipiledCode.AppendCodefileComment(includeFileInfo.FullName);
             preComipiledCode.Append(preCompiler.Compile());
         }
 

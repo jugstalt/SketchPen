@@ -22,4 +22,4 @@ path.addlines(-45,-15, -5,2.3, -5,45);
 path.start();
 path.addlines(45,-15, 5,2.3, 5,45);
 
-path1.draw();
+path.draw();

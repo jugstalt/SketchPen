@@ -92,7 +92,6 @@ namespace SketchPen.Plot
                     break;
             }
 
-
             return new PlotPen(this, pen, penColor.Equals(Plotter.TransparentColor));
         }
 

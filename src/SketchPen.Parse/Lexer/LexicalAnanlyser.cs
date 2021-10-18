@@ -153,7 +153,6 @@ namespace SketchPen.Parse.Lexer
                             item = item.Trim(' ', '\t', '\r', '\n');
                             i = -1;
                         }
-
                     }
                     else
                     {

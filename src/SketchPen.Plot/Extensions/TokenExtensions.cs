@@ -75,6 +75,7 @@ namespace SketchPen.Plot.Extensions
                         statement = new List<Token>();
                     }
                     inComment = true;
+
                     continue;
                 }
 

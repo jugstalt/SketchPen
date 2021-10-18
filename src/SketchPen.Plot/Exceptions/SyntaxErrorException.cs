@@ -16,6 +16,14 @@ namespace SketchPen.Plot.Exceptions
             _statement = statement;
         }
 
+        public string CodeFile
+        {
+            get
+            {
+                return _statement?.FirstOrDefault()?.CodeFile ?? String.Empty;
+            }
+        }
+
         public string Statement
         {
             get

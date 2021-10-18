@@ -49,7 +49,9 @@ namespace SketchPen.Plot
             #region Pre Compile
 
             var preCompiler = new PreComplier(fileName, customGlobalsName, true);
-            code = preCompiler.Compile();
+            code = preCompiler.Compile(fileName);
+
+            //Console.WriteLine(code);
 
             #endregion
 

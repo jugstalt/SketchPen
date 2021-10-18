@@ -98,9 +98,12 @@ namespace SketchPen
             catch (SyntaxErrorException see)
             {
                 Console.WriteLine(Environment.NewLine);
+                Console.WriteLine(see.CodeFile);
                 Console.WriteLine($"ERROR: { see.Message }");
                 Console.WriteLine(">>");
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($">> { see.Statement }");
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(">>");
 
                 return 1;

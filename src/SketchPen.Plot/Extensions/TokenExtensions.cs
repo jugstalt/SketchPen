@@ -50,6 +50,7 @@ namespace SketchPen.Plot.Extensions
             bool inComment = false;
             var tokensArray = tokens.ToArray();
             int lineNumber = 1;
+            string codeFilename = null;
 
             for (int t = 0, to = tokensArray.Length; t < to; t++)
             {
@@ -76,6 +77,21 @@ namespace SketchPen.Plot.Extensions
                     }
                     inComment = true;
 
+                    string commentLine = tokensArray
+                                            .Skip(t)
+                                            .NextStatement(lineNumber, codeFilename)
+                                            .ToCommandLine();
+                    
+                    if (commentLine.IsCodefileComment())
+                    {
+                        codeFilename = commentLine.GetCodefile();
+                        lineNumber = 1;
+                    }
+                    else
+                    {
+                        lineNumber++;
+                    }
+
                     continue;
                 }
 
@@ -84,6 +100,8 @@ namespace SketchPen.Plot.Extensions
                     if (statement.Count > 0)
                     {
                         statement.First().LineNumber = lineNumber;
+                        statement.First().CodeFile = codeFilename;
+
                         statements.Add(statement);
                         statement = new List<Token>();
                     }
@@ -101,7 +119,7 @@ namespace SketchPen.Plot.Extensions
                         throw new SyntaxErrorException($"Unkown Keyword/{ token.TokenType }: { token.TokenValue }",
                             tokensArray
                                 .Skip(t)
-                                .NextStatement(lineNumber));
+                                .NextStatement(lineNumber, codeFilename));
                     }
                 }
             }
@@ -250,7 +268,7 @@ namespace SketchPen.Plot.Extensions
             return commands;
         }
 
-        static public IEnumerable<Token> NextStatement(this IEnumerable<Token> tokens, int lineNumber)
+        static public IEnumerable<Token> NextStatement(this IEnumerable<Token> tokens, int lineNumber, string codeFile)
         {
             List<Token> statement = new List<Token>();
 
@@ -268,6 +286,7 @@ namespace SketchPen.Plot.Extensions
             if (statement.Count > 0)
             {
                 statement.First().LineNumber = lineNumber;
+                statement.First().CodeFile = codeFile;
             }
 
             return statement;

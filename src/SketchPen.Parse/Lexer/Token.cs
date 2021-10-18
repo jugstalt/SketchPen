@@ -16,6 +16,7 @@ namespace SketchPen.Parse.Lexer
         public string TokenValue { get; set; }
 
         public int LineNumber { get; set; }
+        public string CodeFile { get; set; }
 
         public override string ToString()
         {

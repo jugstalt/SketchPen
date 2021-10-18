@@ -46,9 +46,10 @@ namespace SketchPen.Plot.Compile
             _code = code.ToString();
         }
 
-        public string Compile()
+        public string Compile(string codeFile)
         {
             StringBuilder preComipiedCode = new StringBuilder();
+            preComipiedCode.AppendCodefileComment(codeFile);
 
             var stringReader = new StringReader(_code);
             string codeLine;
@@ -77,7 +78,7 @@ namespace SketchPen.Plot.Compile
 
                 if (codeLine.Trim().StartsWith("#include "))
                 {
-                    IncludeFile(codeLine.Substring("#include ".Length), preComipiedCode);
+                    IncludeFile(codeLine.Substring("#include ".Length), preComipiedCode, codeFile);
                     preComipiedCode.Append(Environment.NewLine);
 
                     continue;
@@ -114,7 +115,7 @@ namespace SketchPen.Plot.Compile
             return preComipiedCode.ToString().Trim();
         }
 
-        private void IncludeFile(string includeFile, StringBuilder preComipiledCode)
+        private void IncludeFile(string includeFile, StringBuilder preComipiledCode, string sourceCodeFile)
         {
             includeFile = includeFile.Trim();
             if (includeFile.StartsWith("\"") && includeFile.EndsWith("\""))
@@ -138,8 +139,8 @@ namespace SketchPen.Plot.Compile
 
             var preCompiler = new PreComplier(includeFileInfo.FullName);
 
-            preComipiledCode.AppendCodefileComment(includeFileInfo.FullName);
-            preComipiledCode.Append(preCompiler.Compile());
+            preComipiledCode.Append(preCompiler.Compile(includeFileInfo.FullName));
+            preComipiledCode.AppendCodefileComment(sourceCodeFile);
         }
 
         private bool FileExists(string path)

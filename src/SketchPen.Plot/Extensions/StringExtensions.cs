@@ -8,7 +8,8 @@ namespace SketchPen.Plot.Extensions
     {
         static public void AppendCodefileComment(this StringBuilder code, string codeFileName)
         {
-            code.Append($"{ Environment.NewLine }// Codefile: { codeFileName };{ Environment.NewLine }");
+            //code.Append($"{ Environment.NewLine }// Codefile: { codeFileName };{ Environment.NewLine }");
+            code.Append($"// Codefile: { codeFileName };{ Environment.NewLine }");
         }
 
         static public bool IsCodefileComment(this string codeline)

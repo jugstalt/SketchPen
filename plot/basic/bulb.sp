@@ -1,0 +1,1 @@
+#include "templates/bulb.spt"

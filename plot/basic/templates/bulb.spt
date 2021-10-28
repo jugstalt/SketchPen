@@ -1,0 +1,20 @@
+path.begin();
+path.addlines(-10,25, -10,22);
+path.addarc(0,-18, 50,50, -35,22);
+
+path.addarc(130,280, 50,50, 0,-10);
+
+path.addarc(198,-18, 50,50, 35,22);
+path.addlines(10,22, 10,25);
+path.close();
+
+path.fill();
+path.draw(@@outlinePenColor);
+
+path.begin();
+path.addarc(185,80, 30,30, 0,-10);
+path.draw();
+
+line.draw(-10,25, 10,25);
+line.draw(-10,33, 10,33);
+line.draw(-6,41, 6,41);

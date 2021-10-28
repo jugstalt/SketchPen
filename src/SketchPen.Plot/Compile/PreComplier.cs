@@ -49,7 +49,7 @@ namespace SketchPen.Plot.Compile
         public string Compile(string codeFile)
         {
             StringBuilder preComipiedCode = new StringBuilder();
-            preComipiedCode.AppendCodefileComment(codeFile);
+            //preComipiedCode.AppendCodefileComment(codeFile);
 
             var stringReader = new StringReader(_code);
             string codeLine;
@@ -79,7 +79,7 @@ namespace SketchPen.Plot.Compile
                 if (codeLine.Trim().StartsWith("#include "))
                 {
                     IncludeFile(codeLine.Substring("#include ".Length), preComipiedCode, codeFile);
-                    preComipiedCode.Append(Environment.NewLine);
+                    //preComipiedCode.Append(Environment.NewLine);
 
                     continue;
                 }

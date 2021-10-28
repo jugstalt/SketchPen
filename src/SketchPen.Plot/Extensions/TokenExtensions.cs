@@ -45,12 +45,14 @@ namespace SketchPen.Plot.Extensions
         static public IEnumerable<IEnumerable<Token>> GetStatements(this IEnumerable<Token> tokens, ISyntax syntax)
         {
             List<IEnumerable<Token>> statements = new List<IEnumerable<Token>>();
+            Dictionary<string, int> lineNumber = new Dictionary<string, int>();
 
             List<Token> statement = new List<Token>();
             bool inComment = false;
             var tokensArray = tokens.ToArray();
-            int lineNumber = 1;
-            string codeFilename = null;
+            string codeFilename = String.Empty;
+
+            lineNumber[codeFilename] = 1;
 
             for (int t = 0, to = tokensArray.Length; t < to; t++)
             {
@@ -79,17 +81,18 @@ namespace SketchPen.Plot.Extensions
 
                     string commentLine = tokensArray
                                             .Skip(t)
-                                            .NextStatement(lineNumber, codeFilename)
+                                            .NextStatement(lineNumber[codeFilename], codeFilename)
                                             .ToCommandLine();
-                    
+
+                    lineNumber[codeFilename] = lineNumber[codeFilename] + 1;
+
                     if (commentLine.IsCodefileComment())
                     {
                         codeFilename = commentLine.GetCodefile();
-                        lineNumber = 1;
-                    }
-                    else
-                    {
-                        lineNumber++;
+                        if (!lineNumber.ContainsKey(codeFilename))
+                        {
+                            lineNumber[codeFilename] = 1;
+                        }
                     }
 
                     continue;
@@ -99,14 +102,14 @@ namespace SketchPen.Plot.Extensions
                 {
                     if (statement.Count > 0)
                     {
-                        statement.First().LineNumber = lineNumber;
+                        statement.First().LineNumber = lineNumber[codeFilename];
                         statement.First().CodeFile = codeFilename;
 
                         statements.Add(statement);
                         statement = new List<Token>();
                     }
 
-                    lineNumber++;
+                    lineNumber[codeFilename] = lineNumber[codeFilename] + 1;
                 }
                 else
                 {
@@ -119,7 +122,7 @@ namespace SketchPen.Plot.Extensions
                         throw new SyntaxErrorException($"Unkown Keyword/{ token.TokenType }: { token.TokenValue }",
                             tokensArray
                                 .Skip(t)
-                                .NextStatement(lineNumber, codeFilename));
+                                .NextStatement(lineNumber[codeFilename], codeFilename));
                     }
                 }
             }

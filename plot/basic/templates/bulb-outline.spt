@@ -1,6 +1,6 @@
 #include "bulb-path.spt"
 
-path.fill();
+path.fill(@@backgroundBrushColor);
 path.draw(@@outlinePenColor);
 
 path.begin();

@@ -1,0 +1,9 @@
+path.begin();
+path.addlines(-10,25, -10,22);
+path.addarc(0,-18, 50,50, -35,22);
+
+path.addarc(130,280, 50,50, 0,-10);
+
+path.addarc(198,-18, 50,50, 35,22);
+path.addlines(10,22, 10,25);
+path.close();

@@ -25,7 +25,7 @@ namespace SketchPen.Plot.Commands
             switch (Method?.ToLower())
             {
                 case "begin":
-                    if(_path!=null)
+                    if (_path != null)
                     {
                         _path.Dispose();
                     }

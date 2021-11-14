@@ -4,7 +4,6 @@ using SketchPen.Plot.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SketchPen.Plot.Commands
 {
@@ -13,16 +12,18 @@ namespace SketchPen.Plot.Commands
     {
         protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
         {
-            switch(Method?.ToLower())
+            switch (Method?.ToLower())
             {
                 case "draw":
                     var points = parameters.ToPoints().Take(2).ToArray();
                     if (points.Length == 2)
                     {
                         using (var pen = context.CreatePen(parameters.Skip(4)))
+                        {
                             context.GraphicsContext.DrawLine(pen.Pen,
                                 context.Project(points[0]),
                                 context.Project(points[1]));
+                        }
                     }
                     break;
                 default:

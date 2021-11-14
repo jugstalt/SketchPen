@@ -1,5 +1,4 @@
 ﻿using SketchPen.Plot.Abstraction;
-using System;
 using System.Drawing;
 
 namespace SketchPen.Plot
@@ -14,7 +13,7 @@ namespace SketchPen.Plot
             _context = context;
             _isPseudeoTransparent = isPseudoTransparent;
 
-            if(_isPseudeoTransparent)
+            if (_isPseudeoTransparent)
             {
                 _context.GraphicsContext.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
             }
@@ -28,7 +27,7 @@ namespace SketchPen.Plot
         {
             this.Brush.Dispose();
 
-            if(_isPseudeoTransparent)
+            if (_isPseudeoTransparent)
             {
                 _context.Bitmap.MakeTransparent(Plotter.TransparentColor);
                 _context.GraphicsContext.SmoothingMode = Plotter.DefaultSmothingMode;

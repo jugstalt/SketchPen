@@ -3,9 +3,7 @@ using SketchPen.Plot.Extensions;
 using SketchPen.Plot.Reflection;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 
 namespace SketchPen.Plot.Commands
 {

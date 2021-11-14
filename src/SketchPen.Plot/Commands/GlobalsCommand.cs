@@ -4,7 +4,6 @@ using SketchPen.Plot.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SketchPen.Plot.Commands
 {
@@ -19,7 +18,8 @@ namespace SketchPen.Plot.Commands
                     if (parameters.Count() == 2)
                     {
                         context.Globals[parameters.Get<string>(0)] = parameters.Get<object>(1);
-                    } else
+                    }
+                    else
                     {
                         throw new Exception("Syntax error: declare.globals");
                     }

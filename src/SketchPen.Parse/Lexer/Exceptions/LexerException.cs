@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SketchPen.Parse.Lexer.Exceptions
 {
@@ -8,7 +6,7 @@ namespace SketchPen.Parse.Lexer.Exceptions
     {
         public LexerException() { }
         public LexerException(string message, Exception innerException = null)
-            :base(message, innerException)
+            : base(message, innerException)
         {
 
         }

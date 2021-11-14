@@ -4,7 +4,6 @@ using SketchPen.Plot.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SketchPen.Plot.Commands
 {
@@ -13,7 +12,7 @@ namespace SketchPen.Plot.Commands
     {
         protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
         {
-            switch(Method?.ToLower())
+            switch (Method?.ToLower())
             {
                 case "color":
                     context.GradientBrushColor = parameters.ToColor();

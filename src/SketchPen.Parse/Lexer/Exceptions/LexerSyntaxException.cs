@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SketchPen.Parse.Lexer.Exceptions
 {
     class LexerSyntaxException : LexerException
     {
         public LexerSyntaxException(string message, Exception innerException = null)
-            :base($"Lexer Syntax Error: { message }", innerException) 
+            : base($"Lexer Syntax Error: { message }", innerException)
         { }
     }
 }

@@ -1,11 +1,10 @@
-﻿using SketchPen.Parse.Lexer;
-using SketchPen.Plot.Abstraction;
-using SketchPen.Plot.Reflection;
-using System.Linq;
-using System.Collections.Generic;
+﻿using SketchPen.Plot.Abstraction;
 using SketchPen.Plot.Extensions;
-using System.Drawing;
+using SketchPen.Plot.Reflection;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 
 namespace SketchPen.Plot.Commands
 {
@@ -15,8 +14,8 @@ namespace SketchPen.Plot.Commands
         protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
         {
             RectangleF pos;
-            
-            switch(Method?.ToLower())
+
+            switch (Method?.ToLower())
             {
                 case "arc":
                 case "pie":
@@ -26,12 +25,12 @@ namespace SketchPen.Plot.Commands
                     pos = parameters.ToRectPos();
                     break;
             }
-            
 
-            switch(Method?.ToLower())
+
+            switch (Method?.ToLower())
             {
                 case "draw":
-                    using(var pen = context.CreatePen(parameters.Skip(4)))
+                    using (var pen = context.CreatePen(parameters.Skip(4)))
                     {
                         context.GraphicsContext.DrawEllipse(pen.Pen, context.Project(pos));
                     }
@@ -42,10 +41,10 @@ namespace SketchPen.Plot.Commands
                         context.GraphicsContext.FillEllipse(brush.Brush, context.Project(pos));
                     }
                     break;
-                case "arc":    
+                case "arc":
                     using (var pen = context.CreatePen(parameters.Skip(6)))
                     {
-                        context.GraphicsContext.DrawArc(pen.Pen, 
+                        context.GraphicsContext.DrawArc(pen.Pen,
                                                         context.Project(pos),
                                                         parameters.Get<float>(0),
                                                         parameters.Get<float>(1));

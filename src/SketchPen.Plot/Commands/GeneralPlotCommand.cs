@@ -4,7 +4,6 @@ using SketchPen.Plot.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SketchPen.Plot.Commands
 {
@@ -22,7 +21,7 @@ namespace SketchPen.Plot.Commands
 
         virtual public void Dispose()
         {
-            
+
         }
 
         #endregion
@@ -31,7 +30,7 @@ namespace SketchPen.Plot.Commands
 
         #region IPlotCommand
 
-        virtual public void Init(IEnumerable<Token> statement) 
+        virtual public void Init(IEnumerable<Token> statement)
         {
             _statement = statement;
         }
@@ -57,12 +56,12 @@ namespace SketchPen.Plot.Commands
                         return p;
                     }
                 }));
-            } 
+            }
             catch (SyntaxErrorException see)
             {
                 throw see;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new SyntaxErrorException(ex.Message, _statement);
             }

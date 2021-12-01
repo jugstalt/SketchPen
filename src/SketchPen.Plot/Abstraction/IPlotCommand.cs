@@ -1,7 +1,6 @@
 ﻿using SketchPen.Parse.Lexer;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SketchPen.Plot.Abstraction
 {

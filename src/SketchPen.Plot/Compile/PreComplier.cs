@@ -91,8 +91,8 @@ namespace SketchPen.Plot.Compile
                 if (!codeLine.Trim().StartsWith("//"))
                 {
                     codeLine = codeLine.Replace(" ", "").Replace("\t", "").Trim();
-                } 
-                else if(!codeLine.Trim().StartsWith("// "))
+                }
+                else if (!codeLine.Trim().StartsWith("// "))
                 {
                     codeLine = $"// { codeLine.Substring(2) }";
                 }

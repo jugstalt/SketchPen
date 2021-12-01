@@ -1,6 +1,5 @@
 ﻿using SketchPen.Plot.Abstraction;
 using SketchPen.Plot.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;

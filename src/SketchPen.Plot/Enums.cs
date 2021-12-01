@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SketchPen.Plot
+﻿namespace SketchPen.Plot
 {
     public enum PenCap
     {

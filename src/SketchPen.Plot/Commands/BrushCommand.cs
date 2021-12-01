@@ -1,5 +1,4 @@
-﻿using SketchPen.Parse.Lexer;
-using SketchPen.Plot.Abstraction;
+﻿using SketchPen.Plot.Abstraction;
 using SketchPen.Plot.Extensions;
 using SketchPen.Plot.Reflection;
 using System;

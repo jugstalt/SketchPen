@@ -1,5 +1,4 @@
 ﻿using SketchPen.Plot.Abstraction;
-using System;
 using System.Drawing;
 
 namespace SketchPen.Plot

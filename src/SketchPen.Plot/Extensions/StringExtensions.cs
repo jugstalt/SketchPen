@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace SketchPen.Plot.Extensions
@@ -20,7 +19,9 @@ namespace SketchPen.Plot.Extensions
         static public string GetCodefile(this string codeline)
         {
             if (!codeline.IsCodefileComment())
+            {
                 return null;
+            }
 
             return codeline.Substring("// CodeFile: ".Length);
         }

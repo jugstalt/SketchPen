@@ -1,14 +1,14 @@
 ﻿using SketchPen.Parse.Lexer;
-using SketchPen.Plot.Extensions;
-using System.Reflection;
-using System.Linq;
 using SketchPen.Plot.Abstraction;
-using System.Collections.Generic;
-using System;
+using SketchPen.Plot.Compile;
+using SketchPen.Plot.Extensions;
 using SketchPen.Plot.Reflection;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using SketchPen.Plot.Compile;
+using System.Linq;
+using System.Reflection;
 
 namespace SketchPen.Plot
 {
@@ -20,15 +20,15 @@ namespace SketchPen.Plot
         static internal Color TransparentColor = Color.Transparent; // Color.FromArgb(1, 0, 0);
         static internal System.Drawing.Drawing2D.SmoothingMode DefaultSmothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-        private const int MinPlotSize= 10;
+        private const int MinPlotSize = 10;
 
         static Plotter()
         {
             PlotCommandTypes = Assembly.GetAssembly(typeof(Plotter))
                                        .GetTypes()
-                                       .Where(t => 
-                                                t.IsClass && 
-                                                t.GetCustomAttribute<PlotCommandKeywordAttribute>()!=null &&
+                                       .Where(t =>
+                                                t.IsClass &&
+                                                t.GetCustomAttribute<PlotCommandKeywordAttribute>() != null &&
                                                 typeof(IPlotCommand).IsAssignableFrom(t));
         }
 
@@ -42,7 +42,7 @@ namespace SketchPen.Plot
             _canvasHeight = canvasHeight;
         }
 
-        public byte[] Plot(string fileName, string customGlobalsName="")
+        public byte[] Plot(string fileName, string customGlobalsName = "")
         {
             var code = File.ReadAllText(fileName).Trim();
 
@@ -77,7 +77,7 @@ namespace SketchPen.Plot
                     plotContext.GraphicsContext.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
                     plotContext.GraphicsContext.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 
-                    foreach(var command in commands)
+                    foreach (var command in commands)
                     {
                         command.Execute(plotContext);
                     }
@@ -86,7 +86,7 @@ namespace SketchPen.Plot
                 var ms = new MemoryStream();
                 if (_canvasWith < MinPlotSize)
                 {
-                    using(var bm = new Bitmap(_canvasWith, _canvasHeight))
+                    using (var bm = new Bitmap(_canvasWith, _canvasHeight))
                     using (var gr = Graphics.FromImage(bm))
                     {
                         bm.SetResolution(96f, 96f);

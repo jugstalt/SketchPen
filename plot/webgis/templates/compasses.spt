@@ -1,0 +1,17 @@
+path.begin();
+path.addlines(-5,-20, -35,38, -37,45, -40,38, -10,-20);
+path.draw();
+
+path.begin();
+path.addlines( 5,-20, 35,38, 37,45, 40,38, 10,-20);
+path.draw();
+
+line.draw(0,-45, 0,-35);
+
+line.draw(-40,10, 40,10);
+line.draw(0,0, 0,20);
+
+path.begin();
+path.addarc(0,360, 25,25, -0,-25);
+path.fill();
+path.draw();

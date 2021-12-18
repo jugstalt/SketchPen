@@ -1,0 +1,4 @@
+path.begin();
+path.addarc(65,330, 90,70, 0,0);
+path.addlines(45,45, 45,45);
+path.close();

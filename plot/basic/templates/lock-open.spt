@@ -1,0 +1,5 @@
+#include "lock-body.spt"
+
+path.begin();
+path.addarc(0,-180, 30,60, -30,-10);
+path.draw();

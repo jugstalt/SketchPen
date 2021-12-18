@@ -1,0 +1,4 @@
+#include "speechbubble-path.spt"
+
+path.fill();
+path.draw(@@outlinePenColor);

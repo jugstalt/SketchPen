@@ -1,0 +1,10 @@
+path.begin();
+path.addlines(-30,-10, 30,-10, 30,45, -30,45);
+path.close();
+
+path.addarc(120,300, 20,20, 0,13);
+path.addlines(5,33, -5,33);
+path.close();
+
+path.fill();
+path.draw(@@outlinePenColor);

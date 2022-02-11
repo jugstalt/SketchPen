@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31410.357
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SketchPen", "src\SketchPen\SketchPen.csproj", "{F59FF875-D80E-4023-A60F-2C1BFC4DCCE7}"
 EndProject
@@ -11,7 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SketchPen.Plot", "src\Sketc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SketchPen.Parse", "src\SketchPen.Parse\SketchPen.Parse.csproj", "{15C792DD-E24A-4D0E-8AF5-02C284443BA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SketchPenWeb", "SketchPenWeb\SketchPenWeb.csproj", "{353CB4E2-E428-4BC6-850B-F5F64339BECE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SketchPenWeb", "SketchPenWeb\SketchPenWeb.csproj", "{353CB4E2-E428-4BC6-850B-F5F64339BECE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SketchPen.Plot.Drawing", "src\SketchPen.Plot.Drawing\SketchPen.Plot.Drawing.csproj", "{1FDDD1A9-2A79-4A15-907B-CD908749F493}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SketchPen.Plot.Skia", "src\SketchPen.Plot.Skia\SketchPen.Plot.Skia.csproj", "{C8D2A23E-DF72-4F2A-89DB-06A4DF52C6DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +39,14 @@ Global
 		{353CB4E2-E428-4BC6-850B-F5F64339BECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{353CB4E2-E428-4BC6-850B-F5F64339BECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{353CB4E2-E428-4BC6-850B-F5F64339BECE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FDDD1A9-2A79-4A15-907B-CD908749F493}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FDDD1A9-2A79-4A15-907B-CD908749F493}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FDDD1A9-2A79-4A15-907B-CD908749F493}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FDDD1A9-2A79-4A15-907B-CD908749F493}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8D2A23E-DF72-4F2A-89DB-06A4DF52C6DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8D2A23E-DF72-4F2A-89DB-06A4DF52C6DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8D2A23E-DF72-4F2A-89DB-06A4DF52C6DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8D2A23E-DF72-4F2A-89DB-06A4DF52C6DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +56,8 @@ Global
 		{DB21D1A9-4D36-4D12-9B8E-A827AC344A05} = {D4581E81-EC37-417B-8CD4-4B2F0B165E3A}
 		{15C792DD-E24A-4D0E-8AF5-02C284443BA3} = {D4581E81-EC37-417B-8CD4-4B2F0B165E3A}
 		{353CB4E2-E428-4BC6-850B-F5F64339BECE} = {D4581E81-EC37-417B-8CD4-4B2F0B165E3A}
+		{1FDDD1A9-2A79-4A15-907B-CD908749F493} = {D4581E81-EC37-417B-8CD4-4B2F0B165E3A}
+		{C8D2A23E-DF72-4F2A-89DB-06A4DF52C6DB} = {D4581E81-EC37-417B-8CD4-4B2F0B165E3A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F053F483-D2B4-4BE7-8E31-3ECFE77E146E}

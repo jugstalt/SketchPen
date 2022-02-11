@@ -1,14 +1,18 @@
 ﻿using SketchPen.Plot.Abstraction;
+using SketchPen.Plot.Drawing.Extensions;
 using SketchPen.Plot.Extensions;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 
-namespace SketchPen.Plot
+namespace SketchPen.Plot.Drawing
 {
-    internal class PlotContext : IPlotContext
+    public class PlotContext : IPlotContext
     {
+        static internal Color TransparentColor = Color.Transparent; // Color.FromArgb(1, 0, 0);
+        static internal System.Drawing.Drawing2D.SmoothingMode DefaultSmothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
         private readonly Bitmap _bitmap;
         private readonly float _projectingFactor = 1f;
 
@@ -17,38 +21,40 @@ namespace SketchPen.Plot
             _bitmap = bitmap;
             _projectingFactor = _bitmap.Width / 100f;
 
-            this.GraphicsContext = Graphics.FromImage(_bitmap);
+            this.GraphicsContext = new GraphicsContext(_bitmap);
             this.ResetTransform();
 
-            this.GradientBrushColor = Plotter.TransparentColor;
-            this.GradientBrushPoint2 = new PointF(_bitmap.Width / 2f, _bitmap.Height / 2f);
-            this.GradientBrushPoint1 = new PointF(-_bitmap.Width / 2f, -_bitmap.Height / 2f);
+            this.GradientBrushColor = PlotColor.Transparent;
+            this.GradientBrushPoint2 = new CanvasPoint(_bitmap.Width / 2f, _bitmap.Height / 2f);
+            this.GradientBrushPoint1 = new CanvasPoint(-_bitmap.Width / 2f, -_bitmap.Height / 2f);
 
             MinPenWidth = 1f;
             MaxPenWidth = float.MaxValue;
             PenCap = PenCap.Round;
 
             this.Globals = new Dictionary<string, object>();
+
+
         }
 
         internal Bitmap Bitmap => _bitmap;
 
         #region IPlotContext
 
-        public Graphics GraphicsContext { get; }
+        public IGraphicsContext GraphicsContext { get; }
 
-        public Color PenColor { private get; set; }
+        public PlotColor PenColor { private get; set; }
         public float PenWidth { private get; set; }
         public PenCap PenCap { private get; set; }
         public float MaxPenWidth { private get; set; }
         public float MinPenWidth { private get; set; }
 
 
-        public Color BrushColor { private get; set; }
+        public PlotColor BrushColor { private get; set; }
 
-        public Color GradientBrushColor { private get; set; }
-        public PointF GradientBrushPoint1 { private get; set; }
-        public PointF GradientBrushPoint2 { private get; set; }
+        public PlotColor GradientBrushColor { private get; set; }
+        public CanvasPoint GradientBrushPoint1 { private get; set; }
+        public CanvasPoint GradientBrushPoint2 { private get; set; }
 
         public IDictionary<string, object> Globals { get; }
 
@@ -70,7 +76,7 @@ namespace SketchPen.Plot
             }
 
             var penColor = parameters.Slice(0)?.ToColor() ?? this.PenColor;
-            var pen = new Pen(penColor, penWidth);
+            var pen = new Pen(penColor.ToColor(), penWidth);
 
             switch (this.PenCap)
             {
@@ -91,7 +97,7 @@ namespace SketchPen.Plot
                     break;
             }
 
-            return new PlotPen(this, pen, penColor.Equals(Plotter.TransparentColor));
+            return new PlotPen(this, pen, penColor.Equals(PlotContext.TransparentColor));
         }
 
         public IBrush CreateBrush(IEnumerable<object> parameters = null)
@@ -102,7 +108,7 @@ namespace SketchPen.Plot
             if (parameters.CountElements() == 1)
             {
                 brushColor = parameters.Slice(0).ToColor();
-                gradientBrushColor = Plotter.TransparentColor;
+                gradientBrushColor = PlotColor.Transparent;
             }
             else if (parameters.CountElements() == 2)
             {
@@ -111,34 +117,34 @@ namespace SketchPen.Plot
             }
 
             Brush brush = null;
-            if (!gradientBrushColor.Equals(Plotter.TransparentColor) &&
+            if (!gradientBrushColor.Equals(PlotContext.TransparentColor) &&
                this.GradientBrushPoint1 != null &&
                this.GradientBrushPoint2 != null)
             {
                 brush = new LinearGradientBrush(
-                    this.GradientBrushPoint1,
-                    this.GradientBrushPoint2,
-                    brushColor,
-                    gradientBrushColor);
+                    this.GradientBrushPoint1.ToPoint(),
+                    this.GradientBrushPoint2.ToPoint(),
+                    brushColor.ToColor(),
+                    gradientBrushColor.ToColor());
             }
             else
             {
-                brush = new SolidBrush(brushColor);
+                brush = new SolidBrush(brushColor.ToColor());
             }
 
-            return new PlotBrush(this, brush, brushColor.Equals(Plotter.TransparentColor));
+            return new PlotBrush(this, brush, brushColor.Equals(PlotContext.TransparentColor));
         }
 
-        public PointF Project(PointF point)
+        public CanvasPoint Project(CanvasPoint point)
         {
-            return new PointF(point.X * _projectingFactor, point.Y * _projectingFactor);
+            return new CanvasPoint(point.X * _projectingFactor, point.Y * _projectingFactor);
         }
 
-        public RectangleF Project(RectangleF rect)
+        public CanvasRectangle Project(CanvasRectangle rect)
         {
-            return new RectangleF(
-                rect.Left * _projectingFactor,
-                rect.Top * _projectingFactor,
+            return new CanvasRectangle(
+                rect.X * _projectingFactor,
+                rect.Y * _projectingFactor,
                 rect.Width * _projectingFactor,
                 rect.Height * _projectingFactor);
         }
@@ -150,8 +156,8 @@ namespace SketchPen.Plot
 
         public void ResetTransform()
         {
-            this.GraphicsContext.ResetTransform();
-            this.GraphicsContext.TranslateTransform(Project(50f), Project(50f));
+            ((GraphicsContext)this.GraphicsContext).Graphics.ResetTransform();
+            ((GraphicsContext)this.GraphicsContext).Graphics.TranslateTransform(Project(50f), Project(50f));
         }
 
         #endregion IPlotContext
@@ -162,6 +168,8 @@ namespace SketchPen.Plot
         {
             this.GraphicsContext.Dispose();
         }
+
+        public IPlotPath CreatePlotPath() => new PlotPath();
 
         #endregion
     }

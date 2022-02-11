@@ -1,13 +1,13 @@
 ﻿using SketchPen.Plot.Abstraction;
 using System.Drawing;
 
-namespace SketchPen.Plot
+namespace SketchPen.Plot.Drawing
 {
     internal class PlotPen : IPen
     {
-        private readonly PlotContext _context;
+        private readonly IPlotContext _context;
 
-        public PlotPen(PlotContext context, Pen pen, bool isPseudoTransparent)
+        public PlotPen(IPlotContext context, Pen pen, bool isPseudoTransparent)
         {
             _context = context;
             this.Pen = pen;

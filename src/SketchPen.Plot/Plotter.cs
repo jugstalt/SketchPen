@@ -17,9 +17,7 @@ namespace SketchPen.Plot
         #region Static Constructor & Fields
 
         static internal IEnumerable<Type> PlotCommandTypes = null;
-        static internal Color TransparentColor = Color.Transparent; // Color.FromArgb(1, 0, 0);
-        static internal System.Drawing.Drawing2D.SmoothingMode DefaultSmothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
+        
         private const int MinPlotSize = 10;
 
         static Plotter()
@@ -34,10 +32,12 @@ namespace SketchPen.Plot
 
         #endregion
 
+        private readonly Type _plotContextType;
         private readonly int _canvasWith, _canvasHeight;
 
-        public Plotter(int canvasWidth, int canvasHeight)
+        public Plotter(Type plotContextType, int canvasWidth, int canvasHeight)
         {
+            _plotContextType = plotContextType;
             _canvasWith = canvasWidth;
             _canvasHeight = canvasHeight;
         }
@@ -68,15 +68,8 @@ namespace SketchPen.Plot
                 bitmap.SetResolution(96f, 96f);
                 bitmap.MakeTransparent();
 
-                using (var plotContext = new PlotContext(bitmap))
+                using (var plotContext = (IPlotContext)Activator.CreateInstance(_plotContextType, new object[] { bitmap }))
                 {
-                    plotContext.GraphicsContext.SmoothingMode = Plotter.DefaultSmothingMode;
-                    plotContext.GraphicsContext.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-
-                    //plotContext.GraphicsContext.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
-                    plotContext.GraphicsContext.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-                    plotContext.GraphicsContext.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-
                     foreach (var command in commands)
                     {
                         command.Execute(plotContext);

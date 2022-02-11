@@ -1,21 +1,24 @@
 ﻿using SketchPen.Plot.Abstraction;
 using System.Drawing;
 
-namespace SketchPen.Plot
+namespace SketchPen.Plot.Drawing
 {
     internal class PlotBrush : IBrush
     {
-        private readonly PlotContext _context;
+        private readonly PlotContext _plotContext;
+        private readonly GraphicsContext _graphicsContext;
         private readonly bool _isPseudeoTransparent;
 
         public PlotBrush(PlotContext context, Brush brush, bool isPseudoTransparent)
         {
-            _context = context;
+            _plotContext = context;
+            _graphicsContext = (GraphicsContext)context.GraphicsContext;
+
             _isPseudeoTransparent = isPseudoTransparent;
 
             if (_isPseudeoTransparent)
             {
-                _context.GraphicsContext.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+                _graphicsContext.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
             }
 
             this.Brush = brush;
@@ -29,8 +32,8 @@ namespace SketchPen.Plot
 
             if (_isPseudeoTransparent)
             {
-                _context.Bitmap.MakeTransparent(Plotter.TransparentColor);
-                _context.GraphicsContext.SmoothingMode = Plotter.DefaultSmothingMode;
+                _plotContext.Bitmap.MakeTransparent(PlotContext.TransparentColor);
+                _graphicsContext.Graphics.SmoothingMode = PlotContext.DefaultSmothingMode;
             }
         }
     }

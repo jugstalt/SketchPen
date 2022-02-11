@@ -12,14 +12,14 @@ namespace SketchPen.Plot.Commands
     [PlotCommandKeyword("path")]
     class PathCommand : GeneralPlotCommand
     {
-        static private GraphicsPath _path = null;
+        static private IPlotPath _path = null;
 
         protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
         {
             if (_path == null && Method?.ToLower() != "begin")
             {
-                _path = new GraphicsPath();
-                _path.StartFigure();
+                _path = context.CreatePlotPath();
+                _path.Start();
             }
 
             switch (Method?.ToLower())
@@ -29,11 +29,11 @@ namespace SketchPen.Plot.Commands
                     {
                         _path.Dispose();
                     }
-                    _path = new GraphicsPath();
-                    _path.StartFigure();
+                    _path = context.CreatePlotPath();
+                    _path.Start();
                     break;
                 case "start":
-                    _path.StartFigure();
+                    _path.Start();
                     break;
                 case "addlines":
                     _path.AddLines(parameters.ToPoints().Select(p => context.Project(p)).ToArray());
@@ -45,12 +45,11 @@ namespace SketchPen.Plot.Commands
                                  parameters.Get<float>(1));
                     break;
                 case "addpoint":
-                    _path.AddLine(
-                        parameters.ToPoints().Select(p => context.Project(p)).First(),
+                    _path.AddPoint(
                         parameters.ToPoints().Select(p => context.Project(p)).First());
                     break;
                 case "close":
-                    _path.CloseFigure();
+                    _path.Close();
                     break;
                 case "draw":
                     using (var pen = context.CreatePen(parameters))
@@ -61,13 +60,13 @@ namespace SketchPen.Plot.Commands
                         //pen.CustomStartCap = cap;
                         //pen.CustomEndCap = cap;
 
-                        context.GraphicsContext.DrawPath(pen.Pen, _path);
+                        context.GraphicsContext.DrawPath(pen, _path);
                     }
                     break;
                 case "fill":
                     using (var brush = context.CreateBrush(parameters))
                     {
-                        context.GraphicsContext.FillPath(brush.Brush, _path);
+                        context.GraphicsContext.FillPath(brush, _path);
                     }
                     break;
                 default:

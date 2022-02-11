@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace SketchPen.Plot.Extensions
 {
-    internal static class ParameterExtensions
+    public static class ParameterExtensions
     {
         static public T[] ToTypedParameters<T>(this IEnumerable<object> parameters)
         {
@@ -88,59 +88,61 @@ namespace SketchPen.Plot.Extensions
             return (T)Convert.ChangeType(p, typeof(T));
         }
 
-        static public Color ToColor(this IEnumerable<object> parameters)
+        static public PlotColor ToColor(this IEnumerable<object> parameters)
         {
             if (parameters == null || parameters.Count() == 0)
             {
-                return Plotter.TransparentColor;
+                return PlotColor.Transparent;
             }
             if (parameters.Count() == 1)
             {
-                return ColorTranslator.FromHtml(parameters.Get<string>(0));
+                var col = ColorTranslator.FromHtml(parameters.Get<string>(0));
+                return PlotColor.FromArgb(col.R, col.G, col.B);
             }
             if (parameters.Count() == 2)
             {
-                return Color.FromArgb(parameters.Get<int>(1), ColorTranslator.FromHtml(parameters.Get<string>(0)));
+                var col = ColorTranslator.FromHtml(parameters.Get<string>(0));
+                return PlotColor.FromArgb(parameters.Get<int>(1), col.R, col.G, col.B);
             }
             if (parameters.Count() == 3)
             {
                 var rgb = parameters.ToTypedParameters<int>();
-                return Color.FromArgb(rgb[0], rgb[1], rgb[2]);
+                return PlotColor.FromArgb(rgb[0], rgb[1], rgb[2]);
             }
             if (parameters.Count() == 4)
             {
                 var rgb = parameters.ToTypedParameters<int>();
-                return Color.FromArgb(rgb[3], rgb[0], rgb[1], rgb[2]);
+                return PlotColor.FromArgb(rgb[3], rgb[0], rgb[1], rgb[2]);
             }
 
             throw new Exception("Can't determine color from parameters");
         }
 
-        static public RectangleF ToRectPos(this IEnumerable<object> parameters)
+        static public CanvasRectangle ToRectPos(this IEnumerable<object> parameters)
         {
             var coords = parameters.TakeFirstTypedParameterBlock<float>();
 
             if (coords.Length == 1)
             {
-                return new RectangleF(-coords[0] / 2f, -coords[0] / 2f, coords[0], coords[0]);
+                return new CanvasRectangle(-coords[0] / 2f, -coords[0] / 2f, coords[0], coords[0]);
             }
             if (coords.Length == 2)
             {
-                return new RectangleF(-coords[0] / 2f, -coords[0] / 2f, coords[0], coords[1]);
+                return new CanvasRectangle(-coords[0] / 2f, -coords[0] / 2f, coords[0], coords[1]);
             }
             if (coords.Length == 3)
             {
-                return new RectangleF(coords[1] - coords[0] / 2f, coords[2] - coords[0] / 2f, coords[0], coords[0]);
+                return new CanvasRectangle(coords[1] - coords[0] / 2f, coords[2] - coords[0] / 2f, coords[0], coords[0]);
             }
             if (coords.Length >= 4)
             {
-                return new RectangleF(coords[2] - coords[0] / 2f, coords[3] - coords[1] / 2f, coords[0], coords[1]);
+                return new CanvasRectangle(coords[2] - coords[0] / 2f, coords[3] - coords[1] / 2f, coords[0], coords[1]);
             }
 
             throw new Exception("Can't determine position from parameters");
         }
 
-        static public IEnumerable<PointF> ToPoints(this IEnumerable<object> parameters)
+        static public IEnumerable<CanvasPoint> ToPoints(this IEnumerable<object> parameters)
         {
             var coords = parameters.TakeFirstTypedParameterBlock<float>();
 
@@ -149,20 +151,17 @@ namespace SketchPen.Plot.Extensions
                 throw new Exception("Can't determine points from parameters. Number of parametes is not an even number.");
             }
 
-            List<PointF> points = new List<PointF>();
+            List<CanvasPoint> points = new List<CanvasPoint>();
 
             for (int i = 0; i < coords.Length; i += 2)
             {
-                points.Add(new PointF(coords[i], coords[i + 1]));
+                points.Add(new CanvasPoint(coords[i], coords[i + 1]));
             }
 
             return points;
         }
 
-        static public Rectangle ToRectangle(this RectangleF rectangleF)
-        {
-            return new Rectangle((int)rectangleF.X, (int)rectangleF.Y, (int)rectangleF.Width, (int)rectangleF.Height);
-        }
+        
 
         static public IEnumerable<object> Slice(this IEnumerable<object> parameters, int from, int count = 1)
         {

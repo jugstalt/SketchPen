@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SketchPen.Parse\SketchPen.Parse.csproj" />
+    <ProjectReference Include="..\SketchPen.Plot\SketchPen.Plot.csproj" />
   </ItemGroup>
 
 </Project>

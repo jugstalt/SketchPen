@@ -13,7 +13,7 @@ namespace SketchPen.Plot.Commands
     {
         protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
         {
-            RectangleF pos;
+            CanvasRectangle pos;
 
             switch (Method?.ToLower())
             {
@@ -32,19 +32,19 @@ namespace SketchPen.Plot.Commands
                 case "draw":
                     using (var pen = context.CreatePen(parameters.Skip(4)))
                     {
-                        context.GraphicsContext.DrawEllipse(pen.Pen, context.Project(pos));
+                        context.GraphicsContext.DrawEllipse(pen, context.Project(pos));
                     }
                     break;
                 case "fill":
                     using (var brush = context.CreateBrush(parameters.Skip(4)))
                     {
-                        context.GraphicsContext.FillEllipse(brush.Brush, context.Project(pos));
+                        context.GraphicsContext.FillEllipse(brush, context.Project(pos));
                     }
                     break;
                 case "arc":
                     using (var pen = context.CreatePen(parameters.Skip(6)))
                     {
-                        context.GraphicsContext.DrawArc(pen.Pen,
+                        context.GraphicsContext.DrawArc(pen,
                                                         context.Project(pos),
                                                         parameters.Get<float>(0),
                                                         parameters.Get<float>(1));
@@ -53,8 +53,8 @@ namespace SketchPen.Plot.Commands
                 case "pie":
                     using (var brush = context.CreateBrush(parameters.Skip(6)))
                     {
-                        context.GraphicsContext.FillPie(brush.Brush,
-                                                        context.Project(pos).ToRectangle(),
+                        context.GraphicsContext.FillPie(brush,
+                                                        context.Project(pos),
                                                         parameters.Get<float>(0),
                                                         parameters.Get<float>(1));
                     }

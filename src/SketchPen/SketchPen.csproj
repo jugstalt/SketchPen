@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SketchPen.Plot.Drawing\SketchPen.Plot.Drawing.csproj" />
     <ProjectReference Include="..\SketchPen.Plot\SketchPen.Plot.csproj" />
   </ItemGroup>
 

@@ -22,7 +22,6 @@ namespace SketchPen.Plot.Skia
             _startFigure = true;
         }
 
-
         #region IPlotPath
 
         public object EngineElement => _path;

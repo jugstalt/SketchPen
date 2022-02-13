@@ -1,4 +1,5 @@
 ﻿using SketchPen.Parse.Lexer;
+using SketchPen.Plot;
 using SketchPen.Plot.Abstraction;
 using SketchPen.Plot.Compile;
 using SketchPen.Plot.Extensions;
@@ -10,25 +11,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace SketchPen.Plot
+namespace SketchPen
 {
     public class Plotter
     {
         #region Static Constructor & Fields
-
-        static internal IEnumerable<Type> PlotCommandTypes = null;
         
         private const int MinPlotSize = 10;
 
-        static Plotter()
-        {
-            PlotCommandTypes = Assembly.GetAssembly(typeof(Plotter))
-                                       .GetTypes()
-                                       .Where(t =>
-                                                t.IsClass &&
-                                                t.GetCustomAttribute<PlotCommandKeywordAttribute>() != null &&
-                                                typeof(IPlotCommand).IsAssignableFrom(t));
-        }
 
         #endregion
 
@@ -44,24 +34,10 @@ namespace SketchPen.Plot
 
         public byte[] Plot(string fileName, string customGlobalsName = "")
         {
-            var code = File.ReadAllText(fileName).Trim();
+            var compiler = new Compiler();
+            var code = compiler.PreCompile(fileName, customGlobalsName);
 
-            #region Pre Compile
-
-            var preCompiler = new PreComplier(fileName, customGlobalsName, true);
-            code = preCompiler.Compile(fileName);
-
-            //Console.WriteLine();
-            //Console.WriteLine(code);
-
-            #endregion
-
-            var syntax = new SketchPenSyntax();
-            var lexicalAnalyser = new LexicalAnalyser(syntax);
-            var tokens = lexicalAnalyser.Tokenize(code);
-
-            var commands = tokens.GetStatements(syntax)
-                                 .GetPlotCommands();
+            var commands = compiler.Compile(code);
 
             using (var plotContext = (IPlotContext)Activator.CreateInstance(_plotContextType))
             {

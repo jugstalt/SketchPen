@@ -70,6 +70,39 @@ namespace SketchPen.Plot
                                       (byte)(argb));
         }
 
+        public static PlotColor FromHtml(string htmlColor)
+        {
+            PlotColor c = PlotColor.Empty;
+
+            // empty color
+            if ((htmlColor == null) || (htmlColor.Length == 0))
+                return c;
+
+            // #RRGGBB or #RGB
+            if ((htmlColor[0] == '#') &&
+                ((htmlColor.Length == 7) || (htmlColor.Length == 4)))
+            {
+                if (htmlColor.Length == 7)
+                {
+                    c = PlotColor.FromArgb(Convert.ToInt32(htmlColor.Substring(1, 2), 16),
+                                           Convert.ToInt32(htmlColor.Substring(3, 2), 16),
+                                           Convert.ToInt32(htmlColor.Substring(5, 2), 16));
+                }
+                else
+                {
+                    string r = char.ToString(htmlColor[1]);
+                    string g = char.ToString(htmlColor[2]);
+                    string b = char.ToString(htmlColor[3]);
+
+                    c = PlotColor.FromArgb(Convert.ToInt32(r + r, 16),
+                                       Convert.ToInt32(g + g, 16),
+                                       Convert.ToInt32(b + b, 16));
+                }
+            }
+
+            return c;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is PlotColor)

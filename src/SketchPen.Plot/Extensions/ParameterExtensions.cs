@@ -96,12 +96,11 @@ namespace SketchPen.Plot.Extensions
             }
             if (parameters.Count() == 1)
             {
-                var col = ColorTranslator.FromHtml(parameters.Get<string>(0));
-                return PlotColor.FromArgb(col.R, col.G, col.B);
+               return PlotColor.FromHtml(parameters.Get<string>(0));
             }
             if (parameters.Count() == 2)
             {
-                var col = ColorTranslator.FromHtml(parameters.Get<string>(0));
+                var col = PlotColor.FromHtml(parameters.Get<string>(0));
                 return PlotColor.FromArgb(parameters.Get<int>(1), col.R, col.G, col.B);
             }
             if (parameters.Count() == 3)

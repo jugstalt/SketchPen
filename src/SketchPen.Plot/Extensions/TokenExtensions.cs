@@ -2,6 +2,7 @@
 using SketchPen.Parse.Lexer.Abstrations;
 using SketchPen.Parse.Lexer.Exceptions;
 using SketchPen.Plot.Abstraction;
+using SketchPen.Plot.Compile;
 using SketchPen.Plot.Exceptions;
 using SketchPen.Plot.Platform;
 using SketchPen.Plot.Reflection;
@@ -234,7 +235,7 @@ namespace SketchPen.Plot.Extensions
             {
                 var keyword = statement.First().TokenValue; // must be keyword
 
-                var commandType = Plotter.PlotCommandTypes.Where(t => t.GetCustomAttribute<PlotCommandKeywordAttribute>().Keyword == keyword).FirstOrDefault();
+                var commandType = Compiler.PlotCommandTypes.Where(t => t.GetCustomAttribute<PlotCommandKeywordAttribute>().Keyword == keyword).FirstOrDefault();
                 if (commandType == null)
                 {
                     throw new Exception($"Unkown plotcommand { keyword }");

@@ -4,7 +4,6 @@ using SketchPen.Plot.Extensions;
 using SketchPen.Plot.Reflection;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
 using System.Linq;
 
 namespace SketchPen.Plot.Commands

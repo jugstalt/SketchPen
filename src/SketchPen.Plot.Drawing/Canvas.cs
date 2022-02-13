@@ -7,11 +7,11 @@ using System.Text;
 
 namespace SketchPen.Plot.Drawing
 {
-    internal class GraphicsContext : IGraphicsContext
+    internal class Canvas : ICanvas
     {
         private readonly Graphics _graphics;
 
-        public GraphicsContext(Bitmap bitmap)
+        public Canvas(Bitmap bitmap)
         {
             _graphics = Graphics.FromImage(bitmap);
 
@@ -29,7 +29,7 @@ namespace SketchPen.Plot.Drawing
 
         public void DrawLine(IPen pen, CanvasPoint p1, CanvasPoint p2)
         {
-            _graphics.DrawLine(((PlotPen)pen).Pen,
+            _graphics.DrawLine((Pen)pen.EngineElement,
                 new PointF(p1.X, p1.Y),
                 new PointF(p2.X, p2.Y));
         }
@@ -58,32 +58,32 @@ namespace SketchPen.Plot.Drawing
 
         public void DrawEllipse(IPen pen, CanvasRectangle rect)
         {
-            _graphics.DrawEllipse(((PlotPen)pen).Pen, rect.ToRectangleF());
+            _graphics.DrawEllipse((Pen)pen.EngineElement, rect.ToRectangleF());
         }
 
         public void FillEllipse(IBrush brush, CanvasRectangle rect)
         {
-            _graphics.FillEllipse(((PlotBrush)brush).Brush, rect.ToRectangleF());
+            _graphics.FillEllipse((Brush)brush.EngineElement, rect.ToRectangleF());
         }
 
         public void DrawArc(IPen pen, CanvasRectangle rect, float startAngle, float sweepAngle)
         {
-            _graphics.DrawArc(((PlotPen)pen).Pen, rect.ToRectangleF(), startAngle, sweepAngle);
+            _graphics.DrawArc((Pen)pen.EngineElement, rect.ToRectangleF(), startAngle, sweepAngle);
         }
 
         public void FillPie(IBrush brush, CanvasRectangle rect, float startAngle, float sweepAngle)
         {
-            _graphics.FillPie(((PlotBrush)brush).Brush, rect.ToRectangle(), startAngle, startAngle);
+            _graphics.FillPie((Brush)brush.EngineElement, rect.ToRectangle(), startAngle, startAngle);
         }
 
         public void DrawPath(IPen pen, IPlotPath path)
         {
-            _graphics.DrawPath(((PlotPen)pen).Pen, ((PlotPath)path).Path);
+            _graphics.DrawPath((Pen)pen.EngineElement, (System.Drawing.Drawing2D.GraphicsPath)path.EngineElement);
         }
 
         public void FillPath(IBrush brush, IPlotPath path)
         {
-            _graphics.FillPath(((PlotBrush)brush).Brush, ((PlotPath)path).Path);
+            _graphics.FillPath((Brush)brush.EngineElement, (System.Drawing.Drawing2D.GraphicsPath)path.EngineElement);
         }
     }
 }

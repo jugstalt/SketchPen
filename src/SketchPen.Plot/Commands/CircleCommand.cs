@@ -26,37 +26,36 @@ namespace SketchPen.Plot.Commands
                     break;
             }
 
-
             switch (Method?.ToLower())
             {
                 case "draw":
                     using (var pen = context.CreatePen(parameters.Skip(4)))
                     {
-                        context.GraphicsContext.DrawEllipse(pen, context.Project(pos));
+                        context.Canvas.DrawEllipse(pen, context.Project(pos));
                     }
                     break;
                 case "fill":
                     using (var brush = context.CreateBrush(parameters.Skip(4)))
                     {
-                        context.GraphicsContext.FillEllipse(brush, context.Project(pos));
+                        context.Canvas.FillEllipse(brush, context.Project(pos));
                     }
                     break;
                 case "arc":
                     using (var pen = context.CreatePen(parameters.Skip(6)))
                     {
-                        context.GraphicsContext.DrawArc(pen,
-                                                        context.Project(pos),
-                                                        parameters.Get<float>(0),
-                                                        parameters.Get<float>(1));
+                        context.Canvas.DrawArc(pen,
+                                               context.Project(pos),
+                                               parameters.Get<float>(0),
+                                               parameters.Get<float>(1));
                     }
                     break;
                 case "pie":
                     using (var brush = context.CreateBrush(parameters.Skip(6)))
                     {
-                        context.GraphicsContext.FillPie(brush,
-                                                        context.Project(pos),
-                                                        parameters.Get<float>(0),
-                                                        parameters.Get<float>(1));
+                        context.Canvas.FillPie(brush,
+                                               context.Project(pos),
+                                               parameters.Get<float>(0),
+                                               parameters.Get<float>(1));
                     }
                     break;
                 default:

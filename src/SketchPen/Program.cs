@@ -77,7 +77,7 @@ namespace SketchPen
                             string targetFile = $"{ fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf(".")) }_{ size }@{ ratio }.png";
                             Console.Write(targetFile);
 
-                            var plotter = new Plotter(typeof(SketchPen.Plot.Drawing.PlotContext),  size * ratio, size * ratio);
+                            var plotter = new Plotter(typeof(SketchPen.Plot.Skia.PlotContext),  size * ratio, size * ratio);
                             var imageData = plotter.Plot(fileName, customGlobalsName);
 
                             var targetFileInfo = new FileInfo($"{ outFolder }{ targetFile }");

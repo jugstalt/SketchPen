@@ -15,7 +15,7 @@ namespace SketchPen.Plot.Drawing
             _path = new GraphicsPath();
         }
 
-        internal GraphicsPath Path => _path;
+        public object EngineElement => _path;
 
         public void Start()
         {

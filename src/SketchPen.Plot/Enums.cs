@@ -6,4 +6,10 @@
         Square,
         Flat
     }
+
+    public enum EncodeFormat
+    {
+        Png,
+        Jpeg
+    }
 }

@@ -6,7 +6,10 @@ namespace SketchPen.Plot.Abstraction
 {
     public interface IPlotContext : IDisposable
     {
-        IGraphicsContext GraphicsContext { get; }
+        void Init(int width, int height);
+        void Init(int width, int height, object canvasObject);
+
+        ICanvas Canvas { get; }
 
         PlotColor PenColor { set; }
         float PenWidth { set; }
@@ -34,5 +37,7 @@ namespace SketchPen.Plot.Abstraction
         float Project(float number);
 
         void ResetTransform();
+
+        byte[] Encode(EncodeFormat format);
     }
 }

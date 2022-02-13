@@ -15,15 +15,15 @@ namespace SketchPen.Plot.Commands
             switch (Method?.ToLower())
             {
                 case "translate":
-                    context.GraphicsContext.TranslateTransform(
+                    context.Canvas.TranslateTransform(
                         context.Project(parameters.Get<float>(0)),
                         context.Project(parameters.Get<float>(1)));
                     break;
                 case "rotate":
-                    context.GraphicsContext.RotateTransform(parameters.Get<float>(0));
+                    context.Canvas.RotateTransform(parameters.Get<float>(0));
                     break;
                 case "scale":
-                    context.GraphicsContext.ScaleTransform(
+                    context.Canvas.ScaleTransform(
                         parameters.Get<float>(0),
                         parameters.Get<float>(parameters.Count() > 1 ? 1 : 0));
                     break;

@@ -5,6 +5,6 @@ namespace SketchPen.Plot.Abstraction
 {
     public interface IBrush : IDisposable
     {
-        Brush Brush { get; }
+        object EngineElement { get;  }
     }
 }

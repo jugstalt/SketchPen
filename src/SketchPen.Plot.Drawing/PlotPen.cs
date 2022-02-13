@@ -10,14 +10,17 @@ namespace SketchPen.Plot.Drawing
         public PlotPen(IPlotContext context, Pen pen, bool isPseudoTransparent)
         {
             _context = context;
-            this.Pen = pen;
+            this.EngineElement = pen;
         }
 
-        public Pen Pen { get; }
+        public object EngineElement { get; }
 
         public void Dispose()
         {
-            this.Pen.Dispose();
+            if (EngineElement is Pen)
+            {
+                ((Pen)this.EngineElement).Dispose();
+            }
         }
     }
 }

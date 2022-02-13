@@ -60,13 +60,13 @@ namespace SketchPen.Plot.Commands
                         //pen.CustomStartCap = cap;
                         //pen.CustomEndCap = cap;
 
-                        context.GraphicsContext.DrawPath(pen, _path);
+                        context.Canvas.DrawPath(pen, _path);
                     }
                     break;
                 case "fill":
                     using (var brush = context.CreateBrush(parameters))
                     {
-                        context.GraphicsContext.FillPath(brush, _path);
+                        context.Canvas.FillPath(brush, _path);
                     }
                     break;
                 default:

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SketchPen.Plot.Abstraction
 {
-    public interface IGraphicsContext : IDisposable
+    public interface ICanvas : IDisposable
     {
         void TranslateTransform(float dx, float dy);
         void RotateTransform(float angle);

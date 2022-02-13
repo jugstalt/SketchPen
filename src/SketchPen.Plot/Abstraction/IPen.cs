@@ -5,6 +5,6 @@ namespace SketchPen.Plot.Abstraction
 {
     public interface IPen : IDisposable
     {
-        Pen Pen { get; }
+        object EngineElement { get; }
     }
 }

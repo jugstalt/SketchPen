@@ -6,6 +6,8 @@ namespace SketchPen.Plot.Abstraction
 {
     public interface IPlotPath : IDisposable
     {
+        object EngineElement { get; }
+
         void Start();
         void Close();
 

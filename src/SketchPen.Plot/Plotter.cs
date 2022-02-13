@@ -63,39 +63,35 @@ namespace SketchPen.Plot
             var commands = tokens.GetStatements(syntax)
                                  .GetPlotCommands();
 
-            using (var bitmap = new Bitmap(Math.Max(_canvasWith, MinPlotSize), Math.Max(_canvasHeight, MinPlotSize)))
+            using (var plotContext = (IPlotContext)Activator.CreateInstance(_plotContextType))
             {
-                bitmap.SetResolution(96f, 96f);
-                bitmap.MakeTransparent();
+                plotContext.Init(Math.Max(_canvasWith, MinPlotSize), Math.Max(_canvasHeight, MinPlotSize));
 
-                using (var plotContext = (IPlotContext)Activator.CreateInstance(_plotContextType, new object[] { bitmap }))
+                foreach (var command in commands)
                 {
-                    foreach (var command in commands)
-                    {
-                        command.Execute(plotContext);
-                    }
+                    command.Execute(plotContext);
                 }
 
-                var ms = new MemoryStream();
-                if (_canvasWith < MinPlotSize)
-                {
-                    using (var bm = new Bitmap(_canvasWith, _canvasHeight))
-                    using (var gr = Graphics.FromImage(bm))
-                    {
-                        bm.SetResolution(96f, 96f);
-                        gr.DrawImage(bitmap, new Rectangle(0, 0, _canvasWith, _canvasHeight),
-                                             new Rectangle(0, 0, bitmap.Width, bitmap.Height),
-                                             GraphicsUnit.Pixel);
+                //var ms = new MemoryStream();
+                //if (_canvasWith < MinPlotSize)
+                //{
+                //    using (var bm = new Bitmap(_canvasWith, _canvasHeight))
+                //    using (var gr = Graphics.FromImage(bm))
+                //    {
+                //        bm.SetResolution(96f, 96f);
+                //        gr.DrawImage(bitmap, new Rectangle(0, 0, _canvasWith, _canvasHeight),
+                //                             new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                //                             GraphicsUnit.Pixel);
 
-                        bm.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                    }
-                }
-                else
-                {
-                    bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                }
+                //        bm.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                //    }
+                //}
+                //else
+                //{
+                //    bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                //}
 
-                return ms.ToArray();
+                return plotContext.Encode(EncodeFormat.Png);
             }
         }
     }

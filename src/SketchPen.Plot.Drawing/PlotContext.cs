@@ -4,44 +4,70 @@ using SketchPen.Plot.Extensions;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 
 namespace SketchPen.Plot.Drawing
 {
     public class PlotContext : IPlotContext
     {
-        static internal Color TransparentColor = Color.Transparent; // Color.FromArgb(1, 0, 0);
         static internal System.Drawing.Drawing2D.SmoothingMode DefaultSmothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-        private readonly Bitmap _bitmap;
-        private readonly float _projectingFactor = 1f;
+        private bool _disposeBitmap = false;
+        private Bitmap _bitmap;
+        private float _projectingFactor = 1f;
+        private int _width, _height;
 
-        public PlotContext(Bitmap bitmap)
+        public PlotContext()
         {
-            _bitmap = bitmap;
-            _projectingFactor = _bitmap.Width / 100f;
+            this.Globals = new Dictionary<string, object>();
+        }
 
-            this.GraphicsContext = new GraphicsContext(_bitmap);
-            this.ResetTransform();
-
+        private void Init()
+        {
             this.GradientBrushColor = PlotColor.Transparent;
-            this.GradientBrushPoint2 = new CanvasPoint(_bitmap.Width / 2f, _bitmap.Height / 2f);
-            this.GradientBrushPoint1 = new CanvasPoint(-_bitmap.Width / 2f, -_bitmap.Height / 2f);
+            this.GradientBrushPoint2 = new CanvasPoint(_width / 2f, _height / 2f);
+            this.GradientBrushPoint1 = new CanvasPoint(-_width / 2f, -_height / 2f);
 
             MinPenWidth = 1f;
             MaxPenWidth = float.MaxValue;
             PenCap = PenCap.Round;
-
-            this.Globals = new Dictionary<string, object>();
-
-
         }
 
         internal Bitmap Bitmap => _bitmap;
 
         #region IPlotContext
 
-        public IGraphicsContext GraphicsContext { get; }
+        public void Init(int width, int height)
+        {
+            _disposeBitmap = true;
+            _bitmap = new Bitmap(_width = width, _height = height);
+            _bitmap.SetResolution(96f, 96f);
+            _bitmap.MakeTransparent();
+
+            _projectingFactor = _bitmap.Width / 100f;
+            this.Canvas = new Canvas(_bitmap);
+            this.ResetTransform();
+
+            Init();
+        }
+
+        public void Init(int width, int height, object canvasObject)
+        {
+            if (canvasObject is Bitmap)
+            {
+                _width= width;
+                _height = height;
+
+                _bitmap = (Bitmap)canvasObject;
+                _projectingFactor = _width / 100f;
+                this.Canvas = new Canvas(_bitmap);
+               
+                Init();
+            }
+        }
+
+        public ICanvas Canvas { get; private set; }
 
         public PlotColor PenColor { private get; set; }
         public float PenWidth { private get; set; }
@@ -97,7 +123,7 @@ namespace SketchPen.Plot.Drawing
                     break;
             }
 
-            return new PlotPen(this, pen, penColor.Equals(PlotContext.TransparentColor));
+            return new PlotPen(this, pen, penColor.Equals(PlotColor.Transparent));
         }
 
         public IBrush CreateBrush(IEnumerable<object> parameters = null)
@@ -117,7 +143,7 @@ namespace SketchPen.Plot.Drawing
             }
 
             Brush brush = null;
-            if (!gradientBrushColor.Equals(PlotContext.TransparentColor) &&
+            if (!gradientBrushColor.Equals(PlotColor.Transparent) &&
                this.GradientBrushPoint1 != null &&
                this.GradientBrushPoint2 != null)
             {
@@ -132,7 +158,7 @@ namespace SketchPen.Plot.Drawing
                 brush = new SolidBrush(brushColor.ToColor());
             }
 
-            return new PlotBrush(this, brush, brushColor.Equals(PlotContext.TransparentColor));
+            return new PlotBrush(this, brush, brushColor.Equals(PlotColor.Transparent));
         }
 
         public CanvasPoint Project(CanvasPoint point)
@@ -156,8 +182,31 @@ namespace SketchPen.Plot.Drawing
 
         public void ResetTransform()
         {
-            ((GraphicsContext)this.GraphicsContext).Graphics.ResetTransform();
-            ((GraphicsContext)this.GraphicsContext).Graphics.TranslateTransform(Project(50f), Project(50f));
+            ((Canvas)this.Canvas).Graphics.ResetTransform();
+            ((Canvas)this.Canvas).Graphics.TranslateTransform(Project(50f), Project(50f));
+        }
+        public IPlotPath CreatePlotPath() => new PlotPath();
+
+        public byte[] Encode(EncodeFormat format)
+        {
+            if (_bitmap != null)
+            {
+                var imgFormat = System.Drawing.Imaging.ImageFormat.Png;
+
+                switch (format)
+                {
+                    case EncodeFormat.Jpeg:
+                        imgFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
+                        break;
+                }
+
+                var ms = new MemoryStream();
+                _bitmap.Save(ms, imgFormat);
+
+                return ms.ToArray();
+            }
+
+            return null;
         }
 
         #endregion IPlotContext
@@ -166,10 +215,18 @@ namespace SketchPen.Plot.Drawing
 
         public void Dispose()
         {
-            this.GraphicsContext.Dispose();
-        }
+            if (this.Canvas != null)
+            {
+                this.Canvas.Dispose();
+                this.Canvas = null;
+            }
 
-        public IPlotPath CreatePlotPath() => new PlotPath();
+            if (_disposeBitmap == true && _bitmap != null)
+            {
+                _bitmap.Dispose();
+                _bitmap = null;
+            }
+        }
 
         #endregion
     }

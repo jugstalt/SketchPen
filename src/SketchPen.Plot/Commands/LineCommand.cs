@@ -20,7 +20,7 @@ namespace SketchPen.Plot.Commands
                     {
                         using (var pen = context.CreatePen(parameters.Skip(4)))
                         {
-                            context.GraphicsContext.DrawLine(pen,
+                            context.Canvas.DrawLine(pen,
                                 context.Project(points[0]),
                                 context.Project(points[1]));
                         }

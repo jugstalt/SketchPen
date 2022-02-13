@@ -9,4 +9,8 @@
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.80.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SketchPen.Plot\SketchPen.Plot.csproj" />
+  </ItemGroup>
+
 </Project>

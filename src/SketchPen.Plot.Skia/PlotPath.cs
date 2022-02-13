@@ -52,7 +52,7 @@ namespace SketchPen.Plot.Skia
 
             if (sweepAngle >= 360.0)
             {
-                this.Close(); // to have the same behavoir than with System.Drawing
+                this.Close(); // to have the same behavoir as with System.Drawing
             }
         }
 

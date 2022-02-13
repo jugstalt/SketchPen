@@ -70,15 +70,17 @@ namespace SketchPen
                     var fileInfo = new FileInfo(fileName);
                     Console.WriteLine($"Plot { fileInfo.Name }...");
 
+                    var plotter = new Plotter(typeof(SketchPen.Plot.Skia.PlotContext));
+                    plotter.Init(fileName, customGlobalsName);     
+
                     foreach (var size in sizes)
                     {
                         for (int ratio = 1; ratio <= 3; ratio++)
                         {
                             string targetFile = $"{ fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf(".")) }_{ size }@{ ratio }.png";
-                            Console.Write(targetFile);
+                            Console.Write($"...{ size }@{ ratio }");
 
-                            var plotter = new Plotter(typeof(SketchPen.Plot.Skia.PlotContext),  size * ratio, size * ratio);
-                            var imageData = plotter.Plot(fileName, customGlobalsName);
+                            var imageData = plotter.Plot(size * ratio, size * ratio);
 
                             var targetFileInfo = new FileInfo($"{ outFolder }{ targetFile }");
                             if (!targetFileInfo.Directory.Exists)
@@ -87,10 +89,10 @@ namespace SketchPen
                             }
 
                             File.WriteAllBytes(targetFileInfo.FullName, imageData);
-
-                            Console.WriteLine("...done");
                         }
                     }
+
+                    Console.WriteLine("...done");
                 }
 
                 return 0;

@@ -23,27 +23,30 @@ namespace SketchPen
         #endregion
 
         private readonly Type _plotContextType;
-        private readonly int _canvasWith, _canvasHeight;
+        private IEnumerable<IPlotCommand> _commands;
 
-        public Plotter(Type plotContextType, int canvasWidth, int canvasHeight)
+        public Plotter(Type plotContextType)
         {
             _plotContextType = plotContextType;
-            _canvasWith = canvasWidth;
-            _canvasHeight = canvasHeight;
         }
 
-        public byte[] Plot(string fileName, string customGlobalsName = "")
+        public void Init(string fileName, string customGlobalsName = "")
         {
             var compiler = new Compiler();
             var code = compiler.PreCompile(fileName, customGlobalsName);
 
-            var commands = compiler.Compile(code);
+            _commands = compiler.Compile(code);
+        }
+
+        public byte[] Plot(int canvasWidth, int canvasHeight)
+        {
+            
 
             using (var plotContext = (IPlotContext)Activator.CreateInstance(_plotContextType))
             {
-                plotContext.Init(Math.Max(_canvasWith, MinPlotSize), Math.Max(_canvasHeight, MinPlotSize));
+                plotContext.Init(Math.Max(canvasWidth, MinPlotSize), Math.Max(canvasHeight, MinPlotSize));
 
-                foreach (var command in commands)
+                foreach (var command in _commands)
                 {
                     command.Execute(plotContext);
                 }

@@ -1,0 +1,15 @@
+path.begin();
+path.addlines(0,-35, 45,35, -45,35);
+path.close();
+
+path.fill(@@fillcolor);
+path.draw();
+
+path.begin();
+path.addlines(0,10, -5,-10);
+path.addarc(180,180, 10,10, 0,-10);
+path.close();
+
+path.draw();
+
+circle.draw(7,7, 0,22);

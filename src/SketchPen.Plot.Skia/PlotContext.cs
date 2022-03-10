@@ -109,6 +109,7 @@ namespace SketchPen.Plot.Skia
             {
                 sKPaint = new SKPaint()
                 {
+                    IsAntialias = true,
                     Shader = SKShader.CreateLinearGradient(
                         GradientBrushPoint1.ToSKPoint(),
                         GradientBrushPoint2.ToSKPoint(),
@@ -122,7 +123,8 @@ namespace SketchPen.Plot.Skia
                 sKPaint = new SKPaint()
                 {
                     ColorF = brushColor.ToSKColor(),
-                    Style = SKPaintStyle.Fill
+                    Style = SKPaintStyle.Fill,
+                    IsAntialias = true
                 };
             }
 

@@ -1,6 +1,10 @@
-pen.width(12);
+//pen.width(12);
 pen.cap("flat")
-line.draw(25,-42, 25,0);
+//line.draw(25,-42, 25,0);
+path.begin();
+path.addlines(20,-29, 20,-42, 28,-42, 28,-22);
+path.draw();
+
 
 pen.width(@@penWidth);
 pen.cap(@@penCap);

@@ -1,0 +1,39 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_empty.cshtml";
+    ViewBag.Title = "SketchPen.Code";
+}
+
+<link rel="stylesheet" href="~/css/sketchpen-code.css" asp-append-version="true" />
+
+<div class="sketch-code-body">
+    <div class="sketchpen-code-ide">
+
+    @{
+          Html.RenderPartial("_Toolbar");     
+          Html.RenderPartial("_Sidebar");   
+          Html.RenderPartial("_Content");   
+    }
+
+    </div>
+    <div class="sketchpen-code-help">
+        <iframe id='help-frame' src='' allow='clipboard-read; clipboard-write'>
+
+        </iframe>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/js/sketchpen-code.js"></script>
+    <script src="~/js/sketchpen-code.events.js"></script>
+    <script src="~/js/sketchpen-code.ui.tree.js"></script>
+    <script src="~/js/sketchpen-code.ui.editor.js"></script>
+    <script src="~/js/sketchpen-code.ui.modal.js"></script>
+    <script src="~/js/sketchpen-code.ui.toolbar.js"></script>
+    <script src="~/js/sketchpen-code.ui.blockframe.js"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            sketchPenCode.start();
+        });
+    </script>
+}

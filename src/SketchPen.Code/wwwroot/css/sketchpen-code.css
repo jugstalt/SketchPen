@@ -1,0 +1,1439 @@
+html {
+    font-size: 14px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.sketchpen-code-body {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+}
+
+    .sketchpen-code-body .sketchpen-code-ide {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        bottom: 0px;
+        right: 0px;
+    }
+
+    .sketchpen-code-body .sketchpen-code-help {
+        position: absolute;
+        top: 0px;
+        width: 0px;
+        bottom: 0px;
+        right: 0px;
+    }
+
+        .sketchpen-code-body .sketchpen-code-help > #help-frame {
+            position: absolute;
+            top: 0px;
+            width: 0px;
+            bottom: 0px;
+            right: 0px;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+    .sketchpen-code-body.showhelp .sketchpen-code-ide {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        bottom: 0px;
+        right: 600px;
+    }
+
+    .sketchpen-code-body.showhelp .sketchpen-code-help {
+        position: absolute;
+        top: 0px;
+        width: 600px;
+        bottom: 0px;
+        right: 0px;
+    }
+
+
+    .sketchpen-code-ide .sketchpen-code-toolbar {
+        position: absolute;
+        top: 0px;
+        left: 300px;
+        height: 60px;
+        right: 0px;
+    }
+
+    .sketchpen-code-ide .sketchpen-code-sidebar {
+        position: absolute;
+        top:0px;
+        bottom: 0px;
+        left: 0px;
+        width: 300px;
+    }
+
+    .sketchpen-code-ide .sketchpen-code-content {
+        position: absolute;
+        top: 60px;
+        bottom: 0px;
+        left: 300px;
+        right:0px;
+    }
+
+        .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs {
+            position: absolute;
+            top: 0px;
+            height: 40px;
+            left: 0px;
+            right: 0px;
+            background-color:#333;
+            white-space:nowrap;
+            box-sizing: border-box;
+            border-bottom:2px solid #000;
+        }
+
+            .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab-selector {
+                position: absolute;
+                top: 0px;
+                height: 40px;
+                width: 30px;
+                right: 0px;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: 26px 26px;
+                background-image: url(img/triangle-down_26@1.png);
+                cursor: pointer;
+            }
+
+            .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab {
+                position: relative;
+                display: inline-block;
+                background-color: #333;
+                background-repeat:no-repeat;
+                background-position:4px center;
+                color: #ccc;
+                font-size: 1em;
+                cursor: pointer;
+                padding: 9px 32px 9px 24px;
+                border-right: 1px solid #000;
+                box-sizing: border-box;
+                height: 38px;
+            }
+
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.start {
+                    background-image: url(img/home_16@1.png);
+                    background-size: 16px 16px;
+                }
+
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.endpoint {
+                    background-image: url(img/endpoint_16@1.png);
+                    background-size: 16px 16px;
+                }
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.query {
+                    background-image: url(img/query_16@1.png);
+                    background-size: 16px 16px;
+                }
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.view {
+                    background-image: url(img/code-markup_16@1.png);
+                    background-size: 16px 16px;
+                }
+
+/****** Buttons *********/
+.sketchpen-code-button {
+    background-color: #5badff;
+    color: #fff;
+    min-width: 100px;
+    border: 2px solid #fff;
+    border-radius: 6px;
+    padding: 10px;
+    margin-left: 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+    .sketchpen-code-button.cancel {
+        background-color: transparent;
+    }
+
+.sketchpen-code-open-tabs {
+    list-style: none;
+    padding: 0px;
+}
+
+    .sketchpen-code-open-tabs .sketchpen-code-tab {
+        height: 45px;
+        cursor: pointer;
+        color: #eee;
+        border-bottom: 1px solid #777;
+        background-position: 4px center;
+        background-repeat: no-repeat;
+        background-size: 16px 16px;
+        padding: 4px 36px 4px 30px;
+        box-sizing: border-box;
+        position: relative;
+    }
+
+        .sketchpen-code-open-tabs .sketchpen-code-tab:hover {
+            background-color:#777;
+        }
+
+        .sketchpen-code-open-tabs .sketchpen-code-tab.start {
+            background-image: url(img/home_16@1.png);
+        }
+
+        .sketchpen-code-open-tabs .sketchpen-code-tab.endpoint {
+            background-image: url(img/endpoint_16@1.png);
+        }
+
+        .sketchpen-code-open-tabs .sketchpen-code-tab.query {
+            background-image: url(img/query_16@1.png);
+        }
+
+        .sketchpen-code-open-tabs .sketchpen-code-tab.view {
+            background-image: url(img/code-markup_16@1.png);
+        }
+
+        .sketchpen-code-open-tabs .sketchpen-code-tab .text {
+            font-size: 12.5px;
+        }
+        .sketchpen-code-open-tabs .sketchpen-code-tab .subtext {
+            font-size: 10.5px;
+            color: #ccc;
+        }
+
+        .sketchpen-code-open-tabs .sketchpen-code-tab .checkbox {
+            position: absolute;
+            right: 4px;
+            top: 4px;
+            width: 26px;
+            height: 32px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 16px 16px;
+            background-image: url(img/checkbox-unchecked_16@1.png);
+        }
+
+            .sketchpen-code-open-tabs .sketchpen-code-tab .checkbox.checked {
+                background-image: url(img/checkbox-checked_16@1.png);
+            }
+            .sketchpen-code-open-tabs .sketchpen-code-tab.dirty .checkbox {
+                background-image: url(img/dot-red_16@1.png);
+            }
+            .sketchpen-code-open-tabs .sketchpen-code-tab.errors .checkbox {
+                background-image: url(img/warning_red_16@1.png);
+            }
+
+
+        .sketchpen-code-open-tabs .sketchpen-code-tab .sketchpen-code-button {
+            padding: 4px 10px;
+            margin-top: 4px;
+        }
+
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.start {
+        background-image: url(img/home_16@2.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.endpoint {
+        background-image: url(img/endpoint_16@2.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.query {
+        background-image: url(img/query_16@2.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.view {
+        background-image: url(img/code-markup_16@2.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab-selector {
+        background-image: url(img/triangle-down_26@2.png);
+    }
+
+    .sketchpen-code-open-tabs .sketchpen-code-tab.start {
+        background-image: url(img/home_16@2.png);
+    }
+
+    .sketchpen-code-open-tabs .sketchpen-code-tab.endpoint {
+        background-image: url(img/endpoint_16@2.png);
+    }
+
+    .sketchpen-code-open-tabs .sketchpen-code-tab.query {
+        background-image: url(img/query_16@2.png);
+    }
+
+    .sketchpen-code-open-tabs .sketchpen-code-tab.view {
+        background-image: url(img/code-markup_16@2.png);
+    }
+
+    .sketchpen-code-open-tabs .sketchpen-code-tab .checkbox {
+        background-image: url(img/checkbox-unchecked_16@2.png);
+    }
+
+        .sketchpen-code-open-tabs .sketchpen-code-tab .checkbox.checked {
+            background-image: url(img/checkbox-checked_16@2.png);
+        }
+
+        .sketchpen-code-open-tabs .sketchpen-code-tab.dirty .checkbox {
+            background-image: url(img/dot-red_16@2.png);
+        }
+
+        .sketchpen-code-open-tabs .sketchpen-code-tab.errors .checkbox {
+            background-image: url(img/warning_red_16@2.png);
+        }
+}
+
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab .close-button {
+                    position: absolute;
+                    right: 4px;
+                    top: 8px;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 4px;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }
+
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.selected {
+                    background-color: #000;
+                    color: #fff;
+                }
+
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.selected .close-button {
+                    background-image: url(img/close_16@1.png);
+                    background-size:16px 16px;
+                }
+
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab:hover .close-button {
+                    background-image: url(img/close_16@1.png);
+                    background-size: 16px 16px;
+                }
+
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.dirty .close-button {
+                    background-image: url(img/dot-red_16@1.png);
+                    background-size: 16px 16px;
+                }
+
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.errors .close-button {
+                    background-image: url(img/warning_red_16@1.png);
+                    background-size: 16px 16px;
+                }
+
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.loading .close-button {
+                    background-image: url(img/loader/spinning-line-black-16@1.gif);
+                    background-size: 16px 16px;
+                    filter:invert(1);
+                }
+
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab .close-button:hover {
+                    background-color: #555;
+                    background-image: url(img/close_16@1.png);
+                    background-size: 16px 16px;
+                }
+
+
+
+
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.dirty .close-button {
+        background-image: url(img/dot-red_16@2.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.errors .close-button {
+        background-image: url(img/warning_red_16@2.png);
+        background-size: 16px 16px;
+    }
+
+    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab .close-button:hover {
+        background-image: url(img/close_16@1.png);
+    }
+}
+
+        .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-editor {
+            position: absolute;
+            top: 40px;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            background-color: #777;
+        }
+
+            .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-editor .sketchpen-code-editor-frame {
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+                display: none;
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-editor .sketchpen-code-editor-frame.selected {
+                    display: block;
+                }
+
+    .sketchpen-code-ide .sketchpen-code-bar {
+        background-color: #222;
+    }
+
+    .sketchpen-code-ide .sketchpen-code-panel {
+        background-color: #555;
+        color:#ccc;
+    }
+
+
+.sketchpen-code-ide .sketchpen-code-sidebar .sketchpen-code-tree-top {
+    height: 100px;
+    background-color: #222;
+}
+
+    .sketchpen-code-ide .sketchpen-code-sidebar .sketchpen-code-tree-top .sketchpen-code-tee-title {
+        height: 60px;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        right: 60px;
+        font-size: 24px;
+        padding: 16px;
+        z-index: 1;
+        color: #5badff;
+        box-sizing: border-box;
+    }
+
+    .sketchpen-code-ide .sketchpen-code-sidebar .sketchpen-code-tree-top .sketchpen-code-tree-collapse-button {
+        width: 60px;
+        height: 60px;
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        background-color: #555;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-image: url(img/triangle-left-up_32@1.png);
+        cursor: pointer;
+        z-index:2
+    }
+    .sketchpen-code-ide .sketchpen-code-sidebar .sketchpen-code-tree-top .sketchpen-code-tree-toolbar {
+        width: 100%;
+        height: 40px;
+        position: absolute;
+        left: 0px;
+        top: 60px;
+        background-color: #555;
+        padding: 10px 10px 10px 5px;
+        box-sizing: border-box;
+    }
+
+.sketchpen-code-ide .sketchpen-code-sidebar .sketchpen-code-tree-container {
+    position: absolute;
+    top: 100px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    overflow: auto;
+}
+
+.sketchpen-code-tree {
+    padding: 8px;
+    overflow: auto;
+}
+
+    .sketchpen-code-tree .tree-nodes {
+        list-style: none;
+        margin:0px;
+        padding:0px;
+        display:none;
+    }
+
+    .sketchpen-code-tree .tree-nodes.collapsed {
+        list-style: none;
+        margin: 0px;
+        padding: 0px;
+        display: none;
+    }
+
+        .sketchpen-code-tree .tree-nodes .tree-node {
+            position:relative;
+            cursor:pointer;
+            padding:2px 2px 2px 24px;
+            background-image :url(img/triangle-down_16@1.png);
+            background-repeat:no-repeat;
+            background-position: left 3px;
+            background-size:16px 16px;
+            white-space:nowrap;
+        }
+            .sketchpen-code-tree .tree-nodes .tree-node.has-children {
+                background-image: url(img/triangle-filled-down_16@1.png);
+            }
+            .sketchpen-code-tree .tree-nodes .tree-node.collapsed {
+                background-image: url(img/triangle-right-down_16@1.png);
+            }
+            .sketchpen-code-tree .tree-nodes .tree-node.has-children.collapsed {
+                background-image: url(img/triangle-filled-right-down_16@1.png);
+            }
+            .sketchpen-code-tree .tree-nodes .tree-node.hidden {
+                display: none;
+            }
+            .sketchpen-code-tree .tree-nodes .tree-node.found {
+                color:#ff7;
+            }
+            .sketchpen-code-tree .tree-nodes .tree-node.found > .tree-nodes {
+                color: #eee;
+            }
+            .sketchpen-code-tree .tree-nodes .tree-node.add {
+                background-image: url(img/round-plus_16@1.png);
+            }
+
+            .sketchpen-code-tree .tree-nodes .tree-node > .icon {
+                width: 20px;
+                height: 20px;
+                display: inline-block;
+                vertical-align: top;
+                background-repeat:no-repeat;
+                background-position:center;
+            }
+
+            .sketchpen-code-tree .tree-nodes .tree-node.endpoint > .icon {
+                background-image:url(img/endpoint_16@1.png);
+            }
+            .sketchpen-code-tree .tree-nodes .tree-node.query > .icon {
+                background-image: url(img/query_16@1.png);
+            }
+            .sketchpen-code-tree .tree-nodes .tree-node.view > .icon {
+                background-image: url(img/code-markup_16@1.png);
+            }
+
+            .sketchpen-code-tree .tree-nodes .tree-node .delete {
+                position: absolute;
+                right: 2px;
+                top: 2px;
+                width: 24px;
+                height: 24px;
+                border-radius: 4px;
+                cursor: pointer;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-image: url(img/trashcan-x_16@1.png);
+                background-color: #777;
+                display: none;
+            }
+
+            .sketchpen-code-tree .tree-nodes .tree-node:hover .delete {
+                display: block;
+            }
+
+                .sketchpen-code-tree .tree-nodes .tree-node:hover .delete:hover {
+                    background-color: #555;
+                }
+
+            .sketchpen-code-tree .tree-nodes .tree-node[class*="loading-"],
+            .sketchpen-code-tree .tree-nodes .tree-node.has-children[class*="loading-"] {
+                background-image: url(img/loader/spinning-line-black-16@1.gif) !important;
+            }
+
+            .sketchpen-code-tree .tree-nodes .tree-node .copy-button {
+                position: absolute;
+                right: 2px;
+                top: 2px;
+                width: 24px;
+                height: 24px;
+                background-position: center;
+                background-size: 16px 16px;
+                background-repeat: no-repeat;
+                background-image: url(img/copy_16@1.png);
+                cursor: pointer;
+                display: none;
+                border-radius: 4px;
+            }
+
+            .sketchpen-code-tree .tree-nodes .tree-node.mouseover > .copy-button {
+                display: block;
+            }
+
+            .sketchpen-code-tree .tree-nodes .tree-node.mouseover > .copy-button:hover {
+                background-color: #777;
+            }
+
+                .sketchpen-code-tree .tree-nodes .tree-node.mouseover > .copy-button .tooltiptext {
+                    visibility: hidden;
+                    width: 240px;
+                    background-color: #000;
+                    color: #fff;
+                    text-align: center;
+                    border-radius: 6px;
+                    padding: 5px;
+                    position: absolute;
+                    z-index: 1;
+                    bottom: 150%;
+                    left: 50%;
+                    margin-left: -235px;
+                    opacity: 0;
+                    transition: opacity 0.3s;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+
+                    .sketchpen-code-tree .tree-nodes .tree-node:hover > .copy-button .tooltiptext::after {
+                        content: "";
+                        position: absolute;
+                        top: 100%;
+                        right: 10px;
+                        margin-left: -5px;
+                        border-width: 5px;
+                        border-style: solid;
+                        border-color: #000 transparent transparent transparent;
+                    }
+
+                .sketchpen-code-tree .tree-nodes .tree-node:hover > .copy-button:hover .tooltiptext.show {
+                    visibility: visible;
+                    opacity: 0.8;
+                }
+
+            .sketchpen-code-tree .tree-nodes .tree-node > .label {
+                height: 26px;
+                display: inline-block;
+            }
+
+
+@media (-webkit-min-device-pixel-ratio: 1.5),
+(min-resolution: 144dpi) {
+    .sketchpen-code-tree .tree-nodes .tree-node.endpoint > .icon {
+            background-image: url(img/endpoint_16@2.png);
+            background-size: 16px 16px;
+        }
+
+        .sketchpen-code-tree .tree-nodes .tree-node.query > .icon {
+            background-image: url(img/query_16@2.png);
+            background-size: 16px 16px;
+        }
+
+        .sketchpen-code-tree .tree-nodes .tree-node.view > .icon {
+            background-image: url(img/code-markup_16@2.png);
+            background-size: 16px 16px;
+        }
+
+        .sketchpen-code-tree .tree-nodes .tree-node .copy-button {
+            background-image: url(img/copy_16@2.png);
+        }
+}
+
+
+
+            .sketchpen-code-tree .tree-nodes .tree-node {
+                background-image: url(img/triangle-down_16@2.png);
+            }
+                .sketchpen-code-tree .tree-nodes .tree-node.has-children {
+                    background-image: url(img/triangle-filled-down_16@2.png);
+                }
+                .sketchpen-code-tree .tree-nodes .tree-node.collapsed {
+                    background-image: url(img/triangle-right-down_16@2.png);
+                }
+                .sketchpen-code-tree .tree-nodes .tree-node.has-children.collapsed {
+                    background-image: url(img/triangle-filled-right-down_16@2.png);
+                }
+                .sketchpen-code-tree .tree-nodes .tree-node.add {
+                    background-image: url(img/round-plus_16@2.png);
+                }
+
+                .sketchpen-code-tree .tree-nodes .tree-node input {
+                    background: transparent;
+                    border: 1px solid #777;
+                    color: #fff;
+                }
+            
+
+            .sketchpen-code-tree .tree-nodes .tree-node.view {
+                background: none;
+                padding-left: 4px;
+            }
+
+                .sketchpen-code-tree .tree-nodes .tree-node label:hover {
+                    color: #eee;
+                }
+
+                .sketchpen-code-tree .tree-nodes .tree-node.found:hover {
+                    color: #ffa;
+                }
+
+    .sketchpen-code-tree > .tree-nodes {
+        display: block;
+    }
+
+    .sketchpen-code-tree  > .tree-nodes,
+    .tree-node.collapsed > .tree-nodes {
+        display: block;
+    }
+
+
+.sketchpen-code-editor-switcher {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    width: 72px;
+    height: 36px;
+    box-sizing: border-box;
+    z-index: 100;
+    opacity: .7;
+}
+
+    .sketchpen-code-editor-switcher:hover {
+        opacity: 1;
+    }
+
+    .sketchpen-code-editor-switcher .switch-button {
+        display: inline-block;
+        width: 36px;
+        height: 36px;
+        cursor: pointer;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: #000;
+        background-size:26px 26px;
+        border-radius: 6px;
+    }
+
+        .sketchpen-code-editor-switcher .switch-button.code {
+            background-image: url(img/code-markup_26@1.png);
+        }
+
+        .sketchpen-code-editor-switcher .switch-button.settings {
+            background-image: url(img/settings_26@1.png);
+        }
+
+.sketchpen-code-editor-code-panel {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+}
+
+    .sketchpen-code-editor-code-panel #sketchpen-code-editor-code {
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        top: 0px;
+        bottom: 30px;
+        display:block;
+    }
+
+    .sketchpen-code-editor-code-panel .sketchpen-code-editor-code-errors {
+        display: none;
+        position: absolute;
+        height: 30%;
+        right: 0px;
+        left: 0px;
+        bottom: 30px;
+    }
+
+        .sketchpen-code-editor-code-panel .sketchpen-code-editor-code-errors .titlebar {
+            position: absolute;
+            left: 0px;
+            right: 0px;
+            top: 0px;
+            height: 20px;
+            font-size: 13px;
+            padding: 2px;
+            color: #fcc;
+            background: #555;
+        }
+
+            .sketchpen-code-editor-code-panel .sketchpen-code-editor-code-errors .titlebar .closebutton {
+                position: absolute;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-image: url(img/close_16@1.png);
+                right: 0px;
+                top: 0px;
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+            }
+
+        .sketchpen-code-editor-code-panel .sketchpen-code-editor-code-errors .content {
+            position: absolute;
+            left: 0px;
+            right: 0px;
+            top: 20px;
+            bottom: 0px;
+            background-color: #000;
+            overflow: auto;
+        }
+
+            .sketchpen-code-editor-code-panel .sketchpen-code-editor-code-errors .content .error,
+            .sketchpen-code-editor-code-panel .sketchpen-code-editor-code-errors .content .warning {
+                color: #fff;
+                white-space: nowrap;
+                padding: 4px 4px 4px 24px;
+                border-bottom: 1px solid #aaa;
+                background-size: 16px 16px;
+                background-position: 4px center;
+                background-repeat: no-repeat;
+                cursor: pointer;
+            }
+
+            .sketchpen-code-editor-code-panel .sketchpen-code-editor-code-errors .content .error {
+                background-image: url(img/warning_red_16@1.png);
+                background-color:#600;
+            }
+            .sketchpen-code-editor-code-panel .sketchpen-code-editor-code-errors .content .warning {
+                background-image: url(img/warning_yellow_16@1.png);
+            }
+
+                .sketchpen-code-editor-code-panel .sketchpen-code-editor-code-errors .content .error.selected,
+                .sketchpen-code-editor-code-panel .sketchpen-code-editor-code-errors .content .warning.selected {
+                    color: #fcc;
+                }
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+    .sketchpen-code-editor-code-panel .sketchpen-code-editor-code-errors .content .error {
+        background-image: url(img/warning_red_16@2.png);
+    }
+
+    .sketchpen-code-editor-code-panel .sketchpen-code-editor-code-errors .content .warning {
+        background-image: url(img/warning_yellow_16@2.png);
+    }
+}
+
+    .sketchpen-code-editor-code-panel.show-errors #sketchpen-code-editor-code {
+        bottom:unset;
+        height:70%;
+    }
+
+    .sketchpen-code-editor-code-panel.show-errors .sketchpen-code-editor-code-errors {
+        display: block;
+    }
+
+    .sketchpen-code-editor-code-panel .sketchpen-code-editor-code-statusbar {
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        height: 30px;
+        right: 0px;
+        background: #000;
+    }
+
+.sketchpen-code-editor-settings {
+    display: none;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    overflow: auto;
+    background-color: #333;
+    color: #efefef;
+    padding: 10px;
+}
+
+    .sketchpen-code-editor-settings h1,
+    .sketchpen-code-editor-settings h2,
+    .sketchpen-code-editor-settings h3,
+    .sketchpen-code-editor-settings h4,
+    .sketchpen-code-editor-settings h5 {
+        font-weight: normal;
+    }
+    .sketchpen-code-editor-settings .hr {
+        border-top: 1px solid #eee;
+        margin-bottom:10px;
+    }
+
+    .sketchpen-code-editor-settings .sketchpen-form-section {
+        margin-left: 100px;
+    }
+
+    .sketchpen-code-editor-settings label {
+        font-weight:bold;
+        font-size:0.9em;
+    }
+
+    .sketchpen-code-editor-settings p.description {
+        font-size: 0.8em;
+        margin: 4px 0px;
+    }
+
+    .sketchpen-code-editor-settings .sketchpen-input {
+        border: 1px solid #000;
+        border-radius:4px;
+        background: #777;
+        color: #eee;
+        font-size: 1em;
+        margin: 2px 0 16px 0px;
+        padding: 5px;
+        width: 400px;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+.sketchpen-autocomplete-multiselect {
+
+}
+
+    .sketchpen-autocomplete-multiselect .sketchpen-autocomplete-multiselect-prefix {
+        width: auto;
+        text-align: right;
+    }
+
+    .sketchpen-autocomplete-multiselect .sketchpen-autocomplete-multiselect-input {
+        width: 240px;
+    }
+
+    .sketchpen-autocomplete-multiselect .add-button {
+        font-weight: bold;
+        height: 28px;
+        position: relative;
+        top: -7px;
+    }
+
+    .sketchpen-autocomplete-multiselect .sketchpen-autocomplete-multiselect-value-conatiner {
+
+    }
+
+        .sketchpen-autocomplete-multiselect .sketchpen-autocomplete-multiselect-value-conatiner .sketchpen-autocomplete-multiselect-value-item {
+            border: 1px solid #aaa;
+            background: #555;
+            padding: 5px;
+            margin: 2px;
+            display: inline-block;
+        }
+
+            .sketchpen-autocomplete-multiselect .sketchpen-autocomplete-multiselect-value-conatiner .sketchpen-autocomplete-multiselect-value-item .close-button {
+                width: 20px;
+                height: 20px;
+                background: #333;
+                color: white;
+                float: right;
+                font-weight: bold;
+                text-align: center;
+                border-radius: 3px;
+                cursor: pointer;
+                margin-left: 5px;
+                background-repeat:no-repeat;
+                background-position:center;
+                background-image:url(img/close_16@1.png);
+            }
+
+.sketchpen-code-blockframe-blocker {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: rgba(100,100,100,0.5);
+    z-index: 9999;
+}
+
+    .sketchpen-code-blockframe-blocker .sketchpen-code-blockframe-close {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        width: 36px;
+        height: 36px;
+        background-repeat:no-repeat;
+        background-position:center;
+        background-image:url(img/close_26@1.png);
+        background-size:26px 26px;
+        z-index: 2;
+        cursor:pointer;
+    }
+
+        .sketchpen-code-blockframe-blocker .sketchpen-code-blockframe-close:hover {
+            opacity:.5;
+        }
+
+    .sketchpen-code-blockframe-blocker .sketchpen-code-blockframe-content {
+        position: absolute;
+        left: 50px;
+        top: 50px;
+        right: 50px;
+        bottom: 50px;
+        background-color:white;
+    }
+
+
+/******* Tools *************/
+.sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 32px;
+    width: 50px;
+    height: 50px;
+    margin: 5px 0px 0px 5px;
+    display: inline-block;
+    cursor: pointer;
+    background-color: #222;
+    border-radius: 6px;
+    border: 1px solid #000;
+    box-sizing: border-box;
+}
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton:hover {
+        background-color: #333;
+    }
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.disabled {
+        opacity: .3;
+        cursor: unset;
+        filter: grayscale(100%);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.verify-current {
+        background-image: url(img/checkbox-checked_32@1.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.save-current {
+        background-image:url(img/disk-white_32@1.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.save-all {
+        background-image: url(img/disks-white_32@1.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.run {
+        background-image: url(img/triangle-right_32@1.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.run-in-tab {
+        background-image: url(img/round-right_32@1.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.colorscheme {
+        background-image: url(img/darkmode_32@1.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.help {
+        background-image: url(img/help_32@1.png);
+        float:right;
+    }
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.logout {
+        background-image: url(img/account_32@1.png);
+        width: 120px;
+        background-position: 6px center;
+        padding: 10px 42px;
+        font-size: 12px;
+        overflow: hidden;
+        color: #5badff;
+        float: right;
+    }
+
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.save-current {
+        background-image: url(img/disk-white_32@2.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.save-all {
+        background-image: url(img/disks-white_32@2.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.run {
+        background-image: url(img/triangle-right_32@2.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.run-in-tab {
+        background-image: url(img/round-right_32@2.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.colorscheme {
+        background-image: url(img/darkmode_32@2.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.help {
+        background-image: url(img/help_32@2.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-toolbar .sketchpen-code-toolbutton.logout {
+        background-image: url(img/account_32@2.png);
+    }
+}
+
+/******* Tree Collapsed ********/
+.sketchpen-code-ide.tree-collapsed .sketchpen-code-sidebar {
+    overflow: hidden;
+    width: 60px;
+    height: 60px;
+}
+
+.sketchpen-code-ide.tree-collapsed .sketchpen-code-content {
+    left: 0px;
+}
+
+.sketchpen-code-ide.tree-collapsed .sketchpen-code-toolbar {
+    left: 60px;
+}
+
+.sketchpen-code-ide.tree-collapsed .sketchpen-code-sidebar .sketchpen-code-tree-top .sketchpen-code-tree-collapse-button {
+    background-image:url(img/triangle-right-down_32@1.png)
+}
+
+/****** Tree Toolbar *****/
+
+.tree-tool {
+    width: 26px;
+    height: 26px;
+    display: inline-block;
+    box-sizing: border-box;
+    cursor: pointer;
+    border: 1px solid #777;
+    border-radius: 4px;
+    margin-right: 4px;
+    vertical-align: top;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    background-color: #333;
+}
+
+    .tree-tool.expand-all {
+        background-image: url(img/triangle-up_16@1.png);
+    }
+
+.sketchpen-tree-search-input {
+    width: calc( 100% - 30px);
+    box-sizing: border-box;
+    background: transparent;
+    border: 1px solid #777;
+    border-radius: 4px;
+    color: #fff;
+    padding: 4px;
+    background-size: 16px 16px;
+    background-position: right 5px center;
+    background-repeat: no-repeat;
+    background-image: url(img/magnifier_16@1.png);
+    background-color: #333;
+    cursor: pointer;
+}
+
+    .sketchpen-tree-search-input.has-value {
+        background-image: url(img/close_16@1.png);
+    }
+
+    .sketchpen-tree-search-input:focus {
+        outline: none;
+    }
+
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+    .tree-tool.expand-all {
+        background-image: url(img/triangle-up_16@2.png);
+    }
+
+    .sketchpen-tree-search-input {
+        background-image: url(img/magnifier_16@2.png);
+    }
+
+        .sketchpen-tree-search-input.has-value {
+            background-image: url(img/close_16@2.png);
+        }
+}
+
+.sketchpen-code-tiles {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    height: 50%;
+    background-color:#777;
+    overflow:auto;
+}
+
+    .sketchpen-code-tiles .sketchpen-code-tile {
+        display: inline-block;
+        width: 320px;
+        min-height: 120px;
+        color: #fff;
+        padding: 10px;
+        box-sizing: border-box;
+        margin: 5px;
+        background-color: #555;
+        cursor: pointer;
+        vertical-align: top;
+    }
+
+    .sketchpen-code-tiles .sketchpen-code-tile h1 {
+       font-size:21px;
+    }
+
+.sketchpen-code-progress {
+    display: inline-block;
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+    .sketchpen-code-progress .progressbar-holder {
+        height: 12px;
+        width: 100%;
+        border: 1px solid #777;
+        box-sizing: border-box;
+    }
+        .sketchpen-code-progress .progressbar-holder .progressbar {
+            height: 10px;
+            width: 0%;
+            background-color: #5badff;
+        }
+
+    .sketchpen-code-progress .progresstext {
+        font-size: 10.5px;
+        margin: 4px 0px;
+    }
+
+.sketchpen-code-output {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    height: 50%;
+    background-color: #888;
+    overflow: auto;
+}
+
+    .sketchpen-code-output .sketchpen-code-compile-item {
+        padding:5px 5px 5px 30px;
+        background-position:4px 5px;
+        background-repeat:no-repeat;
+        background-image: url(img/loader/spinning-line-black-16@1.gif);
+        background-size:16px 16px;
+        box-sizing:border-box;
+        color:#efefef;
+        cursor: pointer;
+        border-bottom:1px solid #aaa;
+    }
+
+        .sketchpen-code-output .sketchpen-code-compile-item:hover {
+            color: #ccc;
+        }
+
+        .sketchpen-code-output .sketchpen-code-compile-item.success {
+            background-image: url(img/check_16@1.png);
+        }
+        .sketchpen-code-output .sketchpen-code-compile-item.has-errors {
+            background-color: #600;
+            background-image: url(img/warning_red_16@1.png);
+        }
+
+        .sketchpen-code-output .sketchpen-code-compile-item.has-errors ul  {
+        }
+            .sketchpen-code-output .sketchpen-code-compile-item.has-errors ul li {
+                font-size: 13px;
+                border-top: 1px solid #aaa;
+                padding:5px 0px;
+            }
+
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+    .sketchpen-code-output .sketchpen-code-compile-item.success {
+        background-image: url(img/check_16@2.png);
+    }
+
+    .sketchpen-code-output .sketchpen-code-compile-item.has-errors {
+        background-image: url(img/warning_red_16@2.png);
+    }
+}
+
+/******* Modal Dialog **************/
+.sketchpen-code-modal {
+    font-family: Verdana,Tahoma,Arial,sans-serif;
+    font-family: Verdana,Tahoma,Arial,sans-serif;
+    font-size: .73em;
+    background-color: #ffffff;
+    margin: 0px;
+    scrollbar-base-color: #ffffff;
+    scrollbar-shadow-color: #ffffff;
+    scrollbar-track-color: #ffffff;
+    scrollbar-arrow-color: #000000;
+    scrollbar-face-color: #bcbbbb;
+    scrollbar-highlight-color: #ffffff;
+    scrollbar-darkshadow-color: #ffffff;
+}
+
+    .sketchpen-code-modal h1,
+    .sketchpen-code-modal h2,
+    .sketchpen-code-modal h3,
+    .sketchpen-code-modal h4,
+    .sketchpen-code-modal h5,
+    .sketchpen-code-modal h6 {
+        font-family: Verdana,Tahoma,Arial,sans-serif;
+    }
+
+    .sketchpen-code-modal,
+    .sketchpen-code-modal *,
+    .sketchpen-code-modal *::before,
+    .sketchpen-code-modal *::after {
+        box-sizing: content-box;
+    }
+
+.sketchpen-code-modal-title {
+    color: #fff;
+    background-color: #5badff;
+    border-bottom: 1px solid #777;
+    font-size: 16px;
+    /*font-weight: bold;*/
+    padding: 12px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    border-radius: 5px 5px 0px 0px;
+    text-overflow: ellipsis;
+    padding-right: 32px;
+}
+
+.sketchpen-code-modal-body {
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    border-radius: 5px;
+}
+
+    .sketchpen-code-modal-body.enlargeable .sketchpen-code-modal-title {
+        cursor: pointer;
+        background-image: url('../img/next-26.png');
+        background-repeat: no-repeat;
+        background-position: right 8px center;
+    }
+
+    .sketchpen-code-modal-body.enlargeable.modal-large .sketchpen-code-modal-title {
+        background-image: url('../img/back-26.png');
+    }
+
+    .sketchpen-code-modal-body.enlargeable .sketchpen-code-modal-title.has-closebutton {
+        background-position: right 40px center;
+    }
+
+.sketchpen-code-modal-content {
+    z-index: 1;
+    position: absolute;
+    overflow: auto;
+    left: 0px;
+    top: 38px;
+    right: 0px;
+    bottom: 0px;
+    padding: 0px 10px;
+}
+
+    .sketchpen-code-modal-content .sketchpen-code-modal-content-fill {
+        margin: 0px -10px;
+    }
+
+.sketchpen-code-modal-body.center .sketchpen-code-modal-content {
+    padding: 10px 15px;
+}
+
+    .sketchpen-code-modal-body.center .sketchpen-code-modal-content .sketchpen-code-modal-content-fill {
+        padding: -10px -15px;
+    }
+
+
+.sketchpen-code-modal-resize {
+    cursor: pointer;
+    background: url(../img/maximize-dialog-26.png) no-repeat center;
+    position: absolute;
+    top: 0px;
+    right: 44px;
+    width: 44px;
+    height: 44px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.sketchpen-code-modal-body.maximized {
+    margin: 8px;
+}
+
+@media (max-width: 600px) {
+    .sketchpen-code-modal-body.maximized {
+        margin: 2px;
+    }
+}
+
+.sketchpen-code-modal-body.maximized .sketchpen-code-modal-resize {
+    background: url(../img/minimize-dialog-26.png) no-repeat center;
+}
+
+.sketchpen-code-modal-close {
+    cursor: pointer;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 44px;
+    height: 44px;
+    background-image: url(img/close_26@1.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    /*background-color: rgba(226,226,226,.7);*/
+}
+
+    .sketchpen-code-modal-close:hover {
+        background-color: #ff0101;
+    }
+
+.sketchpen-code-modal-body.animate {
+    transition: opacity .3s ease-in, height .3s ease-in, width .3s ease-in, left .3s ease-in, top .3s ease-in
+}
+
+.sketchpen-code-messagebox-content {
+    color: #fff;
+    font-size: 14px;
+    position: relative;
+}
+
+    .sketchpen-code-messagebox-content .button-bar {
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        height: 60px;
+        bottom: 0px;
+        box-sizing: border-box;
+        padding: 5px 20px;
+        text-align: right;
+    }
+
+/***** Monaco Decoration ********/
+.errorLineDecoration {
+    background: red;
+    width: 5px !important;
+    margin-left: 3px;
+}
+
+/************* Darkmode, Lightmode ***********************/
+
+
+.sketchpen-code-ide.colorscheme-light .sketchpen-code-toolbar.sketchpen-code-bar {
+    background-color:#aaa;
+}
+
+.sketchpen-code-ide.colorscheme-light .sketchpen-code-sidebar.sketchpen-code-panel {
+
+}
+
+    .sketchpen-code-ide.colorscheme-light .sketchpen-code-sidebar.sketchpen-code-panel .sketchpen-code-tree-top .sketchpen-code-tee-title {
+        background-color: #eee;
+    }
+
+    .sketchpen-code-ide.colorscheme-light .sketchpen-code-sidebar.sketchpen-code-panel .sketchpen-code-tree-top .sketchpen-code-tree-collapse-button,
+    .sketchpen-code-ide.colorscheme-light .sketchpen-code-sidebar.sketchpen-code-panel .sketchpen-code-tree-top .sketchpen-code-tree-toolbar {
+        background-color: #999;
+    }
+
+    .sketchpen-code-ide.colorscheme-light .sketchpen-code-sidebar.sketchpen-code-panel .sketchpen-code-tree-container.sketchpen-code-tree-holder {
+        background-color: #999;
+        color:#333;
+    }
+
+.sketchpen-code-ide.colorscheme-light .sketchpen-code-content .sketchpen-code-tabs {
+    background-color: #ccc;
+}
+
+.sketchpen-code-ide.colorscheme-light .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.selected {
+    background-color: #999;
+    color:#333;
+}

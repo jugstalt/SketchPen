@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SketchPen.Plot.Drawing", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SketchPen.Plot.Skia", "src\SketchPen.Plot.Skia\SketchPen.Plot.Skia.csproj", "{C8D2A23E-DF72-4F2A-89DB-06A4DF52C6DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SketchPen.Code", "src\SketchPen.Code\SketchPen.Code.csproj", "{EE15FBD4-3A0C-4FF0-A51B-E0123EAFF9C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{C8D2A23E-DF72-4F2A-89DB-06A4DF52C6DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8D2A23E-DF72-4F2A-89DB-06A4DF52C6DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8D2A23E-DF72-4F2A-89DB-06A4DF52C6DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE15FBD4-3A0C-4FF0-A51B-E0123EAFF9C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE15FBD4-3A0C-4FF0-A51B-E0123EAFF9C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE15FBD4-3A0C-4FF0-A51B-E0123EAFF9C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE15FBD4-3A0C-4FF0-A51B-E0123EAFF9C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,6 +57,7 @@ Global
 		{15C792DD-E24A-4D0E-8AF5-02C284443BA3} = {D4581E81-EC37-417B-8CD4-4B2F0B165E3A}
 		{1FDDD1A9-2A79-4A15-907B-CD908749F493} = {D4581E81-EC37-417B-8CD4-4B2F0B165E3A}
 		{C8D2A23E-DF72-4F2A-89DB-06A4DF52C6DB} = {D4581E81-EC37-417B-8CD4-4B2F0B165E3A}
+		{EE15FBD4-3A0C-4FF0-A51B-E0123EAFF9C4} = {D4581E81-EC37-417B-8CD4-4B2F0B165E3A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F053F483-D2B4-4BE7-8E31-3ECFE77E146E}

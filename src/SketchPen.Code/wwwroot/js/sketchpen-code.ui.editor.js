@@ -24,20 +24,20 @@
         currentDoc: function (options) {
             var $tabs = $(this).children('.sketchpen-code-tabs')
 
-            return $tabs.children(".sketchpen-code-tab.selected").attr('data-id');
+            return $tabs.children(".sketchpen-code-tab.selected").attr('data-route');
         },
         dirtyDocs: function (options) {
             var ids = [];
             $(this).children('.sketchpen-code-tabs').children(".sketchpen-code-tab.dirty").each(function (i, e) {
-                ids.push($(e).attr('data-id'));
+                ids.push($(e).attr('data-route'));
             });
             return ids;
         },
         addTab: function (options) {
-            showOrAddTab($(this).children('.sketchpen-code-tabs'), options.title, options.id, options.className, options.hideCloseButton)
+            showOrAddTab($(this).children('.sketchpen-code-tabs'), options.route, options.className, options.hideCloseButton)
         },
         isOpen: function (options) {
-            return $(this).children('.sketchpen-code-tabs').children(".sketchpen-code-tab[data-id='" + options.id + "']").length > 0;
+            return $(this).children('.sketchpen-code-tabs').children(".sketchpen-code-tab[data-route='" + options.route + "']").length > 0;
         }
     };
     var initUI = function (parent, options) {
@@ -46,6 +46,7 @@
         var $tabs = $("<div>")
             .addClass('sketchpen-code-tabs')
             .appendTo($parent);
+
         $("<div>")
             .addClass('sketchpen-code-tab-selector')
             .appendTo($tabs)
@@ -62,28 +63,19 @@
             .addClass('sketchpen-code-editor')
             .appendTo($parent);
 
-        sketchPenCode.events.on('open-endpoint', function (channel, args) {
-            var $tab = showOrAddTab($tabs, args.endpoint, args.endpoint, 'endpoint');
-        });
-        sketchPenCode.events.on('open-query', function (channel, args) {
-            var $tab = showOrAddTab($tabs, args.query, args.endpoint + '@' + args.query, 'query');
-        });
-        sketchPenCode.events.on('open-view', function (channel, args) {
-            var $tab = showOrAddTab($tabs, args.view, args.endpoint + '@' + args.query + '@' + args.view, 'view');
-        });
-        sketchPenCode.events.on('open-endpoint-css', function (channel, args) {
-            var $tab = showOrAddTab($tabs, 'CSS: ' + args.id, args.id + '@_css', 'css');
+        sketchPenCode.events.on('open-file', function (channel, args) {
+            var $tab = showOrAddTab($tabs, args.route, 'file');
         });
 
         sketchPenCode.events.on('tab-selected', function (channel, args) {
-            showOrAddEditorFrame($editor, args.id);
+            showOrAddEditorFrame($editor, args.route);
 
             checkSize($tabs);
             sketchPenCode.events.fire('refresh-ui');
         });
         sketchPenCode.events.on('tab-removed', function (channel, args) {
-            sketchPenCode.events.fire('destroy-editor', { id: args.id });
-            $(".sketchpen-code-editor-frame[data-id='" + args.id + "']").remove();
+            sketchPenCode.events.fire('destroy-editor', { id: args.route });
+            $(".sketchpen-code-editor-frame[data-route='" + args.route + "']").remove();
 
             if (args.selected) {
                 $tabs.children('.sketchpen-code-tab').last().trigger('click');
@@ -94,30 +86,30 @@
         });
 
         sketchPenCode.events.on('document-changed', function (channel, args) {
-            $tabs.children(".sketchpen-code-tab[data-id='" + args.id + "']")
-                .addClass('dirty');
+            $tabs.children(".sketchpen-code-tab[data-route='" + args.route + "']")
+                 .addClass('dirty');
 
             sketchPenCode.events.fire('refresh-ui');
         });
 
         sketchPenCode.events.on(['save-document','verify-document'], function (channel, args) {
-            $tabs.children(".sketchpen-code-tab[data-id='" + args.id + "']")
+            $tabs.children(".sketchpen-code-tab[data-route='" + args.route + "']")
                 .addClass('loading');
         });
         sketchPenCode.events.on(['document-saved', 'document-verified'], function (channel, args) {
-            $tabs.children(".sketchpen-code-tab[data-id='" + args.id + "']")
+            $tabs.children(".sketchpen-code-tab[data-route='" + args.route + "']")
                 .removeClass('loading')
                 .removeClass('errors');
 
             if (channel.channel === 'document-saved') {
-                $tabs.children(".sketchpen-code-tab[data-id='" + args.id + "']")
+                $tabs.children(".sketchpen-code-tab[data-route='" + args.route + "']")
                     .removeClass('dirty');
             }
 
             sketchPenCode.events.fire('refresh-ui');
         });
         sketchPenCode.events.on('document-errors', function (channel, args) {
-            $tabs.children(".sketchpen-code-tab[data-id='" + args.id + "']").removeClass('loading').addClass('errors');
+            $tabs.children(".sketchpen-code-tab[data-route='" + args.route + "']").removeClass('loading').addClass('errors');
         });
 
         sketchPenCode.events.on('ide-resize', function (channel, args) {
@@ -127,27 +119,30 @@
         sketchPenCode.events.on('document-deleted', function (channel, args) {
             $parent.children('.sketchpen-code-tabs').children('.sketchpen-code-tab').each(function (i, tab) {
                 var $tab = $(tab);
-                var id = $tab.attr('data-id');
-                if (id === args.id || id.indexOf(args.id + '@') === 0) {
+                var id = $tab.attr('data-route');
+                if (id === args.route || id.indexOf(args.route + '@') === 0) {
                     var selected = $tab.hasClass('selected');
                     $tab.remove();
                     sketchPenCode.events.fire('tab-removed', { id: id, selected: selected });
                 };
             });
-            $(".sketchpen-code-editor-frame[data-id='" + args.id + "']").remove();
+            $(".sketchpen-code-editor-frame[data-route='" + args.route + "']").remove();
 
             sketchPenCode.events.fire('refresh-ui');
         });
     };
 
-    var showOrAddTab = function ($tabs, title, id, cls, hideCloseButton) {
-        var $tab = $tabs.children(".sketchpen-code-tab[data-id='" + id + "']");
+    var showOrAddTab = function ($tabs, route, cls, hideCloseButton) {
+        var $tab = $tabs.children(".sketchpen-code-tab[data-route='" + route + "']");
         if ($tab.length === 0) {
+
+            var routeParts = route.split('/');
+
             $tab = $("<div>")
                 .addClass('sketchpen-code-tab')
-                .attr('data-id', id)
-                .text(title)
-                .appendTo($tabs)
+                .attr('data-route', route)
+                .text(routeParts[routeParts.length - 1])
+                .appendTo($tabs);
 
             if (cls) {
                 $tab.addClass(cls);
@@ -161,11 +156,11 @@
                         e.stopPropagation();
 
                         var $tab = $(this).parent();
-                        var id = $tab.attr('data-id');
+                        var id = $tab.attr('data-route');
 
                         sketchPenCode.ui.confirmIf(
                             $tab.hasClass('dirty'),
-                            id,
+                            route,
                             "Close tab without saving? You will loose all changes!",
                             function () {
                                 var selected = $tab.hasClass('selected');
@@ -184,7 +179,7 @@
             $tabs.children('.selected').removeClass('selected');
             $(this).addClass('selected');
 
-            sketchPenCode.events.fire('tab-selected', { id: $(this).attr('data-id') });
+            sketchPenCode.events.fire('tab-selected', { route: $(this).attr('data-route') });
         });
 
         $tab.trigger('click');
@@ -204,7 +199,7 @@
         $tabs.children('.sketchpen-code-tab').each(function (i, tab) {
             var $tab = $(tab);
 
-            var id = $tab.attr('data-id');
+            var id = $tab.attr('data-route');
 
             if (menuRowAdded == false && id.indexOf('_') != 0) {
                 menuRowAdded = true;
@@ -222,7 +217,7 @@
                         $(this).closest('.sketchpen-code-open-tabs').children('.sketchpen-code-tab').each(function (i, li) {
                             var $li = $(li), $tab = $li.data("$tab");
 
-                            if (!$tab || $tab.attr('data-id').indexOf('_') == 0) {
+                            if (!$tab || $tab.attr('data-route').indexOf('_') == 0) {
                                 return;
                             }
 
@@ -249,7 +244,7 @@
                         $this.closest('.sketchpen-code-open-tabs').children('.sketchpen-code-tab').each(function (i, li) {
                             var $li = $(li), $tab = $li.data("$tab");
 
-                            if (!$tab || $tab.attr('data-id').indexOf('_') == 0) {
+                            if (!$tab || $tab.attr('data-route').indexOf('_') == 0) {
                                 return;
                             }
 
@@ -334,31 +329,21 @@
         }
     };
 
-    var showOrAddEditorFrame = function ($editor, id) {
-        var $frame = $editor.children(".sketchpen-code-editor-frame[data-id='" + id + "']");
+    var showOrAddEditorFrame = function ($editor, route) {
+        var $frame = $editor.children(".sketchpen-code-editor-frame[data-route='" + route + "']");
+
         if ($frame.length === 0) {
-            if (id === '_start') {
+            var src = '';
+
+            if (route === '_start') {
                 src = sketchPenCode.targetUrl() + '/Start';
             } else {
-                var ids = id.split('@'), src = '';
-                if (ids.length === 1) {
-                    src = sketchPenCode.targetUrl() + '/EditEndPoint?endpoint=' + ids[0];
-                } else if (ids.length === 2) {
-                    if (ids[1] == '_css') {
-                        src = sketchPenCode.targetUrl() + '/EditEndPointCss?endpoint=' + ids[0];
-                    } else {
-                        src = sketchPenCode.targetUrl() + '/EditEndPointQuery?endpoint=' + ids[0] + '&query=' + ids[1];
-                    }
-                } else if (ids.length === 3) {
-                    src = sketchPenCode.targetUrl() + '/EditEndPointQueryView?endpoint=' + ids[0] + '&query=' + ids[1] + '&view=' + ids[2];
-                } else {
-                    sketchPenCode.ui.alert('Error', 'unknown sketchpen route/id: ' + id);
-                }
+                src = sketchPenCode.targetUrl() + '/EditFile?route=' + route;
             }
 
             $frame = $("<iframe>")
                 .addClass('sketchpen-code-editor-frame')
-                .attr('data-id', id)
+                .attr('data-route', route)
                 .attr('src', src)
                 .appendTo($editor);
         }

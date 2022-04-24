@@ -1,0 +1,45 @@
+﻿@model SketchPen.Code.Models.Code.EditFileModel
+
+@{
+    Layout = "~/Views/Shared/_Layout_empty-sketchpen-code-frame.cshtml";
+    ViewBag.Title = "DataLinq Code";
+}
+
+<div class="sketchpen-code-editor-code-panel switch-to code">
+    <div id="sketchpen-code-editor-code">
+
+    </div>
+    <div class="sketchpen-code-editor-code-errors">
+
+    </div>
+
+    <div class="datsketchpenalinq-code-editor-code-statusbar">
+
+    </div>
+</div>
+
+<div class="sketchpen-code-editor-settings switch-to settings">
+    @using (Html.BeginForm("EditFile", "Code", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+          @Html.HiddenFor(m => m.Route)
+          @Html.HiddenFor(m => m.Content)
+    }
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            var value = "@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(Model.Content))";
+            
+            //console.log(value);
+
+            sketchPenCodeEditor.init('@Model.Route', value, "text");
+
+            sketchPenCodeEditor.events.on('editor-value-changed', function(channel, args) {
+                if(args.route === '@Model.Route') {
+                    $("input[name='Content']").val(args.value);
+                }
+            });
+        });
+    </script>
+}

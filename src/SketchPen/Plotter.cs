@@ -40,8 +40,6 @@ namespace SketchPen
 
         public byte[] Plot(int canvasWidth, int canvasHeight)
         {
-            
-
             using (var plotContext = (IPlotContext)Activator.CreateInstance(_plotContextType))
             {
                 plotContext.Init(Math.Max(canvasWidth, MinPlotSize), Math.Max(canvasHeight, MinPlotSize));

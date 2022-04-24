@@ -45,7 +45,7 @@
 
             $("<input>")
                 .addClass('sketchpen-tree-search-input')
-                .attr('placeholder', 'Find Endpoint, Query, View...')
+                .attr('placeholder', 'Find File...')
                 .data('$tree', $parent)
                 .appendTo(options.$toolbar)
                 .click(function (e) {
@@ -139,13 +139,16 @@
         });
 
         $tree.empty();
-        sketchPenCode.api.getEndPoints(function (endPoints) {
-            if (sketchPenCode.privileges.createEndpoints()) {
-                addEndPointNode($tree, null);
-            }
+        sketchPenCode.api.getFiles(function (filenames) {
+            $.each(filenames, function (i, filename) {
+                var routeParts = filename.split('/');
 
-            $.each(endPoints, function (i, endPoint) {
-                addEndPointNode($tree, endPoint, collapsedRoutes);
+                var $parentNode = $tree;
+                for (i = 0; i < routeParts.length - 1; i++) {
+                    $parentNode = getOrCreateFolderNode($parentNode, routeParts[i]);
+                }
+
+                addFileNode($parentNode, routeParts[routeParts.length-1], collapsedRoutes);
             });
         });
     }
@@ -216,37 +219,31 @@
         $node.appendTo($nodes);
     }
 
-    var addEndPointNode = function ($parent, endPoint, collapsedRoutes) {
-        var $node = createTreeNode(endPoint || 'New endpoint...', null, endPoint === null)
-            .addClass('endpoint')
-            .data('data-endpoint', endPoint)
-            .data('data-route', endPoint);
+    var getOrCreateFolderNode = function ($parent, folder) {
+        var $node = null;
+        $parent.children('.tree-nodes').children('.folder').each(function (f, folderNode) {
+            var $folderNode = $(folderNode);
+            
+            if ($folderNode.data('data-folder') === folder) {
+                $node = $folderNode;
+            }
+        });
 
-        if ($.inArray($node.data('data-route'), collapsedRoutes) >= 0) {
-            $node.addClass('collapsed');
-            $node.data('is_collapsed', true);
-        }
+        if ($node == null) {
+            $node = createTreeNode(folder)
+                .addClass('folder')
+                .data('data-folder', folder)
+                .data('data-route', ($parent.data('data-route') || '') + folder + '/');
 
-        if (endPoint) {
-            $node.data('search-text', endPoint.toLowerCase());
-        }
+            addToNodes($node, $parent);
 
-        addToNodes($node, $parent);
+            if (sketchPenCode.privileges.createFiles()) {
+                addFileNode($node, null);
+            }
 
-        if (endPoint) {
-            $node.addClass('loading-' + endPoint);
-            sketchPenCode.api.getQueries($node.data('data-endpoint'), function (queries) {
-                $node.removeClass('loading-' + endPoint);
-                if (sketchPenCode.privileges.createQueries()) {
-                    addQueryNode($node, $node.data('data-endpoint'), null);
-                }
-
-                $.each(queries, function (i, query) {
-                    addQueryNode($node, $node.data('data-endpoint'), query, collapsedRoutes);
-                });
-            });
             $node.click(function (e) {
                 e.stopPropagation();
+
                 if (e.originalEvent.layerY < 24) {
                     var $this = $(this);
                     if (e.originalEvent.layerX < 30) {
@@ -259,7 +256,37 @@
                     }
                 }
             });
+        }
 
+        return $node;
+    };
+
+    var addFileNode = function ($parent, filename, collapsedRoutes) {
+        var $node = createTreeNode(filename || 'New File...', null, filename === null)
+            .addClass('file')
+            .data('data-filename', filename)
+            .data('data-route', ($parent.data('data-route')  || '') + filename);
+
+        if ($.inArray($node.data('data-route'), collapsedRoutes) >= 0) {
+            $node.addClass('collapsed');
+            $node.data('is_collapsed', true);
+        }
+
+        if (filename) {
+            $node.data('search-text', filename.toLowerCase());
+        }
+
+        addToNodes($node, $parent);
+
+        if (filename) {
+            $node.click(function (e) {
+                e.stopPropagation();
+
+                var $this = $(this);
+                sketchPenCode.events.fire('open-file', {
+                    route: $this.data('data-route'),
+                });
+            });
         } else {
             $node
                 .addClass('add')
@@ -271,10 +298,10 @@
                         var $this = $(this);
 
                         var id = $this.val();
-                        //console.log('create endpoint ' + id);
+                        //console.log('create file ' + id);
                         $this.val('');
 
-                        sketchPenCode.api.createEndPoint(id, function (result) {
+                        sketchPenCode.api.createFile(id, function (result) {
                             if (result.success == true) {
                                 refresh($this.closest('.sketchpen-code-tree-holder'));
                             } else {
@@ -286,135 +313,4 @@
         }
     };
 
-    var addQueryNode = function ($parent, endPoint, query, collapsedRoutes) {
-        var $node = createTreeNode(query || 'New query/data...', null, query === null)
-            .addClass('query')
-            .data('data-endpoint', endPoint)
-            .data('data-query', query)
-            .data('data-route', endPoint + '@' + query);
-
-        if ($.inArray($node.data('data-route'), collapsedRoutes) >= 0) {
-            $node.addClass('collapsed');
-            $node.data('is_collapsed', true);
-        }
-
-        if (query) {
-            $node.data('search-text', query.toLowerCase());
-        }
-
-        addToNodes($node, $parent);
-
-        if (query) {
-            var $endPointNode = $node.parent().parent();
-            $endPointNode.addClass('loading-' + query).addClass('has-children');
-            $node.addClass('loading-' + query);
-
-            sketchPenCode.api.getViews($node.data('data-endpoint'), $node.data('data-query'), function (views) {
-                $endPointNode.removeClass('loading-' + query);
-                $node.removeClass('loading-' + query);
-
-                if (views.length > 0) {
-                    $node.addClass('has-children');
-                }
-
-                if (sketchPenCode.privileges.createViews()) {
-                    addViewNode($node, $node.data('data-endpoint'), $node.data('data-query'), null);
-                }
-
-                $.each(views, function (i, view) {
-                    addViewNode($node, $node.data('data-endpoint'), $node.data('data-query'), view);
-                });
-            });
-
-            $node.click(function (e) {
-                e.stopPropagation();
-                if (e.originalEvent.layerY < 24) {
-                    var $this = $(this);
-                    if (e.originalEvent.layerX < 30) {
-                        $this.toggleClass('collapsed');
-                        $this.data('is_collapsed', $this.hasClass('collapsed'));
-                    } else {
-                        sketchPenCode.events.fire('open-query', {
-                            endpoint: $this.data('data-endpoint'),
-                            query: $this.data('data-query')
-                        });
-                    }
-                }
-            })
-        } else {
-            $node
-                .addClass('add')
-                .click(function (e) {
-                    e.stopPropagation();
-                })
-                .find('input').on('keyup', function (e) {
-                    if (e.which == 13) {
-                        var $this = $(this), $node = $this.closest('.query');
-
-                        var id = $this.val();
-                        //console.log('create query ' + id);
-                        $this.val('');
-
-                        sketchPenCode.api.createQuery($node.data('data-endpoint'), id, function (result) {
-                            if (result.success == true) {
-                                refresh($this.closest('.sketchpen-code-tree-holder'));
-                            } else {
-                                sketchPenCode.ui.alert("Error", (result.error_message || 'Unknown error'));
-                            }
-                        });
-                    }
-                });
-        }
-    };
-
-    var addViewNode = function ($parent, endPoint, query, view) {
-        var $node = createTreeNode(view || 'New view...', null, view === null)
-            .addClass('view')
-            .data('data-endpoint', endPoint)
-            .data('data-query', query)
-            .data('data-view', view)
-            .data('data-route', endPoint + '@' + query + '@' + view);
-
-        if (view) {
-            $node.data('search-text', view.toLowerCase());
-        }
-
-        addToNodes($node, $parent);
-
-        if (view) {
-            $node.click(function (e) {
-                e.stopPropagation();
-
-                var $this = $(this);
-                sketchPenCode.events.fire('open-view', {
-                    endpoint: $this.data('data-endpoint'),
-                    query: $this.data('data-query'),
-                    view: $this.data('data-view')
-                });
-            });
-        } else {
-            $node
-                .addClass('add')
-                .click(function (e) {
-                    e.stopPropagation();
-                })
-                .find('input').on('keyup', function (e) {
-                    if (e.which == 13) {
-                        var $this = $(this), $node = $this.closest('.view');
-
-                        var id = $this.val();
-                        //console.log('create view ' + id);
-                        $this.val('');
-
-                        sketchPenCode.api.createView($node.data('data-endpoint'), $node.data('data-query'), id, function (result) {
-                            if (result.success == true) {
-                                refresh($this.closest('.sketchpen-code-tree-holder'));
-                            } else {
-                                sketchPenCode.ui.alert("Error", (result.error_message || 'Unknown error'));
-                            }
-                        });
-                    }
-                });
-        }
-    };
 })(jQuery);

@@ -1,15 +1,15 @@
 var sketchPenCode = window.parent.sketchPenCode;
 
 sketchPenCodeEditor = new function () {
-    var _id, _this;
+    var _route, _this;
     var _editor = null;
     var _editorDecorations = null;
 
-    this.id = () => _id;
+    this.route = () => _route;
     this.editor = () => _editor;
 
-    this.init = function (id, value, language) {
-        _id = id;
+    this.init = function (route, value, language) {
+        _route = route;
 
         //console.log('init editor', id, value, language);
 
@@ -30,7 +30,7 @@ sketchPenCodeEditor = new function () {
 
             _editor.setValue(value || '');
             _editor.getModel().onDidChangeContent((event) => {
-                sketchPenCodeEditor.events.fire('editor-value-changed', { id: _id, value: _editor.getValue() });
+                sketchPenCodeEditor.events.fire('editor-value-changed', { route: _route, value: _editor.getValue() });
 
                 this.setDirty();
                 this.removeDecoration();
@@ -61,18 +61,18 @@ sketchPenCodeEditor = new function () {
 
         sketchPenCode.bindDocumentEvents(window.document);
 
-        sketchPenCode.events.fire('document-opened', { id: _id });
+        sketchPenCode.events.fire('document-opened', { route: _route });
     };
 
     var _event_save_document = function (channel, args) {
-        if (args.id === _id) {
+        if (args.route === _route) {
             sketchPenCodeEditor.submitForm();
         }
     };
 
     var _event_verify_document = function (channel, args) {
-        if (args.id === _id) {
-            var ids = args.id.split('@')
+        if (args.route === _route) {
+            var ids = args.route.split('@')
             if (ids.length === 3) {  // view
                 sketchPenCodeEditor.submitForm(true);
             }
@@ -80,28 +80,21 @@ sketchPenCodeEditor = new function () {
     };
 
     var _event_before_run_document = function (channel, args) {
-        if (args.id === _id) {
-            var testParameters = $("[name='TestParameters']").val();
-            if (testParameters) {
-                args.urlParameters += (args.urlParameters ? '&' : '') + testParameters;
-            }
-
-            if (args.id.split('@').length === 2) {
-                args.urlParameters += (args.urlParameters ? '&' : '') + '_pjson=true';
-            }
+        if (args.route === _route) {
+            args.urlParameters = "route=" + args.route + '&globals=' + args.globals;
         }
     };
 
     var _event_destroy_editor = function (channel, args) {
-        if (args.id === _id) {
-            console.log('destroy editor ' + _id);
+        if (args.route === _route) {
+            console.log('destroy editor ' + _route);
             sketchPenCode.events.off('save-document', _event_save_document);
             sketchPenCode.events.off('verify-document', _event_verify_document);
             sketchPenCode.events.off('before-run-document', _event_before_run_document);
             sketchPenCode.events.off('theme-changed', _event_theme_changed);
             //sketchPenCode.events.off('destroy-editor', _event_destroy_editor);
 
-            _id = null;
+            _route = null;
         }
     }
 
@@ -160,11 +153,11 @@ sketchPenCodeEditor = new function () {
     }
 
     this.delete = function () {
-        sketchPenCode.events.fire('delete-document', { id: _id });
+        sketchPenCode.events.fire('delete-document', { route: _route });
     };
 
     this.setDirty = function () {
-        sketchPenCode.events.fire('document-changed', { id: _id });
+        sketchPenCode.events.fire('document-changed', { route: _route });
     };
 
     this.submitForm = function (verifyOnly) {
@@ -181,12 +174,12 @@ sketchPenCodeEditor = new function () {
             success: function (data) {
                 if (data.success === true) {
                     if (verifyOnly === true) {
-                        sketchPenCode.events.fire('document-verified', { id: _id });
+                        sketchPenCode.events.fire('document-verified', { route: _route });
                     } else {
-                        sketchPenCode.events.fire('document-saved', { id: _id });
+                        sketchPenCode.events.fire('document-saved', { route: _route });
                     }
                 } else {
-                    sketchPenCode.events.fire('document-errors', { id: _id, errors: data });
+                    sketchPenCode.events.fire('document-errors', { route: _route, errors: data });
                 }
             }
         });
@@ -630,7 +623,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
     };
 
     var _event_document_saved = function (channel, args) {
-        if (args.id === sketchPenCodeEditor.id()) {
+        if (args.route === sketchPenCodeEditor.route()) {
             var $content = this.children('.content');
 
             $content.empty();
@@ -639,7 +632,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
     };
 
     var _event_document_errors = function (channel, args) {
-        if (args.id === sketchPenCodeEditor.id()) {
+        if (args.route === sketchPenCodeEditor.route()) {
             var $elem = this;
             console.log($elem);
 
@@ -664,7 +657,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
     };
 
     var _event_destroy_editor = function (channel, args) {
-        if (args.id === sketchPenCodeEditor.id()) {
+        if (args.route === sketchPenCodeEditor.route()) {
             console.log('destroy sketchPenCode_editor_errors');
             sketchPenCode.events.off('document-saved', _event_document_saved);
             sketchPenCode.events.off('document-errors', _event_document_errors);

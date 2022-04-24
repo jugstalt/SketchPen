@@ -1,18 +1,19 @@
 var sketchPenCode = new function ($) {
-    var _targetUrl, _sketchPenEngineUrl, _username, _userPrevileges;
+    var _targetUrl, _id;
     var _editorTheme = 'vs-dark';
+    var _userPrivileges;
 
     var $tree, $editor, $toolbar;
 
     this.targetUrl = () => _targetUrl;
-    this.loginUsername = () => _username;
+    this.id = () => _id;
     this.editorTheme = () => _editorTheme;
+    this.loginUsername = () => "";
 
-    this.start = function (targetUrl, sketchPenEngineUrl, username, userPrivileges) {
+    this.start = function (targetUrl, id) {
         _targetUrl = targetUrl;
-        _sketchPenEngineUrl = sketchPenEngineUrl;
-        _username = username;
-        _userPrevileges = userPrivileges || {};
+        _id = id;
+        _userPrivileges = { createFiles: true, deleteFiles: true };
 
         $tree = $('.sketchpen-code-tree-container').sketchPenCode_tree({
             $toolbar: $('.sketchpen-code-tree-top > .sketchpen-code-tree-toolbar')
@@ -20,7 +21,7 @@ var sketchPenCode = new function ($) {
         $editor = $('.sketchpen-code-content').sketchPenCode_editor();
         $toolbar = $('.sketchpen-code-toolbar').sketchPenCode_toolbar();
 
-        $editor.sketchPenCode_editor('addTab', { title: 'Start', id: '_start', className: 'start', hideCloseButton: true });
+        $editor.sketchPenCode_editor('addTab', { title: 'Start', route: '_start', className: 'start', hideCloseButton: true });
 
         this.bindDocumentEvents(window.document);
 
@@ -34,24 +35,23 @@ var sketchPenCode = new function ($) {
         });
 
         sketchPenCode.events.on('save-current-document', function () {
-            var id = $editor.sketchPenCode_editor('currentDoc');
-            if (id) {
-                sketchPenCode.events.fire('save-document', { id: id });
+            var route = $editor.sketchPenCode_editor('currentDoc');
+            if (route) {
+                sketchPenCode.events.fire('save-document', { route: route });
             }
         });
 
         sketchPenCode.events.on('verify-current-document', function () {
-            var id = $editor.sketchPenCode_editor('currentDoc');
-            console.log('verify-current-document',id)
-            if (id) {
-                sketchPenCode.events.fire('verify-document', { id: id });
+            var route = $editor.sketchPenCode_editor('currentDoc');
+            if (route) {
+                sketchPenCode.events.fire('verify-document', { route: route });
             }
         });
 
         sketchPenCode.events.on('save-all-documents', function () {
-            var ids = $editor.sketchPenCode_editor('dirtyDocs');
-            $.each(ids, function (i, id) {
-                sketchPenCode.events.fire('save-document', { id: id });
+            var routes = $editor.sketchPenCode_editor('dirtyDocs');
+            $.each(routes, function (i, route) {
+                sketchPenCode.events.fire('save-document', { route: route });
             });
         });
 
@@ -93,12 +93,12 @@ var sketchPenCode = new function ($) {
         });
 
         sketchPenCode.events.on(['run-current-document-in-tab', 'run-current-document'], function (channel) {
-            var id = $editor.sketchPenCode_editor('currentDoc');
+            var route = $editor.sketchPenCode_editor('currentDoc');
 
-            var cmd = id.split('@').length === 3 ? '/report/' : '/select/';
-            var url = _sketchPenEngineUrl + cmd + id;
+            var cmd =  '/preview';
+            var url = sketchPenCode.targetUrl() + cmd;
 
-            var args = { id: id, urlParameters: '' }
+            var args = { route: route, globals: '' }
             sketchPenCode.events.fire('before-run-document', args);  // collect url parameters
             if (args.urlParameters) {
                 url += '?' + args.urlParameters;
@@ -166,7 +166,7 @@ var sketchPenCode = new function ($) {
     this.api = new function () {
         this.get = function (route, callback, data) {
             $.ajax({
-                url: sketchPenCode.targetUrl() + '/' + route,
+                url: sketchPenCode.targetUrl() + '/' + route + '/' + sketchPenCode.id(),
                 data: data,
                 success: function (result) {
                     callback(result)
@@ -174,48 +174,23 @@ var sketchPenCode = new function ($) {
             });
         };
 
-        this.getEndPoints = function (callback) {
-            this.get('getEndPoints', callback)
-        };
-        this.getQueries = function (endPoint, callback) {
-            this.get('getQueries?endPoint=' + endPoint, callback);
-        };
-        this.getViews = function (endPoint, query, callback) {
-            this.get('getViews?endPoint=' + endPoint + '&query=' + query, callback);
+        this.getFiles = function (callback) {
+            this.get('getFiles', callback)
         };
 
-        this.createEndPoint = function (endPoint, callback) {
-            this.get('createEndPoint', callback, { endPoint: endPoint });
-        };
-        this.createQuery = function (endPoint, query, callback) {
-            this.get('createEndPointQuery', callback, { endPoint: endPoint, query: query });
-        };
-        this.createView = function (endPoint, query, view, callback) {
-            this.get('createEndPointQueryView', callback, { endPoint: endPoint, query: query, view: view });
+        this.createFile = function (filename, callback) {
+            this.get('createFile', callback, { filename: filename });
         };
 
-        this.deleteEndPoint = function (endPoint, callback) {
-            this.get('deleteEndPoint', callback, { endPoint: endPoint });
-        };
-        this.deleteQuery = function (endPoint, query, callback) {
-            this.get('deleteEndPointQuery', callback, { endPoint: endPoint, query: query });
-        };
-        this.deleteView = function (endPoint, query, view, callback) {
-            this.get('deleteEndPointQueryView', callback, { endPoint: endPoint, query: query, view: view });
-        };
 
-        this.verifyView = function (endPoint, query, view, callback) {
-            this.get('verifyEndPointQueryView', callback, { endPoint: endPoint, query: query, view: view });
+        this.deleteFile = function (filename, callback) {
+            this.get('deleteFile', callback, { filename: filename });
         };
     };
 
     this.privileges = new function () {
-        this.createEndpoints = function () { return _userPrevileges.createEndpoints === true; };
-        this.createQueries = function () { return _userPrevileges.createQueries === true; };
-        this.createViews = function () { return _userPrevileges.createViews === true; };
-        this.deleteEndpoints = function () { return _userPrevileges.deleteEndpoints === true; };
-        this.deleteQueries = function () { return _userPrevileges.deleteQueries === true; };
-        this.deleteViews = function () { return _userPrevileges.deleteViews === true; };
+        this.createFiles = function () { return _userPrivileges.createFiles === true; };
+        this.deleteFiles = function () { return _userPrivileges.deleteFiles === true; };
     };
 
     this.timer = function (callback, duration, arg) {

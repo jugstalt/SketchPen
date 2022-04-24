@@ -4,6 +4,18 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>318237f8-b34e-49b4-a876-d87746ff85e2</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SketchPen.Parse\SketchPen.Parse.csproj" />
+    <ProjectReference Include="..\SketchPen.Plot.Drawing\SketchPen.Plot.Drawing.csproj" />
+    <ProjectReference Include="..\SketchPen.Plot.Skia\SketchPen.Plot.Skia.csproj" />
+    <ProjectReference Include="..\SketchPen.Plot\SketchPen.Plot.csproj" />
+  </ItemGroup>
 
 </Project>

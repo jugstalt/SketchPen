@@ -26,4 +26,5 @@ path.draw();
 
 pen.width(@@penWidth);
 
+#include "templates/construct-clip-ploygon-outline.spt"
 #include "templates/construct-clip.spt"

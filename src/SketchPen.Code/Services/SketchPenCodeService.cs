@@ -51,6 +51,29 @@ namespace SketchPen.Code.Services
             await File.WriteAllTextAsync(fileInfo.FullName, content);
         }
 
+        async public Task<string> CreateFile(string id, string filename)
+        {
+            if(!filename.IsValidFilename())
+            {
+                throw new Exception($"Filename contains invalid characters: {filename}");
+            }
+
+            var fileInfo = new FileInfo(Path.Combine(_options.RootPath, id, filename));
+
+            if(fileInfo.Exists)
+            {
+                throw new Exception($"{filename} already exists");
+            }
+            if (!fileInfo.HasAllowedExtension())
+            {
+                throw new Exception($"Not allowed file extension: {fileInfo.Extension}");
+            }
+
+            await File.WriteAllTextAsync(fileInfo.FullName, $"// {filename}{Environment.NewLine}");
+
+            return await GetFileContent($"{id}/{filename}");
+        }
+
         #region Helper
 
         private void CollectFiles(DirectoryInfo dirInfo, List<string> filesList)

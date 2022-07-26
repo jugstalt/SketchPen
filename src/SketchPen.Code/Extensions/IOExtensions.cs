@@ -1,10 +1,12 @@
-﻿namespace SketchPen.Code.Extensions
+﻿using System.Text.RegularExpressions;
+
+namespace SketchPen.Code.Extensions
 {
     static public class IOExtensions
     {
         static public bool HasAllowedExtension(this FileInfo fi)
         {
-            switch(fi.Extension.ToLower())
+            switch (fi.Extension.ToLower())
             {
                 case ".sp":
                 case ".spt":
@@ -13,6 +15,19 @@
             }
 
             return false;
+        }
+
+        static public bool IsValidFilename(this string filename)
+        {
+            Regex containsABadCharacter = new Regex($"[{Regex.Escape(new string(System.IO.Path.GetInvalidPathChars()))}]");
+            if (containsABadCharacter.IsMatch(filename))
+            {
+                return false;
+            }
+
+            // other checks for UNC, drive-path format, etc
+
+            return true;
         }
     }
 }

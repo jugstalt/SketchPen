@@ -145,10 +145,16 @@
 
                 var $parentNode = $tree;
                 for (i = 0; i < routeParts.length - 1; i++) {
-                    $parentNode = getOrCreateFolderNode($parentNode, routeParts[i]);
+                    $parentNode = getOrCreateFolderNode($parentNode, routeParts[i], collapsedRoutes);
                 }
 
-                addFileNode($parentNode, routeParts[routeParts.length-1], collapsedRoutes);
+                var filename = routeParts[routeParts.length - 1];
+
+                if (filename.indexOf('.globals') === filename.length - '.globals'.length) {
+
+                } else {
+                    addFileNode($parentNode, filename, collapsedRoutes);
+                }
             });
         });
     }
@@ -219,7 +225,7 @@
         $node.appendTo($nodes);
     }
 
-    var getOrCreateFolderNode = function ($parent, folder) {
+    var getOrCreateFolderNode = function ($parent, folder, collapsedRoutes) {
         var $node = null;
         $parent.children('.tree-nodes').children('.folder').each(function (f, folderNode) {
             var $folderNode = $(folderNode);
@@ -235,10 +241,15 @@
                 .data('data-folder', folder)
                 .data('data-route', ($parent.data('data-route') || '') + folder + '/');
 
+            if ($.inArray($node.data('data-route'), collapsedRoutes) >= 0) {
+                $node.addClass('collapsed');
+                $node.data('is_collapsed', true);
+            }
+
             addToNodes($node, $parent);
 
             if (sketchPenCode.privileges.createFiles()) {
-                addFileNode($node, null);
+                addFileNode($node, null, collapsedRoutes);
             }
 
             $node.click(function (e) {
@@ -265,7 +276,7 @@
         var $node = createTreeNode(filename || 'New File...', null, filename === null)
             .addClass('file')
             .data('data-filename', filename)
-            .data('data-route', ($parent.data('data-route')  || '') + filename);
+            .data('data-route', ($parent.data('data-route')  || '') + (filename || ''));
 
         if ($.inArray($node.data('data-route'), collapsedRoutes) >= 0) {
             $node.addClass('collapsed');
@@ -304,6 +315,11 @@
                         sketchPenCode.api.createFile(id, function (result) {
                             if (result.success == true) {
                                 refresh($this.closest('.sketchpen-code-tree-holder'));
+                                if (result.route) {
+                                    sketchPenCode.events.fire('open-file', {
+                                        route: result.route
+                                    });
+                                }
                             } else {
                                 sketchPenCode.ui.alert("Error", (result.error_message || 'Unknown error'));
                             }

@@ -68,22 +68,38 @@ namespace SketchPen.Code.Controllers
         [Route("CreateFile/{id}")]
         async public Task<IActionResult> CreateFile(string id, string filename)
         {
-            if (!filename.ToLower().EndsWith(".sp"))
+            try
             {
-                filename = $"{filename}.sp";
-            }
+                filename = filename.Trim();
 
-            return View("EditFile", new EditFileModel()
+                if (!filename.ToLower().EndsWith(".sp"))
+                {
+                    filename = $"{filename}.sp";
+                }
+
+                string content = await _sketchPenCode.CreateFile(id, filename);
+
+                return Json(new { success = true, route = $"{id}/{filename}"  });
+            }
+            catch (Exception ex)
             {
-                Route = $"{id}/{filename}",
-                Content = await _sketchPenCode.CreateFile(id, filename)
-            });
+                return Json(new { success = false, error_message = ex.Message});
+            }
+        }
+
+        [HttpGet]
+        [Route("RemoveFile/{id}")]
+        public Task<IActionResult> RemoveFile(string id, string filename)
+        {
+            return Task.FromResult<IActionResult>(null);
         }
 
         #endregion
 
         #region Graphics
 
+        [HttpGet]
+        [Route("Preview")]
         public IActionResult Preview(string route, string globals, int width = 512, int height = 512)
         {
             var imageBytes = _sketchPenPlot.Plot(width, height, route, globals);

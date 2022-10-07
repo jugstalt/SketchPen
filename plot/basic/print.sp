@@ -4,7 +4,7 @@ path.begin();
 path.addlines(-25,-19, -25,-40, 25,-40, 25,-19);
 path.close();
 
-path.fill("#fff");
+path.fill(@@backgroundBrushColor);
 path.draw();
 
 // Printer
@@ -30,5 +30,5 @@ path.begin();
 path.addlines(-25,30, -25,3, 25,3, 25,30);
 path.close();
 
-path.fill("#fff");
+path.fill(@@backgroundBrushColor);
 path.draw();

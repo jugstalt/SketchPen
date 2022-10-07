@@ -1,8 +1,8 @@
 globals.set(penColor, "#82C828");
 //globals.set(penColor, "#406314");
 //globals.set(penColor, "#1f2e0a");
-globals.set(penColor,"#055");
-globals.set(outlinePenColor,"#333");
+globals.set(penColor,"#0078d4");
+globals.set(outlinePenColor,"#555");
 //globals.set(penColor,"#fff");
 
 globals.set(brushColor, "#fafafa");

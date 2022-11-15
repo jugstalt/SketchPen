@@ -10,9 +10,9 @@
     <div class="sketchpen-code-ide">
 
     @{
-          Html.RenderPartial("_Toolbar");     
-          Html.RenderPartial("_Sidebar");   
-          Html.RenderPartial("_Content");   
+         await Html.RenderPartialAsync("_Toolbar");
+         await Html.RenderPartialAsync("_Sidebar");
+         await Html.RenderPartialAsync("_Content");
     }
 
     </div>
@@ -27,6 +27,7 @@
     <script src="~/js/sketchpen-code.js"></script>
     <script src="~/js/sketchpen-code.events.js"></script>
     <script src="~/js/sketchpen-code.ui.tree.js"></script>
+    <script src="~/js/sketchpen-code.ui.globals.js"></script>
     <script src="~/js/sketchpen-code.ui.editor.js"></script>
     <script src="~/js/sketchpen-code.ui.modal.js"></script>
     <script src="~/js/sketchpen-code.ui.toolbar.js"></script>

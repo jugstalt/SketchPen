@@ -18,6 +18,7 @@ var sketchPenCode = new function ($) {
         $tree = $('.sketchpen-code-tree-container').sketchPenCode_tree({
             $toolbar: $('.sketchpen-code-tree-top > .sketchpen-code-tree-toolbar')
         });
+        $globals = $('.sketchpen-code-globlals-container').sketchPenCode_globals();
         $editor = $('.sketchpen-code-content').sketchPenCode_editor();
         $toolbar = $('.sketchpen-code-toolbar').sketchPenCode_toolbar();
 

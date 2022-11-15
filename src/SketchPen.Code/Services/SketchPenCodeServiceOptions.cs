@@ -2,6 +2,6 @@
 {
     public class SketchPenCodeServiceOptions
     {
-        public string RootPath { get; set; }
+        public string RootPath { get; set; } = String.Empty;
     }
 }

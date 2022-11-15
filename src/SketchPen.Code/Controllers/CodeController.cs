@@ -91,7 +91,7 @@ namespace SketchPen.Code.Controllers
         [Route("RemoveFile/{id}")]
         public Task<IActionResult> RemoveFile(string id, string filename)
         {
-            return Task.FromResult<IActionResult>(null);
+            return Task.FromResult<IActionResult>(Json(new { }));
         }
 
         #endregion

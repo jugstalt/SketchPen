@@ -2,7 +2,7 @@
 {
     public class EditFileModel
     {
-        public string Route { get; set; }
-        public string Content { get; set; }
+        public string Route { get; set; } = String.Empty;
+        public string Content { get; set; } = String.Empty;
     }
 }

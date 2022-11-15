@@ -151,7 +151,7 @@
                 var filename = routeParts[routeParts.length - 1];
 
                 if (filename.indexOf('.globals') === filename.length - '.globals'.length) {
-
+                    console.log('globals-file:', filename);
                 } else {
                     addFileNode($parentNode, filename, collapsedRoutes);
                 }

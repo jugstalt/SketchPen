@@ -439,9 +439,19 @@ body {
     top: 100px;
     left: 0px;
     right: 0px;
-    bottom: 0px;
+    bottom: 50px;
     overflow: auto;
 }
+
+.sketchpen-code-ide .sketchpen-code-sidebar .sketchpen-code-globlals-container {
+    position: absolute;
+    bottom: 50px;
+    left: 0px;
+    right: 0px;
+    height: 50px;
+    overflow: auto;
+}
+
 
 .sketchpen-code-tree {
     padding: 8px;

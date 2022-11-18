@@ -11,7 +11,7 @@
             $.error('Method ' + method + ' does not exist on jQuery.sketchPen_code_modal');
         }
     };
-    var defaults = {
+    let defaults = {
         meta_left_frame: false,
         width: '50%',
         height: '80%',
@@ -27,19 +27,19 @@
         animate: true,
         hasBlocker: true
     };
-    var methods = {
+    let methods = {
         init: function (options) {
-            var settings = $.extend({}, defaults, options);
+            let settings = $.extend({}, defaults, options);
             return this.each(function () {
                 new initUI(this, settings);
             });
         },
         content: function (options) {
-            var settings = $.extend({}, defaults, options);
+            let settings = $.extend({}, defaults, options);
             return $(dialogSelector(settings)).find('#sketchpen-code-modal-content');
         },
         title: function (options) {
-            var settings = $.extend({}, defaults, options);
+            let settings = $.extend({}, defaults, options);
             return $(dialogSelector(settings)).find('.sketchpen-code-modal-title');
         },
         close: function (options) {
@@ -65,7 +65,7 @@
         },
         toggle_fullscreen: function (options) {
             options = $.extend({}, defaults, options);
-            var elem = $(dialogSelector(options)).find('.sketchpen-code-modal-body').get(0);
+            let elem = $(dialogSelector(options)).find('.sketchpen-code-modal-body').get(0);
             if ($.fullScreenEnabled()) {
                 elem.style.left = elem.style.top = elem.style.right = elem.style.bottom = '10px';
                 elem.style.border = '1px solid #888888';
@@ -79,7 +79,7 @@
         },
         toggle_maximize: function (options) {
             options = $.extend({}, defaults, options);
-            var elem = $(dialogSelector(options)).find('.sketchpen-code-modal-body').get(0);
+            let elem = $(dialogSelector(options)).find('.sketchpen-code-modal-body').get(0);
             elem.style.width = elem.style.height = '';
             if (elem.style.left !== '0px') {
                 elem.style.left = elem.style.top = elem.style.right = elem.style.bottom = '0px';
@@ -92,12 +92,12 @@
         fit: function (options) {
             options = $.extend({}, defaults, options);
 
-            var useMobile = $(window).width() < 1024;
+            let useMobile = $(window).width() < 1024;
             if (useMobile)
                 return;
-            var $modalBody = $(dialogSelector(options)).find('.sketchpen-code-modal-body');
-            var $content = $modalBody.find('#sketchpen-code-modal-content');
-            var contentWidth = 0, contentHeight = 0;
+            let $modalBody = $(dialogSelector(options)).find('.sketchpen-code-modal-body');
+            let $content = $modalBody.find('#sketchpen-code-modal-content');
+            let contentWidth = 0, contentHeight = 0;
             $content.children().each(function (i, e) {
                 contentWidth = Math.max($(e).outerWidth() + parseInt(parseInt($(e).css('marginLeft')) + parseInt($(e).css('marginRight'))), contentWidth);
                 contentHeight += $(e).outerHeight() + parseInt(parseInt($(e).css('marginTop')) + parseInt($(e).css('marginBottom')));
@@ -124,41 +124,41 @@
             }
         }
     };
-    var initUI = function (parent, options) {
-        var wWidth = $(window).width();
-        var wHeight = $(window).height();
-        var $parent = $(parent);
+    let initUI = function (parent, options) {
+        let wWidth = $(window).width();
+        let wHeight = $(window).height();
+        let $parent = $(parent);
         $parent.find(dialogSelector(options)).each(function (i, e) {
             e.parentNode.removeChild(e);
         });
-        var useMobile = $(window).width() < 1024 && options.mobile_fullscreen === true;
-        var useMobileFullscreenDockPanels = useMobile && screen.width < 800;
+        let useMobile = $(window).width() < 1024 && options.mobile_fullscreen === true;
+        let useMobileFullscreenDockPanels = useMobile && screen.width < 800;
 
-        var isEnlargeable = useMobileFullscreenDockPanels === false && (options.dock === 'left' || options.dock === 'right');
+        let isEnlargeable = useMobileFullscreenDockPanels === false && (options.dock === 'left' || options.dock === 'right');
 
-        var framePos = options.framepos ?
+        let framePos = options.framepos ?
             options.framepos :
             (((useMobile && options.dock === 'center') || (useMobileFullscreenDockPanels && options.dock !== 'center')) ?
                 "left:4px;right:4px;top:4px;bottom:4px;" :
                 "width:" + options.width + ";height:" + options.height + ";min-width:" + options.minWidth + ";max-height:" + options.maxHeight + ";max-width:100%;");
 
         // Absolute wenn sich das ganze innerhalb eines sketchpen-container abspielen soll
-        //var blockerPosition = $(parent).css('position') === "absolute" || $(parent).css('position') === "relative" ? "absolute" : "fixed";
+        //let blockerPosition = $(parent).css('position') === "absolute" || $(parent).css('position') === "relative" ? "absolute" : "fixed";
 
         // Immer fixed => funktionerrt dann auch für Dialog, wenn API auf Drittseiten eingebunden ist, auf denen gescrollt werden muss
-        var blockerPosition = 'fixed';
+        let blockerPosition = 'fixed';
 
-        var $blocker = $("<div id='" + dialogId(options) + "' style='z-index:9999;position:" + blockerPosition + ";left:0px;right:0px;top:0px;bottom:0px;background:rgba(0,0,0," + options.blocker_alpha + ");' class='sketchpen-code-modal'></div>");
+        let $blocker = $("<div id='" + dialogId(options) + "' style='z-index:9999;position:" + blockerPosition + ";left:0px;right:0px;top:0px;bottom:0px;background:rgba(0,0,0," + options.blocker_alpha + ");' class='sketchpen-code-modal'></div>");
 
-        var $frame = $("<div id='" + (options.hasBlocker === true ? '' : dialogId(options)) + "' style='z-index:1000;position:absolute;" + framePos + "background:#555;opacity:0;" + (useMobile === true ? "" : "display:none;") + "' class='sketchpen-code-modal-body " + options.dock + "'></div>").appendTo($blocker);
-        var pPos, mPos;
+        let $frame = $("<div id='" + (options.hasBlocker === true ? '' : dialogId(options)) + "' style='z-index:1000;position:absolute;" + framePos + "background:#555;opacity:0;" + (useMobile === true ? "" : "display:none;") + "' class='sketchpen-code-modal-body " + options.dock + "'></div>").appendTo($blocker);
+        let pPos, mPos;
         if (useMobile === true) {
             pPos = "left:0px;top:44px;right:0px;bottom:0px";
         }
         else {
             pPos = "left:0px;top:44px;right:0px;bottom:0px";
         }
-        var $content = $("<div id='sketchpen-code-modal-content' class='sketchpen-code-modal-content' style='z-index:1;position:absolute;overflow:auto;" + pPos + "'></div>");
+        let $content = $("<div id='sketchpen-code-modal-content' class='sketchpen-code-modal-content' style='z-index:1;position:absolute;overflow:auto;" + pPos + "'></div>");
         if (options.content) {
             $content.html(options.content);
         }
@@ -182,8 +182,8 @@
             });
             $blocker.click(function (e) {
 
-                var dx = e.originalEvent.offsetX - $(this).data('mousedown_x');
-                var dy = e.originalEvent.offsetY - $(this).data('mousedown_y');
+                let dx = e.originalEvent.offsetX - $(this).data('mousedown_x');
+                let dy = e.originalEvent.offsetY - $(this).data('mousedown_y');
 
                 //console.log(dx + " " + dy);
                 if (Math.abs(dx) < 5 && Math.abs(dy) < 5) {
@@ -226,7 +226,7 @@
             }
         }
         else if (options.dock === 'center') {
-            var frameTop = Math.max(0, ($blocker.height() / 2 - $frame.height() / 2) / 2);
+            let frameTop = Math.max(0, ($blocker.height() / 2 - $frame.height() / 2) / 2);
             $frame.css({
                 left: $blocker.width() / 2 - $frame.width() / 2,
                 top: frameTop,
@@ -237,7 +237,7 @@
 
         //console.log("width: " + $frame.width());
 
-        var $title = $("<div style='position:absolute;left:0px;right:0px;top:0px;height:35px'><div class='sketchpen-code-modal-title'>" + (options.title ? options.title : '') + "</div></div>"),
+        let $title = $("<div style='position:absolute;left:0px;right:0px;top:0px;height:35px'><div class='sketchpen-code-modal-title'>" + (options.title ? options.title : '') + "</div></div>"),
             $close = null;
         $title.appendTo($frame);
         if (options.closebutton) {
@@ -257,8 +257,8 @@
         if (isEnlargeable) {
             $frame.addClass('enlargeable');
             $title.click(function () {
-                var $modal = $(this).closest('.sketchpen-code-modal-body');
-                var $blocker = $(this).closest('.sketchpen-code-modal');
+                let $modal = $(this).closest('.sketchpen-code-modal-body');
+                let $blocker = $(this).closest('.sketchpen-code-modal');
 
                 if ($modal.hasClass('modal-large')) {
                     $modal.css('width', 330);
@@ -278,7 +278,7 @@
             $title
                 .css('cursor', 'pointer')
                 .click(function () {
-                    var $modal = $(this).closest('.sketchpen-code-modal-body');
+                    let $modal = $(this).closest('.sketchpen-code-modal-body');
                     if ($modal.hasClass('maximized')) {
                         $modal.css({
                             width: $modal.attr('data-normal-width'),
@@ -312,7 +312,7 @@
                 });
         }
         if (useMobile === false && (options.onmaximize || options.allowfullscreen === true)) {
-            var $max = $("<table style='cursor:pointer;color:black;font-size:14px;font-weight:bold;position:absolute;top:2px;right:72px;margin:4px'><tr><td>Fullscreen</td><td><div class='i8-button-26 i8-maximize-26-w'></div></td></tr></table>");
+            let $max = $("<table style='cursor:pointer;color:black;font-size:14px;font-weight:bold;position:absolute;top:2px;right:72px;margin:4px'><tr><td>Fullscreen</td><td><div class='i8-button-26 i8-maximize-26-w'></div></td></tr></table>");
             $max.appendTo($title);
             if (options.onmaximize) {
                 $max.get(0).onmaximize = options.onmaximize;
@@ -329,7 +329,7 @@
         $frame.removeClass('animate');
         sketchPenCode.delayed(function ($frame) {
             if (options.animate) {
-                var originHeight = $frame.css('height'), originWidth = $frame.css('width'), originLeft = $frame.position().left, originTop = $frame.position().top;
+                let originHeight = $frame.css('height'), originWidth = $frame.css('width'), originLeft = $frame.position().left, originTop = $frame.position().top;
                 $frame.css({
                     width: '0px', height: '0px',
                     left: $(document).width() / 5, top: $(document).height() / 2
@@ -350,13 +350,13 @@
             }
         }, 10, $frame);
     };
-    var dialogId = function (options) {
+    let dialogId = function (options) {
         if (options.id)
             return 'sketchpen-code-modal-' + options.id.replace(/\./g, '-').replace(/:/g, '-');
         ;
     };
-    var dialogSelector = function (options) {
-        var id = dialogId(options);
+    let dialogSelector = function (options) {
+        let id = dialogId(options);
         return (id === '' ? '.sketchpen-code-modal' : '#' + id + '.sketchpen-code-modal');
     };
 })(jQuery);

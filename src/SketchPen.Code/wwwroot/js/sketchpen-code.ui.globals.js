@@ -11,26 +11,63 @@
             $.error('Method ' + method + ' does not exist on jQuery.sketchPenCode_globals');
         }
     };
-    var defaults = {
+
+    let defaults = {
         $toolbar: null,
     };
-    var methods = {
+
+    let methods = {
         init: function (options) {
-            var settings = $.extend({}, defaults, options);
+            let settings = $.extend({}, defaults, options);
             return this.each(function () {
                 new initUI(this, settings);
             });
         },
         refresh: function (options) {
             refresh($(this));
+        },
+        currentValue: function (options) {
+            let $select = $(this).find('.sketchpen-code-globals-select');
+
+            return toGlobalsValue($select.val());
         }
     };
-    var initUI = function (parent, options) {
-        
+
+    let initUI = function (parent, options) {
+        let $parent = $(parent);
+
+        let $selectHodler = $("<div>")
+            .addClass('sketchpan-code-globals-select-holder')
+            .appendTo($parent);
+
+        let $select = $("<select>")
+            .addClass('sketchpen-code-globals-select')
+            .appendTo($selectHodler);
+
+        refresh($parent);
     };
 
-    var refresh = function ($parent) {
-        
-    }
+    let refresh = function ($parent) {
+        let $select = $parent.find('.sketchpen-code-globals-select');
 
+        $select.empty();
+        sketchPenCode.api.getGlobals(function (filenames) {
+            $.each(filenames, function (i, filename) {
+                $("<option>")
+                    .attr('value', filename)
+                    .text(filename)
+                    .appendTo($select);
+
+            });
+        });
+    };
+
+    let toGlobalsValue = function (filename) {
+        if (filename.indexOf('_') == 0 &&
+            filename.indexOf('.globals') === filename.length - '.globals'.length) {
+            return filename.substr(1, filename.length - '.globals'.length - 1);
+        }
+
+        return '';
+    };
 })(jQuery);

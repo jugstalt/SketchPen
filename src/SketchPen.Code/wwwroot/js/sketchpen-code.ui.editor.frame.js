@@ -1,9 +1,10 @@
-var sketchPenCode = window.parent.sketchPenCode;
+"use strict"
+var  sketchPenCode = window.parent.sketchPenCode;
 
-sketchPenCodeEditor = new function () {
-    var _route, _this;
-    var _editor = null;
-    var _editorDecorations = null;
+var sketchPenCodeEditor = new function () {
+    let _route, _this;
+    let _editor = null;
+    let _editorDecorations = null;
 
     this.route = () => _route;
     this.editor = () => _editor;
@@ -64,28 +65,28 @@ sketchPenCodeEditor = new function () {
         sketchPenCode.events.fire('document-opened', { route: _route });
     };
 
-    var _event_save_document = function (channel, args) {
+    let _event_save_document = function (channel, args) {
         if (args.route === _route) {
             sketchPenCodeEditor.submitForm();
         }
     };
 
-    var _event_verify_document = function (channel, args) {
+    let _event_verify_document = function (channel, args) {
         if (args.route === _route) {
-            var ids = args.route.split('@')
+            let ids = args.route.split('@')
             if (ids.length === 3) {  // view
                 sketchPenCodeEditor.submitForm(true);
             }
         }
     };
 
-    var _event_before_run_document = function (channel, args) {
+    let _event_before_run_document = function (channel, args) {
         if (args.route === _route) {
             args.urlParameters = "route=" + args.route + '&globals=' + args.globals;
         }
     };
 
-    var _event_destroy_editor = function (channel, args) {
+    let _event_destroy_editor = function (channel, args) {
         if (args.route === _route) {
             console.log('destroy editor ' + _route);
             sketchPenCode.events.off('save-document', _event_save_document);
@@ -98,7 +99,7 @@ sketchPenCodeEditor = new function () {
         }
     }
 
-    var _event_theme_changed = function (channel, args) {
+    let _event_theme_changed = function (channel, args) {
         if (_editor) {
             _editor.updateOptions({ theme: args.theme });
         }
@@ -114,10 +115,10 @@ sketchPenCodeEditor = new function () {
     };
 
     this.generateRandomToken = function (length) {
-        var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
-        var token = '';
-        for (var i = 0; i < length; i++) {
+        let token = '';
+        for (let i = 0; i < length; i++) {
             token += chars[parseInt((Math.random()) * 0x10000) % chars.length];
         }
 
@@ -161,11 +162,11 @@ sketchPenCodeEditor = new function () {
     };
 
     this.submitForm = function (verifyOnly) {
-        var $form =
+        let $form =
             $(".sketchpen-code-editor-settings")
                 .children('form');
 
-        var actionUrl = $form.attr('action');
+        let actionUrl = $form.attr('action');
 
         $.ajax({
             type: "POST",
@@ -201,22 +202,22 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
             $.error('Method ' + method + ' does not exist on jQuery.sketchPenCode_editor_switcher');
         }
     };
-    var defaults = {
+    let defaults = {
 
     };
-    var methods = {
+    let methods = {
         init: function (options) {
-            var settings = $.extend({}, defaults, options);
+            let settings = $.extend({}, defaults, options);
             return this.each(function () {
                 new initUI(this, settings);
             });
         }
     };
 
-    var initUI = function (parent, opitons) {
-        var $parent = $(parent);
+    let initUI = function (parent, opitons) {
+        let $parent = $(parent);
 
-        var $code = $("<div>")
+        let $code = $("<div>")
             .addClass('switch-button code')
             .appendTo($parent)
             .click(function (e) {
@@ -251,20 +252,20 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
             $.error('Method ' + method + ' does not exist on jQuery.sketchPenCode_editor_properties_form');
         }
     };
-    var defaults = {
+    let defaults = {
 
     };
-    var methods = {
+    let methods = {
         init: function (options) {
-            var settings = $.extend({}, defaults, options);
+            let settings = $.extend({}, defaults, options);
             return this.each(function () {
                 new initUI(this, settings);
             });
         }
     };
 
-    var initUI = function (parent, opitons) {
-        var $parent = $(parent);
+    let initUI = function (parent, opitons) {
+        let $parent = $(parent);
 
         $parent.find("label")
             .addClass('sketchpen-label');
@@ -302,7 +303,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
         }
     };
 
-    var defaults = {
+    let defaults = {
         source: '',
         name: '',
         prefixes: [],
@@ -310,9 +311,9 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
         alwaysIncludeOwner: ''
     };
 
-    var methods = {
+    let methods = {
         init: function (options) {
-            var $this = $(this);
+            let $this = $(this);
             options = $.extend({}, defaults, options);
 
             return this.each(function () {
@@ -322,7 +323,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
         add: function (options) {
             options = $.extend({}, defaults, options);
 
-            var prefix = $(this).find('.sketchpen-autocomplete-multiselect-prefix').val() || '';
+            let prefix = $(this).find('.sketchpen-autocomplete-multiselect-prefix').val() || '';
 
             if (options.value !== "*") {
                 $(this).find('.sketchpen-autocomplete-multiselect-prefix').children("option").each(function (i, o) {
@@ -340,14 +341,14 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
 
             $(this).sketchpen_autocomplete_multiselect('remove', options);
 
-            var displayValue = options.value;
+            let displayValue = options.value;
             //if (prefix && displayValue.indexOf(prefix) === 0) {
             //    displayValue = "<strong>" + prefix + "</strong>" + displayValue.substr(prefix.length, displayValue.length - prefix.length);
             //}
 
-            var $valContainer = $(this).find('.sketchpen-autocomplete-multiselect-value-conatiner');
+            let $valContainer = $(this).find('.sketchpen-autocomplete-multiselect-value-conatiner');
 
-            var $div = $("<div>")
+            let $div = $("<div>")
                 .addClass('sketchpen-autocomplete-multiselect-value-item')
                 .attr('data-value', options.value)
                 .text(displayValue)
@@ -377,7 +378,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
             }
         },
         remove: function (options) {
-            var value = options.value.replace(/\\/g, '\\\\');
+            let value = options.value.replace(/\\/g, '\\\\');
 
             $(this)
                 .find(".sketchpen-autocomplete-multiselect-value-item[data-value='" + value + "']")
@@ -390,7 +391,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
             }
         },
         _calc: function (options) {
-            var val = '';
+            let val = '';
             $(this).find('.sketchpen-autocomplete-multiselect-value-item').each(function (i, e) {
                 if (val !== '') val += ',';
                 val += $(e).attr('data-value');
@@ -399,26 +400,26 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
         }
     };
 
-    var initUI = function (elem, options) {
+    let initUI = function (elem, options) {
 
-        var $elem = $(elem);
+        let $elem = $(elem);
         $elem.addClass('sketchpen-autocomplete-multiselect');
 
-        var $inputRow = $("<tr>").appendTo($("<table style='padding:0px;margin:0px'>").appendTo($elem));
+        let $inputRow = $("<tr>").appendTo($("<table style='padding:0px;margin:0px'>").appendTo($elem));
 
         if (options.prefixes && options.prefixes.length > 0) {
-            var $select = $("<select class='sketchpen-autocomplete-multiselect-prefix sketchpen-input' />");
+            let $select = $("<select class='sketchpen-autocomplete-multiselect-prefix sketchpen-input' />");
             $select.appendTo($("<td style='padding:0px'>").appendTo($inputRow));
 
-            for (var i in options.prefixes) {
-                var prefix = options.prefixes[i];
+            for (let i in options.prefixes) {
+                let prefix = options.prefixes[i];
                 $("<option value='" + prefix + "'>" + prefix + "</option>").appendTo($select);
             }
 
             $("<option value=''>custom</option>").appendTo($select);
         }
 
-        var $input = $("<input class='sketchpen-autocomplete-multiselect-input sketchpen-input' type='text' />");
+        let $input = $("<input class='sketchpen-autocomplete-multiselect-input sketchpen-input' type='text' />");
         $input.appendTo($("<td style='padding:0px'>").appendTo($inputRow));
         $input.keydown(function (event) {
             if (event.keyCode === 13) {
@@ -428,20 +429,20 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
             }
         });
 
-        var $button = $("<button>+</button>")
+        let $button = $("<button>+</button>")
             .addClass('add-button')
             .appendTo($("<td style='padding:0px'>").appendTo($inputRow))
             .click(function (event) {
                 event.stopPropagation();
-                var $elem = $(this).closest('.sketchpen-autocomplete-multiselect');
+                let $elem = $(this).closest('.sketchpen-autocomplete-multiselect');
                 $elem.sketchpen_autocomplete_multiselect('add', { value: $elem.find('.sketchpen-autocomplete-multiselect-input').val(), alwaysIncludeOwner: options.alwaysIncludeOwner });
                 return false;
             });
 
-        var $valContainer = $("<div>")
+        let $valContainer = $("<div>")
             .addClass('sketchpen-autocomplete-multiselect-value-conatiner')
             .appendTo($elem);
-        var $value = $("<input type='hidden' name='" + options.name + "' id='" + options.name + "' />")
+        let $value = $("<input type='hidden' name='" + options.name + "' id='" + options.name + "' />")
             .addClass('sketchpen-autocomplete-multiselect-value')
             .appendTo($elem);
 
@@ -472,10 +473,10 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
                         limit: Number.MAX_VALUE,
                         async: true,
                         source: function (query, processSync, processAsync) {
-                            var $element = $(this.$el[0].parentElement.parentElement).children(".sketchpen-autocomplete-multiselect-input").first(); // Ugly!!!
-                            var $prefix = $(this.$el[0].parentElement.parentElement).closest('.sketchpen-autocomplete-multiselect').find('.sketchpen-autocomplete-multiselect-prefix');
+                            let $element = $(this.$el[0].parentElement.parentElement).children(".sketchpen-autocomplete-multiselect-input").first(); // Ugly!!!
+                            let $prefix = $(this.$el[0].parentElement.parentElement).closest('.sketchpen-autocomplete-multiselect').find('.sketchpen-autocomplete-multiselect-prefix');
 
-                            var source = $element.data('sketchpen-multiselect-source');
+                            let source = $element.data('sketchpen-multiselect-source');
                             if ($prefix.length > 0) {
                                 source += (source.indexOf('?') > 0 ? '&' : '?') + 'prefix=' + $prefix.val();
                             }
@@ -499,8 +500,8 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
         } else if ($.fn.autocomplete) {
             $input.autocomplete({
                 search: function (event, ui) {
-                    var source = $(this).data('sketchpen-multiselect-source');
-                    var $prefix = $(this).closest('.sketchpen-autocomplete-multiselect').find('.sketchpen-autocomplete-multiselect-prefix');
+                    let source = $(this).data('sketchpen-multiselect-source');
+                    let $prefix = $(this).closest('.sketchpen-autocomplete-multiselect').find('.sketchpen-autocomplete-multiselect-prefix');
                     if ($prefix.length > 0) {
                         source += (source.indexOf('?') > 0 ? '&' : '?') + 'prefix=' + $prefix.val();
                     }
@@ -530,12 +531,12 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
         }
     };
 
-    var defaults = {
+    let defaults = {
     };
 
-    var methods = {
+    let methods = {
         init: function (options) {
-            var $this = $(this);
+            let $this = $(this);
             options = $.extend({}, defaults, options);
 
             return this.each(function () {
@@ -543,12 +544,12 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
             });
         },
         add: function (options) {
-            var $content = $(this).children('.content'), lineNumber = 0;
+            let $content = $(this).children('.content'), lineNumber = 0;
 
-            var model = sketchPenCodeEditor.editor().getModel();
+            let model = sketchPenCodeEditor.editor().getModel();
             //console.log(model);
 
-            var codeLine = (options.code_line || '').trim();
+            let codeLine = (options.code_line || '').trim();
             if (codeLine.indexOf("Write(") == 0) {
                 codeLine = codeLine.substr(6);
             }
@@ -558,8 +559,8 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
             //console.log(codeLine);
 
             if (codeLine) {
-                for (var i = 1, to = model.getLineCount(); i <= to; i++) {
-                    var line = model.getLineContent(i);
+                for (let i = 1, to = model.getLineCount(); i <= to; i++) {
+                    let line = model.getLineContent(i);
 
                     if (!line.trim())
                         continue;
@@ -574,7 +575,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
             }
 
             console.log(lineNumber);
-            
+
             $("<div>")
                 .addClass(options.is_warning === true ? 'warning' : 'error')
                 .text('Line ' + lineNumber + ': ' + options.error_text)
@@ -583,7 +584,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
                 .click(function (e) {
                     e.stopPropagation();
 
-                    var lineNumber = $(this).data('line');
+                    let lineNumber = $(this).data('line');
                     //console.log('select line ' + lineNumber);
 
                     $(this).parent().children('.selected').removeClass('selected');
@@ -594,10 +595,10 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
         }
     };
 
-    var initUI = function (elem, options) {
-        var $elem = $(elem);
+    let initUI = function (elem, options) {
+        let $elem = $(elem);
 
-        var $title = $("<div><span class='title'></span></<div>")
+        let $title = $("<div><span class='title'></span></<div>")
             .addClass('titlebar')
             .appendTo($elem);
 
@@ -609,7 +610,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
                 $(this).closest('.sketchpen-code-editor-code-panel').removeClass('show-errors');
             });
 
-        var $content = $("<div>")
+        let $content = $("<div>")
             .addClass('content')
             .appendTo($elem);
 
@@ -622,29 +623,29 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
         });
     };
 
-    var _event_document_saved = function (channel, args) {
+    let _event_document_saved = function (channel, args) {
         if (args.route === sketchPenCodeEditor.route()) {
-            var $content = this.children('.content');
+            let $content = this.children('.content');
 
             $content.empty();
             $content.closest('.sketchpen-code-editor-code-panel').removeClass('show-errors');
         }
     };
 
-    var _event_document_errors = function (channel, args) {
+    let _event_document_errors = function (channel, args) {
         if (args.route === sketchPenCodeEditor.route()) {
-            var $elem = this;
+            let $elem = this;
             console.log($elem);
 
-            var $content = $elem.children('.content');
-            var $title = $elem.children('.titlebar');
+            let $content = $elem.children('.content');
+            let $title = $elem.children('.titlebar');
 
             $content.empty();
             $content.closest('.sketchpen-code-editor-code-panel').addClass('show-errors');
 
             console.log(args);
 
-            var errors = args.errors;
+            let errors = args.errors;
             console.log(errors);
             if (errors) {
                 $title.children('.title').text(errors.error_message);
@@ -656,7 +657,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
         }
     };
 
-    var _event_destroy_editor = function (channel, args) {
+    let _event_destroy_editor = function (channel, args) {
         if (args.route === sketchPenCodeEditor.route()) {
             console.log('destroy sketchPenCode_editor_errors');
             sketchPenCode.events.off('document-saved', _event_document_saved);

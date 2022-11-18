@@ -11,12 +11,12 @@
             $.error('Method ' + method + ' does not exist on jQuery.sketchPenCode_tree');
         }
     };
-    var defaults = {
+    let defaults = {
         $toolbar: null,
     };
-    var methods = {
+    let methods = {
         init: function (options) {
-            var settings = $.extend({}, defaults, options);
+            let settings = $.extend({}, defaults, options);
             return this.each(function () {
                 new initUI(this, settings);
             });
@@ -25,8 +25,8 @@
             refresh($(this));
         }
     };
-    var initUI = function (parent, options) {
-        var $parent = $(parent).addClass('sketchpen-code-tree-holder');
+    let initUI = function (parent, options) {
+        let $parent = $(parent).addClass('sketchpen-code-tree-holder');
 
         if (options.$toolbar) {
             $("<div>")
@@ -51,7 +51,7 @@
                 .click(function (e) {
                     e.stopPropagation();
 
-                    var $this=$(this), x = $(this).outerWidth() - e.originalEvent.layerX;
+                    let $this=$(this), x = $(this).outerWidth() - e.originalEvent.layerX;
                     //console.log(x);
                     if (x < 8) {
                         $this.removeClass('has-value').val('');
@@ -59,7 +59,7 @@
                     }
                 })
                 .on('keyup', function (e) {
-                    var $this = $(this);
+                    let $this = $(this);
                     if ($this.val()) {
                         $this.addClass('has-value')
                     } else {
@@ -69,7 +69,7 @@
                 });
         }
 
-        var $tree = createTreeNode("","<div>")
+        let $tree = createTreeNode("","<div>")
             .addClass('sketchpen-code-tree')
             .appendTo($parent);
 
@@ -80,13 +80,13 @@
         refresh($parent);
     };
 
-    var setFilter = function ($parent, filter) {
+    let setFilter = function ($parent, filter) {
         filter = filter.toLowerCase();
 
         if (!filter) {
             $parent.find('.tree-node').removeClass('hidden').removeClass('found').removeClass('collapsed');
             $parent.find('.tree-node').each(function (i, node) {
-                var $node = $(node);
+                let $node = $(node);
                 if ($node.data('is_collapsed') === true) {
                     $node.addClass('collapsed');
                 }
@@ -95,9 +95,9 @@
         }
 
         $parent.find('.tree-node').each(function (i, node) {
-            var $node = $(node);
+            let $node = $(node);
 
-            var searchText = $node.data('search-text');
+            let searchText = $node.data('search-text');
             if (!searchText) {
                 $node.addClass('hidden');
             } else if (searchText.indexOf(filter) < 0) {
@@ -108,7 +108,7 @@
                 //console.log(searchText, searchText.indexOf(filter));
 
                 // Show all up nodes
-                var $pNode = $node.parent().parent();
+                let $pNode = $node.parent().parent();
                 while ($pNode.hasClass('tree-node')) {
                     $pNode.removeClass('hidden')
                           .addClass('collapsed');
@@ -120,7 +120,7 @@
 
         // Show all down nodes
         $parent.find('.tree-node.found').each(function (i, node) {
-            var $node = $(node);
+            let $node = $(node);
 
             $node
                 .removeClass('collapsed')
@@ -130,10 +130,10 @@
         });
     }
 
-    var refresh = function ($parent) {
-        var $tree = $parent.children('.sketchpen-code-tree');
+    let refresh = function ($parent) {
+        let $tree = $parent.children('.sketchpen-code-tree');
 
-        var collapsedRoutes = [];
+        let collapsedRoutes = [];
         $tree.find('.tree-node.collapsed').each(function (i, node) {
             collapsedRoutes.push($(node).data('data-route'));
         });
@@ -141,14 +141,15 @@
         $tree.empty();
         sketchPenCode.api.getFiles(function (filenames) {
             $.each(filenames, function (i, filename) {
-                var routeParts = filename.split('/');
+                let routeParts = filename.split('/');
 
-                var $parentNode = $tree;
+                let $parentNode = $tree;
+
                 for (i = 0; i < routeParts.length - 1; i++) {
                     $parentNode = getOrCreateFolderNode($parentNode, routeParts[i], collapsedRoutes);
                 }
 
-                var filename = routeParts[routeParts.length - 1];
+                filename = routeParts[routeParts.length - 1];
 
                 if (filename.indexOf('.globals') === filename.length - '.globals'.length) {
                     console.log('globals-file:', filename);
@@ -159,8 +160,8 @@
         });
     }
 
-    var createTreeNode = function (label, element, asInput) {
-        var $node = $(element || "<li>")
+    let createTreeNode = function (label, element, asInput) {
+        let $node = $(element || "<li>")
             .addClass("tree-node");
 
         if (label) {
@@ -170,7 +171,7 @@
                     .attr('placeholder', label)
                     .appendTo($node);
             } else {
-                var $label = $("<div>").addClass('label').text(label).appendTo($node);
+                let $label = $("<div>").addClass('label').text(label).appendTo($node);
 
                 $node.on('mousemove', function (e) {
                     $(this).closest('.sketchpen-code-tree-holder').find('.tree-node').removeClass('mouseover');
@@ -184,7 +185,7 @@
                     $(this).removeClass('mouseover');
                 });
 
-                var $copyButton = $("<div>")
+                let $copyButton = $("<div>")
                     .addClass('copy-button')
                     .appendTo($node)
                     .mouseout(function () {
@@ -193,7 +194,7 @@
                     .click(function (e) {
                         e.stopPropagation();
 
-                        var route = $(this).closest('.tree-node').data('data-route');
+                        let route = $(this).closest('.tree-node').data('data-route');
                         navigator.clipboard.writeText(route);
 
                         if (route.length > 20)
@@ -215,8 +216,8 @@
         return $node;
     };
 
-    var addToNodes = function ($node, $parent) {
-        var $nodes = $parent.children('.tree-nodes');
+    let addToNodes = function ($node, $parent) {
+        let $nodes = $parent.children('.tree-nodes');
         if ($nodes.length === 0) {
             $nodes = $("<ul>")
                 .addClass('tree-nodes')
@@ -225,10 +226,10 @@
         $node.appendTo($nodes);
     }
 
-    var getOrCreateFolderNode = function ($parent, folder, collapsedRoutes) {
-        var $node = null;
+    let getOrCreateFolderNode = function ($parent, folder, collapsedRoutes) {
+        let $node = null;
         $parent.children('.tree-nodes').children('.folder').each(function (f, folderNode) {
-            var $folderNode = $(folderNode);
+            let $folderNode = $(folderNode);
             
             if ($folderNode.data('data-folder') === folder) {
                 $node = $folderNode;
@@ -256,7 +257,7 @@
                 e.stopPropagation();
 
                 if (e.originalEvent.layerY < 24) {
-                    var $this = $(this);
+                    let $this = $(this);
                     if (e.originalEvent.layerX < 30) {
                         $this.toggleClass('collapsed');
                         $this.data('is_collapsed', $this.hasClass('collapsed'));
@@ -272,8 +273,8 @@
         return $node;
     };
 
-    var addFileNode = function ($parent, filename, collapsedRoutes) {
-        var $node = createTreeNode(filename || 'New File...', null, filename === null)
+    let addFileNode = function ($parent, filename, collapsedRoutes) {
+        let $node = createTreeNode(filename || 'New File...', null, filename === null)
             .addClass('file')
             .data('data-filename', filename)
             .data('data-route', ($parent.data('data-route')  || '') + (filename || ''));
@@ -293,7 +294,7 @@
             $node.click(function (e) {
                 e.stopPropagation();
 
-                var $this = $(this);
+                let $this = $(this);
                 sketchPenCode.events.fire('open-file', {
                     route: $this.data('data-route'),
                 });
@@ -306,9 +307,9 @@
                 })
                 .find('input').on('keyup', function (e) {
                     if (e.which == 13) {
-                        var $this = $(this);
+                        let $this = $(this);
 
-                        var id = $this.val();
+                        let id = $this.val();
                         //console.log('create file ' + id);
                         $this.val('');
 

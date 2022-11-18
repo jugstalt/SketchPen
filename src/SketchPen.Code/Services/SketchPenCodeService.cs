@@ -7,9 +7,9 @@ namespace SketchPen.Code.Services
     {
         private readonly SketchPenCodeServiceOptions _options;
 
-        public SketchPenCodeService(IOptionsMonitor<SketchPenCodeServiceOptions> optionsMonitor)
+        public SketchPenCodeService(IOptions<SketchPenCodeServiceOptions> options)
         {
-            _options = optionsMonitor.CurrentValue;
+            _options = options.Value;
         }
 
         public IEnumerable<string> GetAllFiles(string id)
@@ -18,6 +18,19 @@ namespace SketchPen.Code.Services
             var filesList = new List<string>();
 
             CollectFiles(rootDirInfo, filesList);
+
+            return filesList;
+        }
+
+        public IEnumerable<string> GetGlobals(string id)
+        {
+            var rootDirInfo = new DirectoryInfo(Path.Combine(_options.RootPath, id));
+            var filesList = new List<string>();
+
+            foreach(var fileInfo in rootDirInfo.GetFiles("_*.globals"))
+            {
+                filesList.Add(fileInfo.FullName.ToRelativeFilePath(rootDirInfo.FullName));
+            }
 
             return filesList;
         }
@@ -85,7 +98,15 @@ namespace SketchPen.Code.Services
 
             foreach (var fileInfo in dirInfo.GetFiles())
             {
-                filesList.Add(fileInfo.FullName.Substring(_options.RootPath.Length + 1).Replace("\\", "/"));
+                var relFilePath = fileInfo.FullName.ToRelativeFilePath(_options.RootPath);
+
+                if (relFilePath.StartsWith("_") &&
+                    relFilePath.EndsWith(".globals"))
+                {
+                    continue;
+                }
+
+                filesList.Add(relFilePath);
             }
         }
 

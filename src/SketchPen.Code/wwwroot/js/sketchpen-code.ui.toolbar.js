@@ -11,19 +11,19 @@
             $.error('Method ' + method + ' does not exist on jQuery.sketchPenCode_toolbar');
         }
     };
-    var defaults = {
+    let defaults = {
         
     };
-    var methods = {
+    let methods = {
         init: function (options) {
-            var settings = $.extend({}, defaults, options);
+            let settings = $.extend({}, defaults, options);
             return this.each(function () {
                 new initUI(this, settings);
             });
         }
     };
-    var initUI = function (parent, options) {
-        var $parent = $(parent);
+    let initUI = function (parent, options) {
+        let $parent = $(parent);
 
         $("<div>")
             .data('event', 'verify-current-document')
@@ -89,7 +89,7 @@
             .addClass('sketchpen-code-toolbutton help')
             .appendTo($parent);
 
-        var $logout = $("<div>")
+        let $logout = $("<div>")
             .data('event', 'logout')
             .addClass('sketchpen-code-toolbutton logout')
             .appendTo($parent);
@@ -113,8 +113,8 @@
         sketchPenCode.events.on('refresh-ui-elements', function (channel, args) {
             //console.log('refresh-ui-elements', args);
             $parent.children('.sketchpen-code-toolbutton').each(function (i, button) {
-                var $button = $(button);
-                var func = $button.data('refresh-ui');
+                let $button = $(button);
+                let func = $button.data('refresh-ui');
 
                 if (func && func(args) === false) {
                     $button.addClass('disabled');

@@ -29,5 +29,18 @@ namespace SketchPen.Code.Extensions
 
             return true;
         }
-    }
+
+        static public string ToRelativeFilePath(this string path, string rootPath)
+        {
+            return path?.Substring(rootPath.Length + 1).Replace(@"\", "/") ?? String.Empty;
+        }
+
+        static public bool IsValidGlobalsName(this string name)
+        {
+            return !String.IsNullOrEmpty(name) &&
+                !name.ContainsAny(new[] {'/','\\'}) &&
+                name.StartsWith("_") &&
+                name.EndsWith(".globals");
+        }
+    }               
 }

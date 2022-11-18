@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using SketchPen.Code.AppCode.Mvc;
+using SketchPen.Code.Extensions;
 using SketchPen.Code.Models.Code;
 using SketchPen.Code.Services;
 
@@ -48,7 +50,7 @@ namespace SketchPen.Code.Controllers
         [Route("EditFile")]
         async public Task<IActionResult> EditFile(string route)
         {
-            return View(new EditFileModel()
+            return View("EditFile", new EditFileModel()
             {
                 Route = route,
                 Content = await _sketchPenCode.GetFileContent(route)
@@ -92,6 +94,29 @@ namespace SketchPen.Code.Controllers
         public Task<IActionResult> RemoveFile(string id, string filename)
         {
             return Task.FromResult<IActionResult>(Json(new { }));
+        }
+
+        #endregion
+
+        [HttpGet]
+        [Route("GetGlobals/{id}")]
+        public IActionResult GetGlobals(string id)
+        {
+            return base.JsonObject(_sketchPenCode.GetGlobals(id));
+        }
+
+        #region Edit Globals
+
+        [HttpGet]
+        [Route("EditGlobal")]
+        public Task<IActionResult> EditGlobal(string id, string name)
+        {
+            if (!name.IsValidGlobalsName())
+            {
+                throw new Exception($"Invalid globals file name {name}");
+            }
+
+            return EditFile($"{id}/{name}");
         }
 
         #endregion

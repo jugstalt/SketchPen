@@ -11,12 +11,12 @@
             $.error('Method ' + method + ' does not exist on jQuery.sketchPenCode_blockframe');
         }
     };
-    var defaults = {
+    let defaults = {
         onShow: null
     };
-    var methods = {
+    let methods = {
         init: function (options) {
-            var settings = $.extend({}, defaults, options);
+            let settings = $.extend({}, defaults, options);
             return this.each(function () {
                 new initUI(this, settings);
             });
@@ -25,10 +25,10 @@
             $(this).children('.sketchpen-code-blockframe-blocker').remove();
         }
     };
-    var initUI = function (parent, options) {
-        var $parent = $(parent);
+    let initUI = function (parent, options) {
+        let $parent = $(parent);
         
-        var $blocker = $("<div>")
+        let $blocker = $("<div>")
             .addClass("sketchpen-code-blockframe-blocker")
             .appendTo($parent);
 
@@ -40,7 +40,7 @@
                 $blocker.remove();
             });
 
-        var $content = $("<div>")
+        let $content = $("<div>")
             .addClass("sketchpen-code-blockframe-content")
             .appendTo($blocker);
 

@@ -1,9 +1,10 @@
 var sketchPenCode = new function ($) {
-    var _targetUrl, _id;
-    var _editorTheme = 'vs-dark';
-    var _userPrivileges;
+    "use strict"
+    let _targetUrl, _id;
+    let _editorTheme = 'vs-dark';
+    let _userPrivileges;
 
-    var $tree, $editor, $toolbar;
+    let $tree, $globals, $editor, $toolbar;
 
     this.targetUrl = () => _targetUrl;
     this.id = () => _id;
@@ -26,7 +27,7 @@ var sketchPenCode = new function ($) {
 
         this.bindDocumentEvents(window.document);
 
-        sketchPenCode.events.on('refresh-ui', function (channel, args) {
+        sketchPenCode.events.on('refresh-ui', function (channel) {
             var args = {
                 currentDoc: $editor.sketchPenCode_editor('currentDoc'),
                 dirtyDocs: $editor.sketchPenCode_editor('dirtyDocs')
@@ -36,30 +37,30 @@ var sketchPenCode = new function ($) {
         });
 
         sketchPenCode.events.on('save-current-document', function () {
-            var route = $editor.sketchPenCode_editor('currentDoc');
+            let route = $editor.sketchPenCode_editor('currentDoc');
             if (route) {
                 sketchPenCode.events.fire('save-document', { route: route });
             }
         });
 
         sketchPenCode.events.on('verify-current-document', function () {
-            var route = $editor.sketchPenCode_editor('currentDoc');
+            let route = $editor.sketchPenCode_editor('currentDoc');
             if (route) {
                 sketchPenCode.events.fire('verify-document', { route: route });
             }
         });
 
         sketchPenCode.events.on('save-all-documents', function () {
-            var routes = $editor.sketchPenCode_editor('dirtyDocs');
+            let routes = $editor.sketchPenCode_editor('dirtyDocs');
             $.each(routes, function (i, route) {
                 sketchPenCode.events.fire('save-document', { route: route });
             });
         });
 
         sketchPenCode.events.on('delete-document', function (channel, args) {
-            var ids = args.id.split('@');
+            let ids = args.id.split('@');
 
-            var fireDeleted = function (result, args) {
+            let fireDeleted = function (result, args) {
                 if (result.success) {
                     sketchPenCode.events.fire('document-deleted', args);
                 } else {
@@ -94,12 +95,12 @@ var sketchPenCode = new function ($) {
         });
 
         sketchPenCode.events.on(['run-current-document-in-tab', 'run-current-document'], function (channel) {
-            var route = $editor.sketchPenCode_editor('currentDoc');
+            let route = $editor.sketchPenCode_editor('currentDoc');
 
-            var cmd =  '/preview';
-            var url = sketchPenCode.targetUrl() + cmd;
+            let cmd =  '/preview';
+            let url = sketchPenCode.targetUrl() + cmd;
 
-            var args = { route: route, globals: '' }
+            let args = { route: route, globals: $globals.sketchPenCode_globals('currentValue') }
             sketchPenCode.events.fire('before-run-document', args);  // collect url parameters
             if (args.urlParameters) {
                 url += '?' + args.urlParameters;
@@ -136,7 +137,7 @@ var sketchPenCode = new function ($) {
         }, this);
 
         sketchPenCode.events.on('toggle-help', function (channel) {
-            var $sketchpenBody = $('.sketchpen-code-body');
+            let $sketchpenBody = $('.sketchpen-code-body');
             $sketchpenBody.toggleClass('showhelp');
 
             if ($sketchpenBody.hasClass('showhelp')) {
@@ -175,6 +176,10 @@ var sketchPenCode = new function ($) {
             });
         };
 
+        this.getGlobals = function (callback) {
+            this.get('getGlobals', callback);
+        }
+
         this.getFiles = function (callback) {
             this.get('getFiles', callback)
         };
@@ -195,10 +200,10 @@ var sketchPenCode = new function ($) {
     };
 
     this.timer = function (callback, duration, arg) {
-        var _timer = 0;
-        var _callback = callback;
-        var _duration = duration;
-        var _arg = arg;
+        let _timer = 0;
+        let _callback = callback;
+        let _duration = duration;
+        let _arg = arg;
         this.SetArgument = function (arg) { _arg = arg; };
         this.SetDuration = function (d) {
             _duration = d;
@@ -240,16 +245,16 @@ var sketchPenCode = new function ($) {
     };
 
     this.delayed = function (callback, duration, arg) {
-        var timer = new sketchPenCode.timer(callback, duration ? duration : 1, arg);
+        let timer = new sketchPenCode.timer(callback, duration ? duration : 1, arg);
         timer.Start();
     };
 
     this.allDocuments = function () {
-        var documents = [];
+        let documents = [];
 
         $tree.find('.tree-node').each(function (i, node) {
-            var $node = $(node);
-            var route = $node.data('data-route');
+            let $node = $(node);
+            let route = $node.data('data-route');
             if (!$node.hasClass('add') && route) {
                 documents.push({
                     id: route,
@@ -304,7 +309,7 @@ var sketchPenCode = new function ($) {
                         .text(message)
                         .appendTo($content.addClass('sketchpen-code-messagebox-content'));
 
-                    var $buttonbar = $("<div>").addClass("button-bar").appendTo($content);
+                    let $buttonbar = $("<div>").addClass("button-bar").appendTo($content);
 
                     $("<button>")
                         .addClass("sketchpen-code-button")
@@ -338,7 +343,7 @@ var sketchPenCode = new function ($) {
                         .text(message)
                         .appendTo($content.addClass('sketchpen-code-messagebox-content'));
 
-                    var $buttonbar = $("<div>").addClass("button-bar").appendTo($content);
+                    let $buttonbar = $("<div>").addClass("button-bar").appendTo($content);
 
                     $("<button>")
                         .addClass("sketchpen-code-button cancel")

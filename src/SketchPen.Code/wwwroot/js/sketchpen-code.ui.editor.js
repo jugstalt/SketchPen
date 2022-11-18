@@ -11,23 +11,23 @@
             $.error('Method ' + method + ' does not exist on jQuery.sketchPenCode_editor');
         }
     };
-    var defaults = {
+    let defaults = {
         
     };
-    var methods = {
+    let methods = {
         init: function (options) {
-            var settings = $.extend({}, defaults, options);
+            let settings = $.extend({}, defaults, options);
             return this.each(function () {
                 new initUI(this, settings);
             });
         },
         currentDoc: function (options) {
-            var $tabs = $(this).children('.sketchpen-code-tabs')
+            let $tabs = $(this).children('.sketchpen-code-tabs')
 
             return $tabs.children(".sketchpen-code-tab.selected").attr('data-route');
         },
         dirtyDocs: function (options) {
-            var ids = [];
+            let ids = [];
             $(this).children('.sketchpen-code-tabs').children(".sketchpen-code-tab.dirty").each(function (i, e) {
                 ids.push($(e).attr('data-route'));
             });
@@ -40,10 +40,10 @@
             return $(this).children('.sketchpen-code-tabs').children(".sketchpen-code-tab[data-route='" + options.route + "']").length > 0;
         }
     };
-    var initUI = function (parent, options) {
-        var $parent = $(parent);
+    let initUI = function (parent, options) {
+        let $parent = $(parent);
 
-        var $tabs = $("<div>")
+        let $tabs = $("<div>")
             .addClass('sketchpen-code-tabs')
             .appendTo($parent);
 
@@ -59,12 +59,12 @@
                 });
             });
 
-        var $editor = $("<div>")
+        let $editor = $("<div>")
             .addClass('sketchpen-code-editor')
             .appendTo($parent);
 
         sketchPenCode.events.on('open-file', function (channel, args) {
-            var $tab = showOrAddTab($tabs, args.route, 'file');
+            let $tab = showOrAddTab($tabs, args.route, 'file');
         });
 
         sketchPenCode.events.on('tab-selected', function (channel, args) {
@@ -118,10 +118,10 @@
 
         sketchPenCode.events.on('document-deleted', function (channel, args) {
             $parent.children('.sketchpen-code-tabs').children('.sketchpen-code-tab').each(function (i, tab) {
-                var $tab = $(tab);
-                var id = $tab.attr('data-route');
+                let $tab = $(tab);
+                let id = $tab.attr('data-route');
                 if (id === args.route || id.indexOf(args.route + '@') === 0) {
-                    var selected = $tab.hasClass('selected');
+                    let selected = $tab.hasClass('selected');
                     $tab.remove();
                     sketchPenCode.events.fire('tab-removed', { id: id, selected: selected });
                 };
@@ -132,11 +132,11 @@
         });
     };
 
-    var showOrAddTab = function ($tabs, route, cls, hideCloseButton) {
-        var $tab = $tabs.children(".sketchpen-code-tab[data-route='" + route + "']");
+    let showOrAddTab = function ($tabs, route, cls, hideCloseButton) {
+        let $tab = $tabs.children(".sketchpen-code-tab[data-route='" + route + "']");
         if ($tab.length === 0) {
 
-            var routeParts = route.split('/');
+            let routeParts = route.split('/');
 
             $tab = $("<div>")
                 .addClass('sketchpen-code-tab')
@@ -155,15 +155,15 @@
                     .click(function (e) {
                         e.stopPropagation();
 
-                        var $tab = $(this).parent();
-                        var id = $tab.attr('data-route');
+                        let $tab = $(this).parent();
+                        let id = $tab.attr('data-route');
 
                         sketchPenCode.ui.confirmIf(
                             $tab.hasClass('dirty'),
                             route,
                             "Close tab without saving? You will loose all changes!",
                             function () {
-                                var selected = $tab.hasClass('selected');
+                                let selected = $tab.hasClass('selected');
                                 $tab.remove();
 
                                 sketchPenCode.events.fire('tab-removed', { id: id, selected: selected });
@@ -189,22 +189,22 @@
         return $tab;
     };
 
-    var renderOpenTabs = function ($tabs, $parent) {
-        var $ul = $("<ul>")
+    let renderOpenTabs = function ($tabs, $parent) {
+        let $ul = $("<ul>")
             .addClass('sketchpen-code-open-tabs')
             .appendTo($parent);
 
-        var menuRowAdded = false;
+        let menuRowAdded = false;
 
         $tabs.children('.sketchpen-code-tab').each(function (i, tab) {
-            var $tab = $(tab);
+            let $tab = $(tab);
 
-            var id = $tab.attr('data-route');
+            let id = $tab.attr('data-route');
 
             if (menuRowAdded == false && id.indexOf('_') != 0) {
                 menuRowAdded = true;
 
-                var $menu = $("<li>")
+                let $menu = $("<li>")
                     .addClass('sketchpen-code-tab')
                     .css('text-align', 'right')
                     .appendTo($ul);
@@ -215,13 +215,13 @@
                     .appendTo($menu)
                     .click(function () {
                         $(this).closest('.sketchpen-code-open-tabs').children('.sketchpen-code-tab').each(function (i, li) {
-                            var $li = $(li), $tab = $li.data("$tab");
+                            let $li = $(li), $tab = $li.data("$tab");
 
                             if (!$tab || $tab.attr('data-route').indexOf('_') == 0) {
                                 return;
                             }
 
-                            var $checkbox = $li.children('.checkbox');
+                            let $checkbox = $li.children('.checkbox');
 
                             if ($checkbox.hasClass('checked') === true) {
                                 $tab.children('.close-button').trigger('click');
@@ -237,18 +237,18 @@
                     .click(function (e) {
                         e.stopPropagation();
 
-                        var $this = $(this);
+                        let $this = $(this);
                         $this.toggleClass('checked');
-                        var checked = $this.hasClass('checked');
+                        let checked = $this.hasClass('checked');
 
                         $this.closest('.sketchpen-code-open-tabs').children('.sketchpen-code-tab').each(function (i, li) {
-                            var $li = $(li), $tab = $li.data("$tab");
+                            let $li = $(li), $tab = $li.data("$tab");
 
                             if (!$tab || $tab.attr('data-route').indexOf('_') == 0) {
                                 return;
                             }
 
-                            var $checkbox = $li.children('.checkbox');
+                            let $checkbox = $li.children('.checkbox');
 
                             if (($checkbox.hasClass('checked') === true && checked === false) ||
                                 ($checkbox.hasClass('checked') === false && checked === true)) {
@@ -258,7 +258,7 @@
                     });
             }
 
-            var $li = $("<li>")
+            let $li = $("<li>")
                 .data("$tab", $tab)
                 .attr('class', $tab.attr('class'))
                 .click(function (e) {
@@ -285,7 +285,7 @@
                     .click(function (e) {
                         e.stopPropagation();
 
-                        var $this = $(this);
+                        let $this = $(this);
                         if ($this.parent().hasClass('dirty') || $this.parent().hasClass('errors')) {
                             return;
                         }
@@ -296,12 +296,12 @@
         });
     };
 
-    var checkSize = function ($tabs) {
+    let checkSize = function ($tabs) {
         function check(skip) {
-            var pos = 0, tabsWidth = $tabs.width();
+            let pos = 0, tabsWidth = $tabs.width();
 
             $tabs.children('.sketchpen-code-tab').each(function (i, tab) {
-                var $tab = $(tab).css('display', ''), tabWidth = $tab.outerWidth();
+                let $tab = $(tab).css('display', ''), tabWidth = $tab.outerWidth();
 
                 if (i < skip) {
                     $tab.css('display', 'none');
@@ -315,8 +315,8 @@
             });
         };
 
-        var numTabs = $tabs.children('.sketchpen-code-tab').length, skip = 0;
-        var $selectedTab = $tabs.children('.sketchpen-code-tab.selected');
+        let numTabs = $tabs.children('.sketchpen-code-tab').length, skip = 0;
+        let $selectedTab = $tabs.children('.sketchpen-code-tab.selected');
 
         while (skip < numTabs) {
             check(skip);
@@ -329,11 +329,11 @@
         }
     };
 
-    var showOrAddEditorFrame = function ($editor, route) {
-        var $frame = $editor.children(".sketchpen-code-editor-frame[data-route='" + route + "']");
+    let showOrAddEditorFrame = function ($editor, route) {
+        let $frame = $editor.children(".sketchpen-code-editor-frame[data-route='" + route + "']");
 
         if ($frame.length === 0) {
-            var src = '';
+            let src = '';
 
             if (route === '_start') {
                 src = sketchPenCode.targetUrl() + '/Start';

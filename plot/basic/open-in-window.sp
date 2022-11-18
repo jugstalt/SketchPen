@@ -4,10 +4,9 @@ line.draw(0, 0, 42, -42);
 line.draw( 42, -42,  42,-25);
 line.draw( 42, -42,  25,-42);
 
-transform.reset();
+pen.width(@@penWidth);
 
 path.begin();
-path.addlines(42,-5, 42,42, -42,42, -42,-42, 5,-42);
+path.addlines(32,-5, 32,32, -32,32, -32,-32, 5,-32);
 path.draw();
 
-pen.width(@@penWidth);

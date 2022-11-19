@@ -439,7 +439,7 @@ body {
     top: 100px;
     left: 0px;
     right: 0px;
-    bottom: 50px;
+    bottom: 80px;
     overflow: auto;
 }
 
@@ -448,7 +448,7 @@ body {
     bottom: 0px;
     left: 0px;
     right: 0px;
-    height: 50px;
+    height: 80px;
     overflow: auto;
 }
 
@@ -1065,6 +1065,55 @@ body {
         background-image: url(img/account_32@2.png);
     }
 }
+ 
+/******* Globals *************/
+.sketchpen-code-ide .sketchpen-code-globlals-container {
+    padding: 10px 5px 5px 5px;
+}
+
+.sketchpen-code-ide .sketchpen-code-globlals-container .sketchpen-code-globals-toolbar {
+    width: 100%;
+    height: 32px;
+}
+
+    .sketchpen-code-ide .sketchpen-code-globlals-container .sketchpen-code-globals-toolbar .sketchpen-code-globals-toolbutton {
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 26px;
+        width: 32px;
+        height: 32px;
+        margin: 0px 4px 0px 0px;
+        display: inline-block;
+        background-color: #555;
+        border-radius: 3px;
+        border: 1px solid #000;
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+
+        .sketchpen-code-ide .sketchpen-code-globlals-container .sketchpen-code-globals-toolbar .sketchpen-code-globals-toolbutton:hover {
+            background-color: #333;
+        }
+
+        .sketchpen-code-ide .sketchpen-code-globlals-container .sketchpen-code-globals-toolbar .sketchpen-code-globals-toolbutton.add {
+            background-image: url(img/edit-plus_26@1.png);
+        }
+        .sketchpen-code-ide .sketchpen-code-globlals-container .sketchpen-code-globals-toolbar .sketchpen-code-globals-toolbutton.edit {
+            background-image: url(img/edit-text_26@1.png);
+        }
+
+    .sketchpen-code-ide .sketchpen-code-globlals-container .sketchpen-code-globals-select-holder {
+        margin-top:3px;
+        width:100%;
+    }
+        .sketchpen-code-ide .sketchpen-code-globlals-container .sketchpen-code-globals-select-holder .sketchpen-code-globals-select {
+            width: 100%;
+            border: 1px solid #777;
+            border-radius: 4px;
+            color: #fff;
+            background-color:#333;
+            padding:4px;
+        }
 
 /******* Tree Collapsed ********/
 .sketchpen-code-ide.tree-collapsed .sketchpen-code-sidebar {

@@ -9,4 +9,3 @@ pen.width(@@penWidth);
 path.begin();
 path.addlines(32,-5, 32,32, -32,32, -32,-32, 5,-32);
 path.draw();
-

@@ -36,8 +36,20 @@
     let initUI = function (parent, options) {
         let $parent = $(parent);
 
+        let $toolbar = $("<div>")
+            .addClass('sketchpen-code-globals-toolbar')
+            .appendTo($parent);
+
+        $("<div>")
+            .addClass('sketchpen-code-globals-toolbutton add')
+            .appendTo($toolbar);
+
+        $("<div>")
+            .addClass('sketchpen-code-globals-toolbutton edit')
+            .appendTo($toolbar);
+
         let $selectHodler = $("<div>")
-            .addClass('sketchpan-code-globals-select-holder')
+            .addClass('sketchpen-code-globals-select-holder')
             .appendTo($parent);
 
         let $select = $("<select>")

@@ -27,6 +27,19 @@ var sketchPenCode = new function ($) {
 
         return "Unknown Filetype";
     };
+    this.fileClass = (file) => {
+        if (file.indexOf(this.fileExt()) == file.length - this.fileExt().length) {
+            return "file";
+        }
+        if (file.indexOf(this.templateFileExt()) == file.length - this.templateFileExt().length) {
+            return "template";
+        }
+        if (file.indexOf(this.globalsFileExt()) === file.length - this.globalsFileExt().length) {
+            return "globals";
+        }
+
+        return "unknown";
+    }
 
     this.start = function (targetUrl, id) {
         _targetUrl = targetUrl;

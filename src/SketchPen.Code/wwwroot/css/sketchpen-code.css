@@ -133,16 +133,16 @@ body {
                     background-size: 16px 16px;
                 }
 
-                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.endpoint {
-                    background-image: url(img/endpoint_16@1.png);
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.file {
+                    background-image: url(img/redlining_16@1.png);
                     background-size: 16px 16px;
                 }
-                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.query {
-                    background-image: url(img/query_16@1.png);
-                    background-size: 16px 16px;
-                }
-                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.view {
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.template {
                     background-image: url(img/code-markup_16@1.png);
+                    background-size: 16px 16px;
+                }
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.globals {
+                    background-image: url(img/globe2_16@1.png);
                     background-size: 16px 16px;
                 }
 
@@ -189,16 +189,16 @@ body {
             background-image: url(img/home_16@1.png);
         }
 
-        .sketchpen-code-open-tabs .sketchpen-code-tab.endpoint {
-            background-image: url(img/endpoint_16@1.png);
+        .sketchpen-code-open-tabs .sketchpen-code-tab.file {
+            background-image: url(img/redlining_16@1.png);
         }
 
-        .sketchpen-code-open-tabs .sketchpen-code-tab.query {
-            background-image: url(img/query_16@1.png);
-        }
-
-        .sketchpen-code-open-tabs .sketchpen-code-tab.view {
+        .sketchpen-code-open-tabs .sketchpen-code-tab.template {
             background-image: url(img/code-markup_16@1.png);
+        }
+
+        .sketchpen-code-open-tabs .sketchpen-code-tab.globals {
+            background-image: url(img/globe2_16@1.png);
         }
 
         .sketchpen-code-open-tabs .sketchpen-code-tab .text {
@@ -242,16 +242,16 @@ body {
         background-image: url(img/home_16@2.png);
     }
 
-    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.endpoint {
-        background-image: url(img/endpoint_16@2.png);
+    .sketchpen-code-ide .sketchpen-code-content .sketchpen-globe2_16code-tabs .sketchpen-code-tab.file {
+        background-image: url(img/redlining_16@2.png);
     }
 
-    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.query {
-        background-image: url(img/query_16@2.png);
-    }
-
-    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.view {
+    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.template {
         background-image: url(img/code-markup_16@2.png);
+    }
+
+    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.globals {
+        background-image: url(img/globe2_16@2.png);
     }
 
     .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab-selector {
@@ -262,16 +262,16 @@ body {
         background-image: url(img/home_16@2.png);
     }
 
-    .sketchpen-code-open-tabs .sketchpen-code-tab.endpoint {
-        background-image: url(img/endpoint_16@2.png);
+    .sketchpen-code-open-tabs .sketchpen-code-tab.file {
+        background-image: url(img/redlining_16@2.png);
     }
 
-    .sketchpen-code-open-tabs .sketchpen-code-tab.query {
-        background-image: url(img/query_16@2.png);
-    }
-
-    .sketchpen-code-open-tabs .sketchpen-code-tab.view {
+    .sketchpen-code-open-tabs .sketchpen-code-tab.template {
         background-image: url(img/code-markup_16@2.png);
+    }
+
+    .sketchpen-code-open-tabs .sketchpen-code-tab.globals {
+        background-image: url(img/globe2_16@2.png);
     }
 
     .sketchpen-code-open-tabs .sketchpen-code-tab .checkbox {
@@ -514,13 +514,13 @@ body {
             }
 
             .sketchpen-code-tree .tree-nodes .tree-node.endpoint > .icon {
-                background-image:url(img/endpoint_16@1.png);
+                background-image:url(img/redlining_16@1.png);
             }
             .sketchpen-code-tree .tree-nodes .tree-node.query > .icon {
-                background-image: url(img/query_16@1.png);
+                background-image: url(img/code-markup_16@1.png);
             }
             .sketchpen-code-tree .tree-nodes .tree-node.view > .icon {
-                background-image: url(img/code-markup_16@1.png);
+                background-image: url(img/globe2_16@1.png);
             }
 
             .sketchpen-code-tree .tree-nodes .tree-node .delete {
@@ -618,17 +618,17 @@ body {
 @media (-webkit-min-device-pixel-ratio: 1.5),
 (min-resolution: 144dpi) {
     .sketchpen-code-tree .tree-nodes .tree-node.endpoint > .icon {
-            background-image: url(img/endpoint_16@2.png);
+            background-image: url(img/redlining_16@2.png);
             background-size: 16px 16px;
         }
 
         .sketchpen-code-tree .tree-nodes .tree-node.query > .icon {
-            background-image: url(img/query_16@2.png);
+            background-image: url(img/code-markup_16@2.png);
             background-size: 16px 16px;
         }
 
         .sketchpen-code-tree .tree-nodes .tree-node.view > .icon {
-            background-image: url(img/code-markup_16@2.png);
+            background-image: url(img/globe2_16@2.png);
             background-size: 16px 16px;
         }
 

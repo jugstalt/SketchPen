@@ -64,7 +64,7 @@
             .appendTo($parent);
 
         sketchPenCode.events.on('open-file', function (channel, args) {
-            let $tab = showOrAddTab($tabs, args.route, 'file');
+            let $tab = showOrAddTab($tabs, args.route, sketchPenCode.fileClass(args.route));
         });
 
         sketchPenCode.events.on('tab-selected', function (channel, args) {

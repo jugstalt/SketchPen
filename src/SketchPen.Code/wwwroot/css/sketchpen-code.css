@@ -1101,6 +1101,9 @@ body {
         .sketchpen-code-ide .sketchpen-code-globlals-container .sketchpen-code-globals-toolbar .sketchpen-code-globals-toolbutton.edit {
             background-image: url(img/edit-text_26@1.png);
         }
+        .sketchpen-code-ide .sketchpen-code-globlals-container .sketchpen-code-globals-toolbar .sketchpen-code-globals-toolbutton.remove {
+            background-image: url(img/trashcan-x_26@1.png);
+        }
 
     .sketchpen-code-ide .sketchpen-code-globlals-container .sketchpen-code-globals-select-holder {
         margin-top:3px;
@@ -1378,6 +1381,16 @@ body {
     bottom: 0px;
     padding: 0px 10px;
 }
+
+    .sketchpen-code-modal-content .input-prompt {
+        width: 100%;
+        padding: 5px;
+        box-sizing: border-box;
+        border: 1px solid #777;
+        border-radius: 4px;
+        color: #fff;
+        background-color: #333;
+    }
 
     .sketchpen-code-modal-content .sketchpen-code-modal-content-fill {
         margin: 0px -10px;

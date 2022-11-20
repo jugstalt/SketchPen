@@ -1,3 +1,4 @@
+// general globals
 globals.tryset(penColor, "#000");
 globals.tryset(outlinePenColor, "#000");
 globals.tryset(brushColor, "#fff");

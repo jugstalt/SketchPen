@@ -119,11 +119,12 @@
         sketchPenCode.events.on('document-deleted', function (channel, args) {
             $parent.children('.sketchpen-code-tabs').children('.sketchpen-code-tab').each(function (i, tab) {
                 let $tab = $(tab);
-                let id = $tab.attr('data-route');
-                if (id === args.route || id.indexOf(args.route + '@') === 0) {
+                let route = $tab.attr('data-route');
+
+                if (route === args.route) {
                     let selected = $tab.hasClass('selected');
                     $tab.remove();
-                    sketchPenCode.events.fire('tab-removed', { id: id, selected: selected });
+                    sketchPenCode.events.fire('tab-removed', { id: route, selected: selected });
                 };
             });
             $(".sketchpen-code-editor-frame[data-route='" + args.route + "']").remove();

@@ -74,13 +74,14 @@ namespace SketchPen.Code.Controllers
             {
                 filename = filename.Trim();
 
-                if (!filename.ToLower().EndsWith(".sp"))
+                if (!filename.ToLower().EndsWith(".sp") &&
+                    !filename.ToLower().EndsWith(".globals"))
                 {
                     filename = $"{filename}.sp";
                 }
 
                 string content = await _sketchPenCode.CreateFile(id, filename);
-
+                
                 return Json(new { success = true, route = $"{id}/{filename}"  });
             }
             catch (Exception ex)
@@ -90,10 +91,21 @@ namespace SketchPen.Code.Controllers
         }
 
         [HttpGet]
-        [Route("RemoveFile/{id}")]
-        public Task<IActionResult> RemoveFile(string id, string filename)
+        [Route("DeleteFile/{id}")]
+        public IActionResult RemoveFile(string id, string filename)
         {
-            return Task.FromResult<IActionResult>(Json(new { }));
+            try
+            {
+                return Json(new
+                {
+                    success = _sketchPenCode.DeleteFile(id, filename),
+                    route = $"{id}/{filename}"
+                });
+            } 
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error_message = ex.Message });
+            }
         }
 
         #endregion

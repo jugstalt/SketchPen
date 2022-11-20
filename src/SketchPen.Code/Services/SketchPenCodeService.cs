@@ -87,6 +87,20 @@ namespace SketchPen.Code.Services
             return await GetFileContent($"{id}/{filename}");
         }
 
+        public bool DeleteFile(string id, string filename)
+        {
+            var fileInfo = new FileInfo(Path.Combine(_options.RootPath, id, filename));
+
+            if (!fileInfo.Exists)
+            {
+                throw new Exception($"{filename} not exists");
+            }
+
+            fileInfo.Delete();
+
+            return true;
+        }
+
         #region Helper
 
         private void CollectFiles(DirectoryInfo dirInfo, List<string> filesList)

@@ -151,7 +151,7 @@
 
                 filename = routeParts[routeParts.length - 1];
 
-                if (filename.indexOf('.globals') === filename.length - '.globals'.length) {
+                if (filename.indexOf(sketchPenCode.globalsFileExt()) === filename.length - sketchPenCode.globalsFileExt().length) {
                     console.log('globals-file:', filename);
                 } else {
                     addFileNode($parentNode, filename, collapsedRoutes);
@@ -262,9 +262,9 @@
                         $this.toggleClass('collapsed');
                         $this.data('is_collapsed', $this.hasClass('collapsed'));
                     } else {
-                        sketchPenCode.events.fire('open-endpoint', {
-                            endpoint: $this.data('data-endpoint'),
-                        });
+                        //sketchPenCode.events.fire('open-endpoint', {
+                        //    endpoint: $this.data('data-endpoint'),
+                        //});
                     }
                 }
             });

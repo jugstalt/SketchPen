@@ -11,6 +11,23 @@ var sketchPenCode = new function ($) {
     this.editorTheme = () => _editorTheme;
     this.loginUsername = () => "";
 
+    this.fileExt = () => ".sp";
+    this.templateFileExt = ()=> ".spt";
+    this.globalsFileExt = () => ".globals";
+    this.fileType = (file) => {
+        if (file.indexOf(this.fileExt()) == file.length - this.fileExt().length) {
+            return "Sketchpen File";
+        }
+        if (file.indexOf(this.templateFileExt()) == file.length - this.templateFileExt().length) {
+            return "Sketchpen Template File";
+        }
+        if (file.indexOf(this.globalsFileExt()) === file.length - this.globalsFileExt().length) {
+            return "Sketchpen Globals File";
+        }
+
+        return "Unknown Filetype";
+    };
+
     this.start = function (targetUrl, id) {
         _targetUrl = targetUrl;
         _id = id;
@@ -58,40 +75,22 @@ var sketchPenCode = new function ($) {
         });
 
         sketchPenCode.events.on('delete-document', function (channel, args) {
-            let ids = args.id.split('@');
+            let file = args.file;
 
-            let fireDeleted = function (result, args) {
+            let fireDeleted = function (result) {
                 if (result.success) {
-                    sketchPenCode.events.fire('document-deleted', args);
+                    sketchPenCode.events.fire('document-deleted', result);
                 } else {
                     sketchPenCode.ui.alert("Error", (result.error_message || 'Unknown error'));
                 }
             }
 
-            if (ids.length === 1) {
-                sketchPenCode.ui.confirm('Delete endpoint', 'Delete endpoint ' + args.id + ' permanently?',
-                    function () {
-                        sketchPenCode.api.deleteEndPoint(ids[0], function (result) {
-                            fireDeleted(result, args);
-                        });
+            sketchPenCode.ui.confirm('Delete ' + sketchPenCode.fileType(file), 'Delete ' + file + ' permanently?',
+                function () {
+                    sketchPenCode.api.deleteFile(file, function (result) {
+                        fireDeleted(result);
                     });
-            }
-            else if (ids.length === 2) {
-                sketchPenCode.ui.confirm('Delete query', 'Delete query ' + args.id + ' permanently?',
-                    function () {
-                        sketchPenCode.api.deleteQuery(ids[0], ids[1], function (result) {
-                            fireDeleted(result, args);
-                        });
-                    });
-            }
-            else if (ids.length === 3) {
-                sketchPenCode.ui.confirm('Delete view', 'Delete view ' + args.id + ' permanently?',
-                    function () {
-                        sketchPenCode.api.deleteView(ids[0], ids[1], ids[2], function (result) {
-                            fireDeleted(result, args);
-                        });
-                    });
-            }
+                });
         });
 
         sketchPenCode.events.on(['run-current-document-in-tab', 'run-current-document'], function (channel) {
@@ -187,7 +186,6 @@ var sketchPenCode = new function ($) {
         this.createFile = function (filename, callback) {
             this.get('createFile', callback, { filename: filename });
         };
-
 
         this.deleteFile = function (filename, callback) {
             this.get('deleteFile', callback, { filename: filename });
@@ -337,7 +335,7 @@ var sketchPenCode = new function ($) {
             $('body').sketchPen_code_modal({
                 title: title,
                 height: '200px',
-                id: 'sketchpen-code-alert',
+                id: 'sketchpen-code-confirm',
                 onload: function ($content) {
                     $("<p>")
                         .text(message)
@@ -350,7 +348,7 @@ var sketchPenCode = new function ($) {
                         .text("No")
                         .appendTo($buttonbar)
                         .click(function () {
-                            $('body').sketchPen_code_modal('close', { id: 'sketchpen-code-alert' });
+                            $('body').sketchPen_code_modal('close', { id: 'sketchpen-code-confirm' });
                         });
 
                     $("<button>")
@@ -362,10 +360,66 @@ var sketchPenCode = new function ($) {
                                 onConfirm();
                             }
 
-                            $('body').sketchPen_code_modal('close', { id: 'sketchpen-code-alert' });
+                            $('body').sketchPen_code_modal('close', { id: 'sketchpen-code-confirm' });
                         });
                 }
             });
         }
+
+        this.prompt = function (title, message, onEntered, placeholder) {
+            $('body').sketchPen_code_modal({
+                title: title,
+                height: '200px',
+                id: 'sketchpen-code-prompt',
+                onload: function ($content) {
+                    $("<p>")
+                        .text(message)
+                        .appendTo($content.addClass('sketchpen-code-messagebox-content'));
+
+                    let $input = $("<input>")
+                        .addClass('input-prompt')
+                        .attr('type', 'text')
+                        .attr('placeholder', placeholder || '')
+                        .appendTo($content)
+                        .keyup(function (e) {
+                            $msg.css('display', $(this).val().trim() ? 'none' : '');
+                        });
+
+                    let $msg = $("<p>")
+                        .css({ display: 'none', color: 'red' })
+                        .text('Please, insert a value')
+                        .appendTo($content);
+
+                    let $buttonbar = $("<div>").addClass("button-bar").appendTo($content);
+
+                    $("<button>")
+                        .addClass("sketchpen-code-button cancel")
+                        .text("Cancel")
+                        .appendTo($buttonbar)
+                        .click(function () {
+                            $('body').sketchPen_code_modal('close', { id: 'sketchpen-code-prompt' });
+                        });
+
+                    $("<button>")
+                        .addClass("sketchpen-code-button")
+                        .text("OK")
+                        .appendTo($buttonbar)
+                        .click(function () {
+                            var val = $input.val().trim();
+
+                            if (!val) {
+                                $msg.css('display', '');
+                                return;
+                            }
+
+                            if (onEntered) {
+                                onEntered(val);
+                            }
+
+                            $('body').sketchPen_code_modal('close', { id: 'sketchpen-code-prompt' });
+                        });
+                }
+            });
+        };
      }
 }(jQuery);

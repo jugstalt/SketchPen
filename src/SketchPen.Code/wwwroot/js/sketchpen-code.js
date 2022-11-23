@@ -29,16 +29,16 @@ var sketchPenCode = new function ($) {
     };
     this.fileClass = (file) => {
         if (file.indexOf(this.fileExt()) == file.length - this.fileExt().length) {
-            return "file";
+            return "sp-file";
         }
         if (file.indexOf(this.templateFileExt()) == file.length - this.templateFileExt().length) {
-            return "template";
+            return "template-file";
         }
         if (file.indexOf(this.globalsFileExt()) === file.length - this.globalsFileExt().length) {
-            return "globals";
+            return "globals-file";
         }
 
-        return "unknown";
+        return "folder";
     }
 
     this.start = function (targetUrl, id) {

@@ -133,15 +133,15 @@ body {
                     background-size: 16px 16px;
                 }
 
-                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.file {
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.sp-file {
                     background-image: url(img/redlining_16@1.png);
                     background-size: 16px 16px;
                 }
-                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.template {
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.template-file {
                     background-image: url(img/code-markup_16@1.png);
                     background-size: 16px 16px;
                 }
-                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.globals {
+                .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.globals-file {
                     background-image: url(img/globe2_16@1.png);
                     background-size: 16px 16px;
                 }
@@ -189,15 +189,15 @@ body {
             background-image: url(img/home_16@1.png);
         }
 
-        .sketchpen-code-open-tabs .sketchpen-code-tab.file {
+        .sketchpen-code-open-tabs .sketchpen-code-tab.sp-file {
             background-image: url(img/redlining_16@1.png);
         }
 
-        .sketchpen-code-open-tabs .sketchpen-code-tab.template {
+        .sketchpen-code-open-tabs .sketchpen-code-tab.template-file {
             background-image: url(img/code-markup_16@1.png);
         }
 
-        .sketchpen-code-open-tabs .sketchpen-code-tab.globals {
+        .sketchpen-code-open-tabs .sketchpen-code-tab.globals-file {
             background-image: url(img/globe2_16@1.png);
         }
 
@@ -242,15 +242,15 @@ body {
         background-image: url(img/home_16@2.png);
     }
 
-    .sketchpen-code-ide .sketchpen-code-content .sketchpen-globe2_16code-tabs .sketchpen-code-tab.file {
+    .sketchpen-code-ide .sketchpen-code-content .sketchpen-globe2_16code-tabs .sketchpen-code-tab.sp-file {
         background-image: url(img/redlining_16@2.png);
     }
 
-    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.template {
+    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.template-file {
         background-image: url(img/code-markup_16@2.png);
     }
 
-    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.globals {
+    .sketchpen-code-ide .sketchpen-code-content .sketchpen-code-tabs .sketchpen-code-tab.globals-file {
         background-image: url(img/globe2_16@2.png);
     }
 
@@ -262,15 +262,15 @@ body {
         background-image: url(img/home_16@2.png);
     }
 
-    .sketchpen-code-open-tabs .sketchpen-code-tab.file {
+    .sketchpen-code-open-tabs .sketchpen-code-tab.sp-file {
         background-image: url(img/redlining_16@2.png);
     }
 
-    .sketchpen-code-open-tabs .sketchpen-code-tab.template {
+    .sketchpen-code-open-tabs .sketchpen-code-tab.template-file {
         background-image: url(img/code-markup_16@2.png);
     }
 
-    .sketchpen-code-open-tabs .sketchpen-code-tab.globals {
+    .sketchpen-code-open-tabs .sketchpen-code-tab.globals-file {
         background-image: url(img/globe2_16@2.png);
     }
 
@@ -491,6 +491,14 @@ body {
             .sketchpen-code-tree .tree-nodes .tree-node.has-children.collapsed {
                 background-image: url(img/triangle-filled-right-down_16@1.png);
             }
+
+            .sketchpen-code-tree .tree-nodes .tree-node.sp-file {
+                background-image: url(img/redlining_16@1.png);
+            }
+            .sketchpen-code-tree .tree-nodes .tree-node.template-file {
+                background-image: url(img/code-markup_16@1.png);
+            }
+
             .sketchpen-code-tree .tree-nodes .tree-node.hidden {
                 display: none;
             }
@@ -551,7 +559,7 @@ body {
                 background-image: url(img/loader/spinning-line-black-16@1.gif) !important;
             }
 
-            .sketchpen-code-tree .tree-nodes .tree-node .copy-button {
+            .sketchpen-code-tree .tree-nodes .tree-node .remove-button {
                 position: absolute;
                 right: 2px;
                 top: 2px;
@@ -560,53 +568,18 @@ body {
                 background-position: center;
                 background-size: 16px 16px;
                 background-repeat: no-repeat;
-                background-image: url(img/copy_16@1.png);
+                background-image: url(img/trashcan-x_16@1.png);
                 cursor: pointer;
                 display: none;
                 border-radius: 4px;
             }
 
-            .sketchpen-code-tree .tree-nodes .tree-node.mouseover > .copy-button {
+            .sketchpen-code-tree .tree-nodes .tree-node.mouseover > .remove-button {
                 display: block;
             }
 
-            .sketchpen-code-tree .tree-nodes .tree-node.mouseover > .copy-button:hover {
-                background-color: #777;
-            }
-
-                .sketchpen-code-tree .tree-nodes .tree-node.mouseover > .copy-button .tooltiptext {
-                    visibility: hidden;
-                    width: 240px;
-                    background-color: #000;
-                    color: #fff;
-                    text-align: center;
-                    border-radius: 6px;
-                    padding: 5px;
-                    position: absolute;
-                    z-index: 1;
-                    bottom: 150%;
-                    left: 50%;
-                    margin-left: -235px;
-                    opacity: 0;
-                    transition: opacity 0.3s;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                }
-
-                    .sketchpen-code-tree .tree-nodes .tree-node:hover > .copy-button .tooltiptext::after {
-                        content: "";
-                        position: absolute;
-                        top: 100%;
-                        right: 10px;
-                        margin-left: -5px;
-                        border-width: 5px;
-                        border-style: solid;
-                        border-color: #000 transparent transparent transparent;
-                    }
-
-                .sketchpen-code-tree .tree-nodes .tree-node:hover > .copy-button:hover .tooltiptext.show {
-                    visibility: visible;
-                    opacity: 0.8;
+                .sketchpen-code-tree .tree-nodes .tree-node.mouseover > .remove-button:hover {
+                    background-color: #777;
                 }
 
             .sketchpen-code-tree .tree-nodes .tree-node > .label {
@@ -653,6 +626,14 @@ body {
                 }
                 .sketchpen-code-tree .tree-nodes .tree-node.add {
                     background-image: url(img/round-plus_16@2.png);
+                }
+
+                .sketchpen-code-tree .tree-nodes .tree-node.sp-file {
+                    background-image: url(img/redlining_16@2.png);
+                }
+
+                .sketchpen-code-tree .tree-nodes .tree-node.template-file {
+                    background-image: url(img/code-markup_16@2.png);
                 }
 
                 .sketchpen-code-tree .tree-nodes .tree-node input {

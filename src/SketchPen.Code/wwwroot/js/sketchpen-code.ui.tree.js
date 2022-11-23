@@ -165,51 +165,42 @@
             .addClass("tree-node");
 
         if (label) {
-            $("<div>").addClass('icon').appendTo($node);
             if (asInput == true) {
                 $("<input type='text'/>")
                     .attr('placeholder', label)
                     .appendTo($node);
             } else {
-                let $label = $("<div>").addClass('label').text(label).appendTo($node);
+                let $label = $("<div>")
+                    .addClass('label')
+                    .text(label)
+                    .appendTo($node);
 
-                $node.on('mousemove', function (e) {
-                    $(this).closest('.sketchpen-code-tree-holder').find('.tree-node').removeClass('mouseover');
-                    e.stopPropagation();
-                    if (e.originalEvent.layerY >= 0 && e.originalEvent.layerY <= 32) {
-                        $(this).addClass('mouseover');
-                    } else {
-                        $(this).removeClass('mouseover');
-                    }
-                }).on('mouseleave', function (e) {
-                    $(this).removeClass('mouseover');
-                });
-
-                let $copyButton = $("<div>")
-                    .addClass('copy-button')
-                    .appendTo($node)
-                    .mouseout(function () {
-                        $(this).find('.tooltiptext').removeClass('show');
+                $node
+                    .addClass(sketchPenCode.fileClass(label))
+                    .on('mousemove', function (e) {
+                        $(this).closest('.sketchpen-code-tree-holder').find('.tree-node').removeClass('mouseover');
+                        e.stopPropagation();
+                        if (e.originalEvent.layerY >= 0 && e.originalEvent.layerY <= 32) {
+                            $(this).addClass('mouseover');
+                        } else {
+                            $(this).removeClass('mouseover');
+                        }
                     })
+                    .on('mouseleave', function (e) {
+                        $(this).removeClass('mouseover');
+                    });
+
+                let $removeButton = $("<div>")
+                    .addClass('remove-button')
+                    .appendTo($node)
                     .click(function (e) {
                         e.stopPropagation();
 
                         let route = $(this).closest('.tree-node').data('data-route');
-                        navigator.clipboard.writeText(route);
+                        var file = route.substr(sketchPenCode.id().length + 1);
 
-                        if (route.length > 20)
-                            route = route.substr(0, 20) + '...';
-
-                        $(this)
-                            .find('.tooltiptext')
-                            .text("Copied route: " + route)
-                            .addClass('show');
+                        sketchPenCode.events.fire('delete-document', { file: file });
                     });
-
-                $("<span>")
-                    .addClass('tooltiptext')
-                    .text('Copy placeholder')
-                    .appendTo($copyButton);
             }
         }
 

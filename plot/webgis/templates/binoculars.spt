@@ -1,0 +1,40 @@
+// connection
+line.draw(-10,-10, 10,-10);
+line.draw(-10,0, 10,0);
+
+// right
+transform.translate(10,-3);
+
+path.begin();
+path.addlines(0,-30, 15,-30, 15,-15);
+path.addarc(270,90, 30,30, 15,0);
+path.addlines(30,0, 30,35);
+path.addarc(0,-180, 30,15, 15,35);
+path.close();
+path.fill();
+path.draw(@@outlinePenColor);
+
+line.draw(3,-38, 12,-38);
+
+path.begin();
+path.addarc(0,360, 30,15, 15,35);
+path.draw();
+
+// left
+transform.translate(-20,-3);
+transform.scale(-1,1);
+
+path.begin();
+path.addlines(0,-30, 15,-30, 15,-15);
+path.addarc(270,90, 30,30, 15,0);
+path.addlines(30,0, 30,35);
+path.addarc(0,-180, 30,15, 15,35);
+path.close();
+path.fill();
+path.draw(@@outlinePenColor);
+
+line.draw(3,-38, 12,-38);
+
+path.begin();
+path.addarc(0,360, 30,15, 15,35);
+path.draw();

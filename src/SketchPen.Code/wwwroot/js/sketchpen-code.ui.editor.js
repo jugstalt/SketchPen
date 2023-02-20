@@ -34,7 +34,7 @@
             return ids;
         },
         addTab: function (options) {
-            showOrAddTab($(this).children('.sketchpen-code-tabs'), options.route, options.className, options.hideCloseButton)
+            showOrAddTab($(this).children('.sketchpen-code-tabs'), options.title, options.route, options.className, options.hideCloseButton)
         },
         isOpen: function (options) {
             return $(this).children('.sketchpen-code-tabs').children(".sketchpen-code-tab[data-route='" + options.route + "']").length > 0;
@@ -64,7 +64,9 @@
             .appendTo($parent);
 
         sketchPenCode.events.on('open-file', function (channel, args) {
-            let $tab = showOrAddTab($tabs, args.route, sketchPenCode.fileClass(args.route));
+            let routeParts = args.route.split('/');
+
+            let $tab = showOrAddTab($tabs, routeParts[routeParts.length - 1], args.route, sketchPenCode.fileClass(args.route));
         });
 
         sketchPenCode.events.on('tab-selected', function (channel, args) {
@@ -133,16 +135,14 @@
         });
     };
 
-    let showOrAddTab = function ($tabs, route, cls, hideCloseButton) {
+    let showOrAddTab = function ($tabs, title, route, cls, hideCloseButton) {
         let $tab = $tabs.children(".sketchpen-code-tab[data-route='" + route + "']");
         if ($tab.length === 0) {
-
-            let routeParts = route.split('/');
 
             $tab = $("<div>")
                 .addClass('sketchpen-code-tab')
                 .attr('data-route', route)
-                .text(routeParts[routeParts.length - 1])
+                .text(title)
                 .appendTo($tabs);
 
             if (cls) {
@@ -331,6 +331,7 @@
     };
 
     let showOrAddEditorFrame = function ($editor, route) {
+        console.log('showOrAddEditorFrame', route);
         let $frame = $editor.children(".sketchpen-code-editor-frame[data-route='" + route + "']");
 
         if ($frame.length === 0) {

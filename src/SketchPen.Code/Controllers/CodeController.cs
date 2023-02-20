@@ -32,6 +32,8 @@ namespace SketchPen.Code.Controllers
             });
         }
 
+        [HttpGet]
+        [Route("Start")]
         public IActionResult Start()
         {
             return View();

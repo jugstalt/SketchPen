@@ -86,7 +86,10 @@ namespace SketchPen.Plot.Drawing
 
         public IPen CreatePen(IEnumerable<object> parameters = null)
         {
-            float penWidth = parameters.Slice(1)?.ToTypedParameters<float>().FirstOrDefault() ?? this.PenWidth;
+            var typedParameters = parameters?.Slice(1)?.ToTypedParameters<float>();
+            float penWidth = typedParameters != null && typedParameters.Length >= 1 ?
+                typedParameters.First() :
+                this.PenWidth;
 
             if (penWidth >= MinPenWidth && penWidth <= MaxPenWidth)
             {

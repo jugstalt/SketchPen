@@ -36,7 +36,7 @@ namespace SketchPen.Code.AppCode.Mvc
             Response.Headers.Add("Pragma", "no-cache");
             Response.Headers.Add("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
             Response.Headers.Add("Access-Control-Allow-Headers", "*");
-            Response.Headers.Add("Access-Control-Allow-Origin", (string)Request.Headers["Origin"] != null ? (string)Request.Headers["Origin"] : "*");
+            Response.Headers.Add("Access-Control-Allow-Origin", (string?)Request.Headers["Origin"] ?? "*");
             Response.Headers.Add("Access-Control-Allow-Credentials", "true");
 
             return BinaryResultStream(Encoding.UTF8.GetBytes(json), "application/json; charset=utf-8");

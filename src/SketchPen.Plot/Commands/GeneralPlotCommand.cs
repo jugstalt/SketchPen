@@ -9,10 +9,10 @@ namespace SketchPen.Plot.Commands
 {
     abstract class GeneralPlotCommand : IPlotCommand
     {
-        private string _method = null;
-        private IEnumerable<object> _parameters = null;
+        private string _method = String.Empty;
+        private IEnumerable<object> _parameters = Array.Empty<object>();
 
-        private IEnumerable<Token> _statement;
+        private IEnumerable<Token> _statement = Array.Empty<Token>();
 
         protected string Method => _method;
         protected IEnumerable<object> Parameters => _parameters;
@@ -39,11 +39,11 @@ namespace SketchPen.Plot.Commands
         {
             try
             {
-                ExecuteCommand(context, Parameters.Select(p =>
+                ExecuteCommand(context, parameters: Parameters?.Select(p =>
                 {
                     if (p != null && p.ToString().StartsWith("@@"))
                     {
-                        var variableName = p?.ToString().Substring(2);
+                        var variableName = p.ToString().Substring(2);
                         if (!context.Globals.ContainsKey(variableName))
                         {
                             throw new SyntaxErrorException($"Unknown variable: { variableName }", _statement);
@@ -55,7 +55,7 @@ namespace SketchPen.Plot.Commands
                     {
                         return p;
                     }
-                }));
+                }) ?? Array.Empty<object>());
             }
             catch (SyntaxErrorException see)
             {

@@ -10,9 +10,9 @@ namespace SketchPen.Plot.Extensions
     {
         static public T[] ToTypedParameters<T>(this IEnumerable<object> parameters)
         {
-            return parameters?.Select(p =>
+            return parameters.Select(p =>
             {
-                if (p?.GetType() == typeof(T))
+                if (p.GetType() == typeof(T))
                 {
                     return p;
                 }
@@ -37,7 +37,7 @@ namespace SketchPen.Plot.Extensions
             {
                 try
                 {
-                    if (parameter?.GetType() == typeof(T))
+                    if (parameter.GetType() == typeof(T))
                     {
                         typedParamters.Add((T)parameter);
                     }
@@ -67,12 +67,12 @@ namespace SketchPen.Plot.Extensions
         {
             if (index < 0 || index > parameters.Count() - 1)
             {
-                return default(T);
+                return GetDefaultNonNullValue<T>();
             }
 
             var p = parameters.Skip(index).First();
 
-            if (p?.GetType() == typeof(T))
+            if (p.GetType() == typeof(T))
             {
                 return (T)p;
             }
@@ -166,7 +166,7 @@ namespace SketchPen.Plot.Extensions
         {
             if (parameters == null || from >= parameters.Count())
             {
-                return null;
+                return Array.Empty<object>();
             }
 
             return parameters.Skip(from).Take(1);
@@ -180,6 +180,21 @@ namespace SketchPen.Plot.Extensions
             }
 
             return parameters.Count();
+        }
+
+        static public T GetDefaultNonNullValue<T>()
+        {
+            return typeof(T) switch
+            {
+                Type t when t == typeof(string) => (T)(object)string.Empty,
+                Type t when t == typeof(short) => (T)(object)default(short),
+                Type t when t == typeof(int) => (T)(object)default(int),
+                Type t when t == typeof(long) => (T)(object)default(long),
+                Type t when t == typeof(float) => (T)(object)default(float),
+                Type t when t == typeof(double) => (T)(object)default(double),
+                Type t when t == typeof(decimal) => (T)(object)default(decimal),
+                _ => throw new ArgumentException($"Type '{typeof(T).FullName}' is not supported"),
+            };
         }
     }
 }

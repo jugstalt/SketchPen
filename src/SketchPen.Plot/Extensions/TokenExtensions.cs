@@ -90,6 +90,7 @@ namespace SketchPen.Plot.Extensions
                     if (commentLine.IsCodefileComment())
                     {
                         codeFilename = commentLine.GetCodefile();
+
                         if (!lineNumber.ContainsKey(codeFilename))
                         {
                             lineNumber[codeFilename] = 1;
@@ -255,7 +256,8 @@ namespace SketchPen.Plot.Extensions
                 }
 
                 string method = tokens[2].TokenValue;
-                List<Token> parameters = null;
+                IEnumerable<Token> parameters = Array.Empty<Token>();
+
                 for (int i = 2; i < tokens.Length; i++)
                 {
                     if (tokens[i].TokenType == TokenType.Operator)

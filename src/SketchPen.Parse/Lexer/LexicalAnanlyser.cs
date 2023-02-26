@@ -96,6 +96,7 @@ namespace SketchPen.Parse.Lexer
         private Token GetNextLexicalAtom(ref string item)
         {
             StringBuilder tokenString = new StringBuilder();
+
             for (int i = 0; i < item.Length; i++)
             {
                 if (CheckDelimiter(item[i].ToString()))
@@ -239,10 +240,12 @@ namespace SketchPen.Parse.Lexer
 
             if (!String.IsNullOrEmpty(item))
             {
-                throw new LexerSyntaxException($"Unexpecting end of line '{ item }'");
+                throw new LexerSyntaxException($"Unexpecting end of line '{item}'");
             }
-
-            return null;
+            else
+            {
+                throw new Exception($"Syntax error: {item}");
+            }
         }
 
         private string EscapeLiteral(string literal)

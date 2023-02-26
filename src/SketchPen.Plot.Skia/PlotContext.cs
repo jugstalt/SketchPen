@@ -131,9 +131,12 @@ namespace SketchPen.Plot.Skia
             return new PlotBrush(this, sKPaint, brushColor.Equals(PlotColor.Transparent));
         }
 
-        public IPen CreatePen(IEnumerable<object> parameters = null)
+        public IPen CreatePen(IEnumerable<object> parameters)
         {
-            float penWidth = parameters.Slice(1)?.ToTypedParameters<float>().FirstOrDefault() ?? this.PenWidth;
+            var typedParameters = parameters?.Slice(1)?.ToTypedParameters<float>();
+            float penWidth = typedParameters != null && typedParameters.Length >= 1 ?
+                typedParameters.First() :
+                this.PenWidth;
 
             if (penWidth >= MinPenWidth && penWidth <= MaxPenWidth)
             {
@@ -148,7 +151,10 @@ namespace SketchPen.Plot.Skia
                 }
             }
 
-            var penColor = parameters.Slice(0)?.ToColor() ?? this.PenColor;
+            var colorParams = parameters.Slice(0);
+            var penColor = (colorParams == null || colorParams.Count() == 0) ?
+                this.PenColor :
+                colorParams.ToColor();
 
             var skPaint = new SKPaint()
             {

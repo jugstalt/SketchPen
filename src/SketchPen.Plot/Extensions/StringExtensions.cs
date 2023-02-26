@@ -20,7 +20,7 @@ namespace SketchPen.Plot.Extensions
         {
             if (!codeline.IsCodefileComment())
             {
-                return null;
+                return String.Empty;
             }
 
             return codeline.Substring("// CodeFile: ".Length);

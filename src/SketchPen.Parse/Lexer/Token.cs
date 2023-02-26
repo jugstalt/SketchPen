@@ -12,7 +12,7 @@
         public string TokenValue { get; set; }
 
         public int LineNumber { get; set; }
-        public string CodeFile { get; set; }
+        public string CodeFile { get; set; } = string.Empty;
 
         public override string ToString()
         {

@@ -11,7 +11,7 @@ namespace SketchPen.Plot.Compile
 {
     public class Compiler
     {
-        static internal IEnumerable<Type> PlotCommandTypes = null;
+        static internal IEnumerable<Type> PlotCommandTypes = Array.Empty<Type>();
 
         static Compiler()
         {

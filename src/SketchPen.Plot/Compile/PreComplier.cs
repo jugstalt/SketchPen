@@ -123,7 +123,7 @@ namespace SketchPen.Plot.Compile
                 includeFile = includeFile.Substring(1, includeFile.Length - 2);
             }
 
-            FileInfo includeFileInfo = null;
+            FileInfo includeFileInfo;
             if (FileExists($"{ new FileInfo(_fileName).Directory.FullName }/{ includeFile }"))
             {
                 includeFileInfo = new FileInfo($"{ new FileInfo(_fileName).Directory.FullName }/{ includeFile }");

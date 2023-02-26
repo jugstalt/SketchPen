@@ -8,6 +8,7 @@ using System.Linq;
 namespace SketchPen.Plot.Commands
 {
     [PlotCommandKeyword("line")]
+    [PlotCommandMethod("draw", insertText: "draw(${1:point1_x}, ${2:point1_y},${3:point2_x},${4:point2_y});")]
     class LineCommand : GeneralPlotCommand
     {
         protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)

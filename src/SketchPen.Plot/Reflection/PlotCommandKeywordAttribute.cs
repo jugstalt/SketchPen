@@ -2,6 +2,7 @@
 
 namespace SketchPen.Plot.Reflection
 {
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class PlotCommandKeywordAttribute : Attribute
     {
         public PlotCommandKeywordAttribute(string keyword)

@@ -9,6 +9,30 @@ using System.Linq;
 namespace SketchPen.Plot.Commands
 {
     [PlotCommandKeyword("circle")]
+    [PlotCommandMethod("draw", label: "draw(diameter)", insertText: "draw(${1:diameter});")]
+    [PlotCommandMethod("draw", label: "draw(diameterX, diameterY)", insertText: "draw(${1:diameterX}, ${2:diameterY});")]
+    [PlotCommandMethod("draw", label: "draw(diameter, centerX, centerY)", insertText: "draw(${1:diameter}, ${2:centerX}, ${3:centerY});")]
+    [PlotCommandMethod("draw", label: "draw(diameterX, diameterY, centerX, centerY)", insertText: "draw(${1:diameterX}, ${2:diameterY}, ${3:centerX}, ${4:centerY});")]
+    [PlotCommandMethod("draw", label: "draw(diameterX, diameterY, centerX, centerY, color)", insertText: "draw(${1:diameterX}, ${2:diameterY}, ${3:centerX}, ${4:centerY}, \"${5:hexColor}\");")]
+
+    [PlotCommandMethod("fill", label: "fill(diameter)", insertText: "fill(${1:diameter});")]
+    [PlotCommandMethod("fill", label: "fill(diameterX, diameterY)", insertText: "fill(${1:diameterX}, ${2:diameterY});")]
+    [PlotCommandMethod("fill", label: "fill(diameter, centerX, centerY)", insertText: "fill(${1:diameter}, ${2:centerX}, ${3:centerY});")]
+    [PlotCommandMethod("fill", label: "fill(diameterX, diameterY, centerX, centerY)", insertText: "fill(${1:diameterX}, ${2:diameterY}, ${3:centerX}, ${4:centerY});")]
+    [PlotCommandMethod("fill", label: "fill(diameterX, diameterY, centerX, centerY, color)", insertText: "fill(${1:diameterX}, ${2:diameterY}, ${3:centerX}, ${4:centerY}, \"${5:hexColor}\");")]
+
+    [PlotCommandMethod("arc", label: "arc(startAngle, sweepAngle, diameter)", insertText: "arc(${1:startAngle}, ${2:sweepAngle}, ${3:diameter});")]
+    [PlotCommandMethod("arc", label: "arc(startAngle, sweepAngle, diameterX, diameterY)", insertText: "arc(${1:startAngle}, ${2:sweepAngle}, ${3:diameterX}, ${4:diameterY});")]
+    [PlotCommandMethod("arc", label: "arc(startAngle, sweepAngle, diameter, centerX, centerY)", insertText: "arc(${1:startAngle}, ${2:sweepAngle}, ${3:diameter}, ${4:centerX}, ${5:centerY});")]
+    [PlotCommandMethod("arc", label: "arc(startAngle, sweepAngle, diameterX, diameterY, centerX, centerY)", insertText: "arc(${1:startAngle}, ${2:sweepAngle}, ${3:diameterX}, ${4:diameterY}, ${5:centerX}, ${6:centerY});")]
+    [PlotCommandMethod("arc", label: "arc(startAngle, sweepAngle, diameterX, diameterY, centerX, centerY, color)", insertText: "arc(${1:startAngle}, ${2:sweepAngle}, ${3:diameterX}, ${4:diameterY}, ${5:centerX}, ${6:centerY}, \"${7:hexColor}\");")]
+
+    [PlotCommandMethod("pie", label: "pie(startAngle, sweepAngle, diameter)", insertText: "pie(${1:startAngle}, ${2:sweepAngle}, ${3:diameter});")]
+    [PlotCommandMethod("pie", label: "pie(startAngle, sweepAngle, diameterX, diameterY)", insertText: "pie(${1:startAngle}, ${2:sweepAngle}, ${3:diameterX}, ${4:diameterY});")]
+    [PlotCommandMethod("pie", label: "pie(startAngle, sweepAngle, diameter, centerX, centerY)", insertText: "pie(${1:startAngle}, ${2:sweepAngle}, ${3:diameter}, ${4:centerX}, ${5:centerY});")]
+    [PlotCommandMethod("pie", label: "pie(startAngle, sweepAngle, diameterX, diameterY, centerX, centerY)", insertText: "pie(${1:startAngle}, ${2:sweepAngle}, ${3:diameterX}, ${4:diameterY}, ${5:centerX}, ${6:centerY});")]
+    [PlotCommandMethod("pie", label: "pie(startAngle, sweepAngle, diameterX, diameterY, centerX, centerY, color)", insertText: "pie(${1:startAngle}, ${2:sweepAngle}, ${3:diameterX}, ${4:diameterY}, ${5:centerX}, ${6:centerY}, \"${7:hexColor}\");")]
+
     class CircleCommand : GeneralPlotCommand
     {
         protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)

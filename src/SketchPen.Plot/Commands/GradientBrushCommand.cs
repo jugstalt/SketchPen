@@ -8,6 +8,8 @@ using System.Linq;
 namespace SketchPen.Plot.Commands
 {
     [PlotCommandKeyword("gradientbrush")]
+    [PlotCommandMethod("color", insertText: "color(\"${1:hexColor}\");")]
+    [PlotCommandMethod("points", insertText: "points(${1:point1_x}, ${2:point1_y},${3:point2_x},${4:point2_y});")]
     class GradientBrushCommand : GeneralPlotCommand
     {
         protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
@@ -19,7 +21,7 @@ namespace SketchPen.Plot.Commands
                     break;
                 case "points":
                     context.GradientBrushPoint1 = parameters.ToPoints().FirstOrDefault();
-                    context.GradientBrushPoint2 = parameters.ToPoints().Skip(1).FirstOrDefault();
+                    context.GradientBrushPoint2 = parameters.ToPoints().Skip(2).FirstOrDefault();
                     break;
                 default:
                     throw new Exception($"Unknown method: { Method  }");

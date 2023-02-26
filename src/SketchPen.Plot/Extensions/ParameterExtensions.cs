@@ -127,7 +127,7 @@ namespace SketchPen.Plot.Extensions
             }
             if (coords.Length == 2)
             {
-                return new CanvasRectangle(-coords[0] / 2f, -coords[0] / 2f, coords[0], coords[1]);
+                return new CanvasRectangle(-coords[0] / 2f, -coords[1] / 2f, coords[0], coords[1]);
             }
             if (coords.Length == 3)
             {

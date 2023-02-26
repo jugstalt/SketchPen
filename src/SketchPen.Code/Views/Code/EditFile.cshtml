@@ -33,7 +33,7 @@
             
             //console.log(value);
 
-            sketchPenCodeEditor.init('@Model.Route', value, "text");
+            sketchPenCodeEditor.init('@Model.Route', value, "sketchpen");
 
             sketchPenCodeEditor.events.on('editor-value-changed', function(channel, args) {
                 if(args.route === '@Model.Route') {

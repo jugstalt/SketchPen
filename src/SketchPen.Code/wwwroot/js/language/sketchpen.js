@@ -1,12 +1,19 @@
 // import * as monaco from 'monaco-editor';
 
-function registerSketchPenLanguate() {
-    console.log('register-sketchpen-language');
+function registerSketchPenLanguate(rules) {
+    console.log('register-sketchpen-language', rules);
+
     monaco.languages.register({
         id: 'sketchpen',
     });
 
-    let keywords = ['transform', 'path', 'line', 'circle', 'test1344444'];
+    let keywords = [];
+
+    if (rules) {
+        for (let keyword in rules) {
+            keywords.push(keyword);
+        }
+    }
 
     monaco.languages.setMonarchTokensProvider('sketchpen', {
         keywords: keywords,
@@ -36,87 +43,70 @@ function registerSketchPenLanguate() {
     });
 
     monaco.languages.registerCompletionItemProvider('sketchpen', {
+        triggerCharacters: ['.', '@'],
         provideCompletionItems: (model, position) => {
-            const suggestions = [
+
+            if (!rules) return { suggestions: [] };
+
+            //console.log('model', model);
+            //console.log('position', position);
+
+            let textUntilPosition = model.getValueInRange(
                 {
-                    label: "transform.reset()",
-                    kind: monaco.languages.CompletionItemKind.Keyword,
-                    insertText: "transform.reset();",
+                    startLineNumber: position.lineNumber,
+                    startColumn: 1,
+                    endLineNumber: position.lineNumber,
+                    endColumn: position.column
+                });
+            const wordUntilPosition = model.getWordUntilPosition(position);
+
+            console.log('textUntilPosition', textUntilPosition);
+            console.log('wordUntilPosition', wordUntilPosition);
+
+            let suggestions = [];
+
+            if (textUntilPosition[textUntilPosition.length - 1] === '@') {
+                suggestions.push({
+                    label: "@@varible1",
+                    insertText: "@varible1",
+                    kind: monaco.languages.CompletionItemKind.Varible,
                     insertTextRules:
-                        monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-                },
-                {
-                    label: "transform.translate()",
-                    kind: monaco.languages.CompletionItemKind.Keyword,
-                    insertText: "transform.translate(${1:x}, ${2:y});",
-                    insertTextRules:
-                        monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-                },
-                {
-                    label: "transform.scale()",
-                    kind: monaco.languages.CompletionItemKind.Keyword,
-                    insertText: "transform.scale(${1:scale});",
-                    insertTextRules:
-                        monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-                },
-                {
-                    label: "transform.rotate()",
-                    kind: monaco.languages.CompletionItemKind.Keyword,
-                    insertText: "transform.rotate(${1:angle});",
-                    insertTextRules:
-                        monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-                },
-                {
-                    label: "line.draw()",
-                    kind: monaco.languages.CompletionItemKind.Keyword,
-                    insertText: "line.draw(${1:x1}, ${2:y1}, ${3:x2}, ${4:y2});",
-                    insertTextRules:
-                        monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-                },
-                {
-                    label: "line.draw()",
-                    kind: monaco.languages.CompletionItemKind.Keyword,
-                    insertText: "line.draw(${1:x1}, ${2:y1}, ${3:x2}, ${4:y2});",
-                    insertTextRules:
-                        monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-                },
-                {
-                    label: "path.begin()",
-                    kind: monaco.languages.CompletionItemKind.Keyword,
-                    insertText: "path.begin();",
-                    insertTextRules:
-                        monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-                },
-                {
-                    label: "path.close()",
-                    kind: monaco.languages.CompletionItemKind.Keyword,
-                    insertText: "path.close();",
-                    insertTextRules:
-                        monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-                },
-                {
-                    label: "path.addlines()",
-                    kind: monaco.languages.CompletionItemKind.Keyword,
-                    insertText: "path.addlines(${1:x1}, ${2:y1}, ${3:x2}, ${4:y2}, ...);",
-                    insertTextRules:
-                        monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-                },
-                {
-                    label: "path.fill()",
-                    kind: monaco.languages.CompletionItemKind.Keyword,
-                    insertText: "path.fill(${1: optional color});",
-                    insertTextRules:
-                        monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-                },
-                {
-                    label: "path.draw()",
-                    kind: monaco.languages.CompletionItemKind.Keyword,
-                    insertText: "path.draw(${1: optional color});",
-                    insertTextRules:
-                        monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-                },
-            ];
+                        monaco.languages.CompletionItemInsertTextRule.None
+                });
+            }
+            else if (textUntilPosition.indexOf('.') > 0) {
+                var keyword = textUntilPosition.trim().split('.')[0];
+
+                if (rules[keyword]) {
+                    for (var suggestion of rules[keyword]) {
+                        suggestions.push({
+                            label: suggestion.suggestion,
+                            insertText: suggestion.snippet,
+                            kind: monaco.languages.CompletionItemKind.Method,
+                            insertTextRules:
+                                monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+                        });
+                    }
+                }
+            } else {  // keyword
+                for (var keyword of keywords) {
+                    suggestions.push({
+                        label: keyword,
+                        insertText: keyword,
+                        kind: monaco.languages.CompletionItemKind.Class,
+                        insertTextRules:
+                            monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+                    });
+                }
+            }
+
+            //console.log(suggestions);
+
             return { suggestions: suggestions };
         }
     });
 };
+
+// https://ohdarling88.medium.com/4-steps-to-add-custom-language-support-to-monaco-editor-5075eafa156d
+// https://codesandbox.io/s/monaco-demo-s0hei?file=/src/index.tsx
+// https://stackoverflow.com/questions/51536492/monaco-editor-based-namespace-auto-complete

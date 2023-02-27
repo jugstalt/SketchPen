@@ -33,6 +33,8 @@
             
             //console.log(value);
 
+            registerSketchPenLanguate(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(@Model.EditorCompletion)));
+
             sketchPenCodeEditor.init('@Model.Route', value, "sketchpen");
 
             sketchPenCodeEditor.events.on('editor-value-changed', function(channel, args) {

@@ -4,6 +4,7 @@ using SketchPen.Code.AppCode.Mvc;
 using SketchPen.Code.Extensions;
 using SketchPen.Code.Models.Code;
 using SketchPen.Code.Services;
+using SketchPen.Plot.Services;
 
 namespace SketchPen.Code.Controllers
 {
@@ -12,12 +13,15 @@ namespace SketchPen.Code.Controllers
     {
         private readonly SketchPenCodeService _sketchPenCode;
         private readonly SketchPenPlotService _sketchPenPlot;
+        private readonly CompilerService _compiler;
 
         public CodeController(SketchPenCodeService sketchPenCode,
-                              SketchPenPlotService sketchPenPlot)
+                              SketchPenPlotService sketchPenPlot,
+                              CompilerService compiler)
         {
             _sketchPenCode = sketchPenCode;
             _sketchPenPlot = sketchPenPlot;
+            _compiler = compiler;
         }
 
         [HttpGet]
@@ -55,7 +59,8 @@ namespace SketchPen.Code.Controllers
             return View("EditFile", new EditFileModel()
             {
                 Route = route,
-                Content = await _sketchPenCode.GetFileContent(route)
+                Content = await _sketchPenCode.GetFileContent(route),
+                EditorCompletion = _compiler.EditorCompletion
             });
         }
 

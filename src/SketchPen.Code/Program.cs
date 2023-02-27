@@ -1,8 +1,10 @@
 using SketchPen.Code.Extensions.DependencyInjection;
+using SketchPen.Plot.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddCompilerService();
 builder.Services.AddSketchPenCodeServices(options =>
 {
     options.RootPath = builder.Configuration["rootPath"] ?? String.Empty;

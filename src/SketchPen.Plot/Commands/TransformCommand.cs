@@ -8,11 +8,11 @@ using System.Linq;
 namespace SketchPen.Plot.Commands
 {
     [PlotCommandKeyword("transform")]
-    [PlotCommandMethod("translate", insertText: "translate(${1:x}, ${2:y});")]
-    [PlotCommandMethod("rotate", insertText: "rotate(${1:angle});")]
-    [PlotCommandMethod("scale", label:"scale(ratio)", insertText: "scale(${1:ratio});")]
-    [PlotCommandMethod("scale", label: "scale(ratioX, ratioY)", insertText: "scale(${1:ratioX}, ${2:ratioY});")]
-    [PlotCommandMethod("reset", insertText: "reset();")]
+    [PlotCommandMethod("translate", snippet: "translate(${1:x}, ${2:y});")]
+    [PlotCommandMethod("rotate", snippet: "rotate(${1:angle});")]
+    [PlotCommandMethod("scale", suggestion:"scale(ratio)", snippet: "scale(${1:ratio});")]
+    [PlotCommandMethod("scale", suggestion: "scale(ratioX, ratioY)", snippet: "scale(${1:ratioX}, ${2:ratioY});")]
+    [PlotCommandMethod("reset", snippet: "reset();")]
     class TransformCommand : GeneralPlotCommand
     {
         protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)

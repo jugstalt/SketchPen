@@ -8,8 +8,8 @@ using System.Linq;
 namespace SketchPen.Plot.Commands
 {
     [PlotCommandKeyword("gradientbrush")]
-    [PlotCommandMethod("color", insertText: "color(\"${1:hexColor}\");")]
-    [PlotCommandMethod("points", insertText: "points(${1:point1_x}, ${2:point1_y},${3:point2_x},${4:point2_y});")]
+    [PlotCommandMethod("color", snippet: "color(\"${1:hexColor}\");")]
+    [PlotCommandMethod("points", snippet: "points(${1:point1_x}, ${2:point1_y},${3:point2_x},${4:point2_y});")]
     class GradientBrushCommand : GeneralPlotCommand
     {
         protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)

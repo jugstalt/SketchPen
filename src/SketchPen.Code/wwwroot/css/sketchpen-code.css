@@ -1488,3 +1488,9 @@ body {
     background-color: #999;
     color:#333;
 }
+
+/* suggest-widget size */
+.monaco-editor .suggest-widget {
+    width: 700px !important;
+    max-width: 100% !important;
+}

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace SketchPen.Plot.Commands
 {
     [PlotCommandKeyword("brush")]
-    [PlotCommandMethod("color", insertText: "color(\"${1:hexColor}\");")]
+    [PlotCommandMethod("color", snippet: "color(\"${1:hexColor}\");")]
     class BrushCommand : GeneralPlotCommand
     {
         protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)

@@ -8,11 +8,11 @@ using System.Linq;
 namespace SketchPen.Plot.Commands
 {
     [PlotCommandKeyword("pen")]
-    [PlotCommandMethod("color", insertText: "color(\"${1:hexColor}\");")]
-    [PlotCommandMethod("width", insertText: "width(${1:width});")]
-    [PlotCommandMethod("minwidth", insertText: "minwidth(${1:minWidth});")]
-    [PlotCommandMethod("maxwidth", insertText: "maxwidth(${1:maxWidth});")]
-    [PlotCommandMethod("cap", insertText: "cap(\"${1:round|flat|square}\");")]
+    [PlotCommandMethod("color", snippet: "color(\"${1:hexColor}\");")]
+    [PlotCommandMethod("width", snippet: "width(${1:width});")]
+    [PlotCommandMethod("minwidth", snippet: "minwidth(${1:minWidth});")]
+    [PlotCommandMethod("maxwidth", snippet: "maxwidth(${1:maxWidth});")]
+    [PlotCommandMethod("cap", snippet: "cap(\"${1:round|flat|square}\");")]
     class PenCommand : GeneralPlotCommand
     {
         protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)

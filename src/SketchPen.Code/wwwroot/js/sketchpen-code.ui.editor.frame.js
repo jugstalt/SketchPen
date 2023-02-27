@@ -22,8 +22,7 @@ var sketchPenCodeEditor = new function () {
 
             // register a completion item provider for DLH
             // monaco.languages.registerCompletionItemProvider('razor', getDlhCompletionProvider(monaco));
-            registerSketchPenLanguate();
-
+            
             console.log('create editor with language: ', language || 'text');
             _editor = monaco.editor.create(document.getElementById('sketchpen-code-editor-code'), {
                 language: language || 'text',

@@ -8,8 +8,8 @@ using System.Linq;
 namespace SketchPen.Plot.Commands
 {
     [PlotCommandKeyword("globals")]
-    [PlotCommandMethod("set", insertText: "set(${1:variableName}, ${2:value});")]
-    [PlotCommandMethod("tryset", insertText: "tryset(${1:variableName}, ${2:value});")]
+    [PlotCommandMethod("set", snippet: "set(${1:variableName}, ${2:value});")]
+    [PlotCommandMethod("tryset", snippet: "tryset(${1:variableName}, ${2:value});")]
     class GlobalsCommand : GeneralPlotCommand
     {
         protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)

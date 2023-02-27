@@ -6,16 +6,16 @@ namespace SketchPen.Plot.Reflection
     public class PlotCommandMethodAttribute : Attribute
     {
         public PlotCommandMethodAttribute(string name,
-                                          string label = "",
-                                          string insertText = "")
+                                          string suggestion = "",
+                                          string snippet = "")
         {
             Name = name;
-            Label = label;
-            InsertText = insertText;
+            Suggestion = suggestion;
+            Snippet = snippet;
         }
 
         public string Name { get; }
-        public string Label { get; }
-        public string InsertText { get; }
+        public string Suggestion { get; }
+        public string Snippet { get; }
     }
 }

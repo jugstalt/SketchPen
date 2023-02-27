@@ -9,24 +9,24 @@ using System.Linq;
 namespace SketchPen.Plot.Commands
 {
     [PlotCommandKeyword("path")]
-    [PlotCommandMethod("begin", insertText: "begin();")]
-    [PlotCommandMethod("start", insertText: "start();")]
-    [PlotCommandMethod("close", insertText: "close();")]
+    [PlotCommandMethod("begin", snippet: "begin();")]
+    [PlotCommandMethod("start", snippet: "start();")]
+    [PlotCommandMethod("close", snippet: "close();")]
 
-    [PlotCommandMethod("addlines", insertText: "addlines(${1:x1}, ${2:y1}, ${3:x2}, ${4:y2}, ${5:...});")]
+    [PlotCommandMethod("addlines", snippet: "addlines(${1:x1}, ${2:y1}, ${3:x2}, ${4:y2}, ${5:...});")]
 
-    [PlotCommandMethod("addarc", label: "addarc(startAngle, sweepAngle, diameter)", insertText: "addarc(${1:startAngle}, ${2:sweepAngle}, ${3:diameter});")]
-    [PlotCommandMethod("addarc", label: "addarc(startAngle, sweepAngle, diameterX, diameterY)", insertText: "addarc(${1:startAngle}, ${2:sweepAngle}, ${3:diameterX}, ${4:diameterY});")]
-    [PlotCommandMethod("addarc", label: "addarc(startAngle, sweepAngle, diameter, centerX, centerY)", insertText: "addarc(${1:startAngle}, ${2:sweepAngle}, ${3:diameter}, ${4:centerX}, ${5:centerY});")]
-    [PlotCommandMethod("addarc", label: "addarc(startAngle, sweepAngle, diameterX, diameterY, centerX, centerY)", insertText: "addarc(${1:startAngle}, ${2:sweepAngle}, ${3:diameterX}, ${4:diameterY}, ${5:centerX}, ${6:centerY});")]
+    [PlotCommandMethod("addarc", suggestion: "addarc(startAngle, sweepAngle, diameter)", snippet: "addarc(${1:startAngle}, ${2:sweepAngle}, ${3:diameter});")]
+    [PlotCommandMethod("addarc", suggestion: "addarc(startAngle, sweepAngle, diameterX, diameterY)", snippet: "addarc(${1:startAngle}, ${2:sweepAngle}, ${3:diameterX}, ${4:diameterY});")]
+    [PlotCommandMethod("addarc", suggestion: "addarc(startAngle, sweepAngle, diameter, centerX, centerY)", snippet: "addarc(${1:startAngle}, ${2:sweepAngle}, ${3:diameter}, ${4:centerX}, ${5:centerY});")]
+    [PlotCommandMethod("addarc", suggestion: "addarc(startAngle, sweepAngle, diameterX, diameterY, centerX, centerY)", snippet: "addarc(${1:startAngle}, ${2:sweepAngle}, ${3:diameterX}, ${4:diameterY}, ${5:centerX}, ${6:centerY});")]
 
-    [PlotCommandMethod("addpoint", insertText: "addpoint(${1:x}, ${2:y});")]
+    [PlotCommandMethod("addpoint", snippet: "addpoint(${1:x}, ${2:y});")]
 
-    [PlotCommandMethod("draw", label: "draw()", insertText: "draw();")]
-    [PlotCommandMethod("draw", label: "draw(color)", insertText: "draw(\"${1:hexColor}\");")]
+    [PlotCommandMethod("draw", suggestion: "draw()", snippet: "draw();")]
+    [PlotCommandMethod("draw", suggestion: "draw(color)", snippet: "draw(\"${1:hexColor}\");")]
 
-    [PlotCommandMethod("fill", label: "fill()", insertText: "fill();")]
-    [PlotCommandMethod("fill", label: "fill(color)", insertText: "fill(\"${1:hexColor}\");")]
+    [PlotCommandMethod("fill", suggestion: "fill()", snippet: "fill();")]
+    [PlotCommandMethod("fill", suggestion: "fill(color)", snippet: "fill(\"${1:hexColor}\");")]
 
 
     class PathCommand : GeneralPlotCommand

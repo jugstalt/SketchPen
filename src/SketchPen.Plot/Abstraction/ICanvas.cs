@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace SketchPen.Plot.Abstraction
+namespace SketchPen.Plot.Abstraction;
+
+public interface ICanvas : IDisposable
 {
-    public interface ICanvas : IDisposable
-    {
-        void TranslateTransform(float dx, float dy);
-        void RotateTransform(float angle);
-        void ScaleTransform(float sx, float sy);
+    void TranslateTransform(float dx, float dy);
+    void RotateTransform(float angle);
+    void ScaleTransform(float sx, float sy);
 
-        void DrawLine(IPen pen, CanvasPoint p1, CanvasPoint p2);
+    void DrawLine(IPen pen, CanvasPoint p1, CanvasPoint p2);
 
-        void DrawEllipse(IPen pen, CanvasRectangle rect);
-        void FillEllipse(IBrush brush, CanvasRectangle rect);
+    void DrawEllipse(IPen pen, CanvasRectangle rect);
+    void FillEllipse(IBrush brush, CanvasRectangle rect);
 
-        void DrawArc(IPen pen, CanvasRectangle rect, float startAngle, float sweepAngle);
-        void FillPie(IBrush brush, CanvasRectangle rect, float startAngle, float sweepAngle);
+    void DrawArc(IPen pen, CanvasRectangle rect, float startAngle, float sweepAngle);
+    void FillPie(IBrush brush, CanvasRectangle rect, float startAngle, float sweepAngle);
 
-        void DrawPath(IPen pen, IPlotPath path);
-        void FillPath(IBrush brush, IPlotPath path);
-    }
+    void DrawPath(IPen pen, IPlotPath path);
+    void FillPath(IBrush brush, IPlotPath path);
 }

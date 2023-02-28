@@ -1,7 +1,6 @@
-﻿namespace SketchPen.Code.Services
+﻿namespace SketchPen.Code.Services;
+
+public class SketchPenCodeServiceOptions
 {
-    public class SketchPenCodeServiceOptions
-    {
-        public string RootPath { get; set; } = String.Empty;
-    }
+    public string RootPath { get; set; } = String.Empty;
 }

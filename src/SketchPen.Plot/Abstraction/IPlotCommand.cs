@@ -2,14 +2,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace SketchPen.Plot.Abstraction
+namespace SketchPen.Plot.Abstraction;
+
+public interface IPlotCommand : IDisposable
 {
-    public interface IPlotCommand : IDisposable
-    {
-        void SetStatement(string method, IEnumerable<object> parameters);
+    void SetStatement(string method, IEnumerable<object> parameters);
 
-        void Init(IEnumerable<Token> statement);
+    void Init(IEnumerable<Token> statement);
 
-        void Execute(IPlotContext context);
-    }
+    void Execute(IPlotContext context);
 }

@@ -1,9 +1,7 @@
 ﻿using SketchPen.Plot.Abstraction;
 using SketchPen.Plot.Skia.Extensions;
 using SkiaSharp;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SketchPen.Plot.Skia
 {
@@ -58,7 +56,9 @@ namespace SketchPen.Plot.Skia
         public void AddLines(IEnumerable<CanvasPoint> points)
         {
             if (points == null)
+            {
                 return;
+            }
 
             bool first = _startFigure;
             foreach (var point in points)

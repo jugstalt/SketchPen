@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Drawing;
 
-namespace SketchPen.Plot.Abstraction
+namespace SketchPen.Plot.Abstraction;
+
+public interface IBrush : IDisposable
 {
-    public interface IBrush : IDisposable
-    {
-        object EngineElement { get;  }
-    }
+    object EngineElement { get; }
 }

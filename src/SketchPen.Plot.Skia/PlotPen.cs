@@ -2,23 +2,22 @@
 using SkiaSharp;
 using System;
 
-namespace SketchPen.Plot.Skia
+namespace SketchPen.Plot.Skia;
+
+internal class PlotPen : IPen
 {
-    internal class PlotPen : IPen
+    private readonly IPlotContext _context;
+
+    public PlotPen(IPlotContext context, SKPaint skPaint)
     {
-        private readonly IPlotContext _context;
+        _context = context;
+        this.EngineElement = skPaint;
+    }
 
-        public PlotPen(IPlotContext context, SKPaint skPaint)
-        {
-            _context = context;
-            this.EngineElement = skPaint;
-        }
+    public object EngineElement { get; }
 
-        public object EngineElement { get; }
-
-        public void Dispose()
-        {
-            ((IDisposable)this.EngineElement).Dispose();
-        }
+    public void Dispose()
+    {
+        ((IDisposable)this.EngineElement).Dispose();
     }
 }

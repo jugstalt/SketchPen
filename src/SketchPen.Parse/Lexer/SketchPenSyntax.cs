@@ -1,29 +1,28 @@
 ﻿using SketchPen.Parse.Lexer.Abstrations;
 
-namespace SketchPen.Parse.Lexer
+namespace SketchPen.Parse.Lexer;
+
+public class SketchPenSyntax : ISyntax
 {
-    public class SketchPenSyntax : ISyntax
-    {
-        public const string StatementSeparator = ";";
+    public const string StatementSeparator = ";";
 
-        #region Const
+    #region Const
 
-        private string[] _keywords = new[] { "globals", "pen", "brush", "line", "rect", "circle", "text", "transform", "path", "line", "gradientbrush" };
+    private string[] _keywords = new[] { "globals", "pen", "brush", "line", "rect", "circle", "text", "transform", "path", "line", "gradientbrush" };
 
-        private string[] _separator = new[] { StatementSeparator, "\r", "\n", "\r\n" };
+    private string[] _separator = new[] { StatementSeparator, "\r", "\n", "\r\n" };
 
-        private string[] _comments = new[] { "//" };
+    private string[] _comments = new[] { "//" };
 
-        private string[] _operators = new[] { "(", ")", ",", "()", "." };
+    private string[] _operators = new[] { "(", ")", ",", "()", "." };
 
-        #endregion
+    #endregion
 
-        public string[] Keywords => _keywords;
+    public string[] Keywords => _keywords;
 
-        public string[] Separator => _separator;
+    public string[] Separator => _separator;
 
-        public string[] Comments => _comments;
+    public string[] Comments => _comments;
 
-        public string[] Operators => _operators;
-    }
+    public string[] Operators => _operators;
 }

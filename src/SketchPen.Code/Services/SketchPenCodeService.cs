@@ -1,129 +1,147 @@
 ﻿using Microsoft.Extensions.Options;
 using SketchPen.Code.Extensions;
+using SketchPen.Plot;
 
-namespace SketchPen.Code.Services
+namespace SketchPen.Code.Services;
+
+public class SketchPenCodeService
 {
-    public class SketchPenCodeService
+    private readonly SketchPenCodeServiceOptions _options;
+
+    public SketchPenCodeService(IOptions<SketchPenCodeServiceOptions> options)
     {
-        private readonly SketchPenCodeServiceOptions _options;
-
-        public SketchPenCodeService(IOptions<SketchPenCodeServiceOptions> options)
-        {
-            _options = options.Value;
-        }
-
-        public IEnumerable<string> GetAllFiles(string id)
-        {
-            var rootDirInfo = new DirectoryInfo(Path.Combine(_options.RootPath, id));
-            var filesList = new List<string>();
-
-            CollectFiles(rootDirInfo, filesList);
-
-            return filesList;
-        }
-
-        public IEnumerable<string> GetGlobals(string id)
-        {
-            var rootDirInfo = new DirectoryInfo(Path.Combine(_options.RootPath, id));
-            var filesList = new List<string>();
-
-            foreach(var fileInfo in rootDirInfo.GetFiles("_*.globals"))
-            {
-                filesList.Add(fileInfo.FullName.ToRelativeFilePath(rootDirInfo.FullName));
-            }
-
-            return filesList;
-        }
-
-        async public Task<string> GetFileContent(string route)
-        {
-            var fileInfo = new FileInfo(Path.Combine(_options.RootPath, route));
-
-            if (!fileInfo.HasAllowedExtension())
-            {
-                throw new Exception($"Not allowed file extension: {fileInfo.Extension}");
-            }
-
-            if (!fileInfo.Exists)
-            {
-                throw new Exception($"File {route} not exists");
-            }
-
-            return await File.ReadAllTextAsync(fileInfo.FullName);
-        }
-
-        async public Task SetFileContent(string route, string content)
-        {
-            var fileInfo = new FileInfo(Path.Combine(_options.RootPath, route));
-
-            if (!fileInfo.HasAllowedExtension())
-            {
-                throw new Exception($"Not allowed file extension: {fileInfo.Extension}");
-            }
-
-            await File.WriteAllTextAsync(fileInfo.FullName, content);
-        }
-
-        async public Task<string> CreateFile(string id, string filename)
-        {
-            if(!filename.IsValidFilename())
-            {
-                throw new Exception($"Filename contains invalid characters: {filename}");
-            }
-
-            var fileInfo = new FileInfo(Path.Combine(_options.RootPath, id, filename));
-
-            if(fileInfo.Exists)
-            {
-                throw new Exception($"{filename} already exists");
-            }
-            if (!fileInfo.HasAllowedExtension())
-            {
-                throw new Exception($"Not allowed file extension: {fileInfo.Extension}");
-            }
-
-            await File.WriteAllTextAsync(fileInfo.FullName, $"// {filename}{Environment.NewLine}");
-
-            return await GetFileContent($"{id}/{filename}");
-        }
-
-        public bool DeleteFile(string id, string filename)
-        {
-            var fileInfo = new FileInfo(Path.Combine(_options.RootPath, id, filename));
-
-            if (!fileInfo.Exists)
-            {
-                throw new Exception($"{filename} not exists");
-            }
-
-            fileInfo.Delete();
-
-            return true;
-        }
-
-        #region Helper
-
-        private void CollectFiles(DirectoryInfo dirInfo, List<string> filesList)
-        {
-            foreach (var folderDirInfo in dirInfo.GetDirectories())
-            {
-                CollectFiles(folderDirInfo, filesList);
-            }
-
-            foreach (var fileInfo in dirInfo.GetFiles())
-            {
-                var relFilePath = fileInfo.FullName.ToRelativeFilePath(_options.RootPath);
-
-                if (relFilePath.StartsWith("_") &&
-                    relFilePath.EndsWith(".globals"))
-                {
-                    continue;
-                }
-
-                filesList.Add(relFilePath);
-            }
-        }
-
-        #endregion
+        _options = options.Value;
     }
+
+    public IEnumerable<string> GetAllFiles(string id)
+    {
+        var rootDirInfo = new DirectoryInfo(Path.Combine(_options.RootPath, id));
+        var filesList = new List<string>();
+
+        CollectFiles(rootDirInfo, filesList);
+
+        return filesList;
+    }
+
+    public IEnumerable<string> GetGlobals(string id)
+    {
+        var rootDirInfo = new DirectoryInfo(Path.Combine(_options.RootPath, id));
+        var filesList = new List<string>();
+
+        foreach (var fileInfo in rootDirInfo.GetFiles("_*.globals"))
+        {
+            filesList.Add(fileInfo.FullName.ToRelativeFilePath(rootDirInfo.FullName));
+        }
+
+        return filesList;
+    }
+
+    async public Task<string> GetFileContent(string route)
+    {
+        var fileInfo = new FileInfo(Path.Combine(_options.RootPath, route));
+
+        if (!fileInfo.HasAllowedExtension())
+        {
+            throw new Exception($"Not allowed file extension: {fileInfo.Extension}");
+        }
+
+        if (!fileInfo.Exists)
+        {
+            throw new Exception($"File {route} not exists");
+        }
+
+        return await File.ReadAllTextAsync(fileInfo.FullName);
+    }
+
+    async public Task SetFileContent(string route, string content)
+    {
+        var fileInfo = new FileInfo(Path.Combine(_options.RootPath, route));
+
+        if (!fileInfo.HasAllowedExtension())
+        {
+            throw new Exception($"Not allowed file extension: {fileInfo.Extension}");
+        }
+
+        await File.WriteAllTextAsync(fileInfo.FullName, content);
+    }
+
+    async public Task<string> CreateFile(string id, string filename)
+    {
+        if (!filename.IsValidFilename())
+        {
+            throw new Exception($"Filename contains invalid characters: {filename}");
+        }
+
+        var fileInfo = new FileInfo(Path.Combine(_options.RootPath, id, filename));
+
+        if (fileInfo.Exists)
+        {
+            throw new Exception($"{filename} already exists");
+        }
+        if (!fileInfo.HasAllowedExtension())
+        {
+            throw new Exception($"Not allowed file extension: {fileInfo.Extension}");
+        }
+
+        await File.WriteAllTextAsync(fileInfo.FullName, $"// {filename}{Environment.NewLine}");
+
+        return await GetFileContent($"{id}/{filename}");
+    }
+
+    public bool DeleteFile(string id, string filename)
+    {
+        var fileInfo = new FileInfo(Path.Combine(_options.RootPath, id, filename));
+
+        if (!fileInfo.Exists)
+        {
+            throw new Exception($"{filename} not exists");
+        }
+
+        fileInfo.Delete();
+
+        return true;
+    }
+
+    public EditorFileType GetEditorFileType(string route)
+    {
+        var fileExt = route?
+                        .Split('/')
+                        .Last()
+                        .Split(".")
+                        .Last()
+                        .ToLower();
+
+        return fileExt switch
+        {
+            "sp" => EditorFileType.Code,
+            "spt" => EditorFileType.Template,
+            "globals" => EditorFileType.Globals,
+            _ => EditorFileType.Unknown
+        };
+    }
+
+    #region Helper
+
+    private void CollectFiles(DirectoryInfo dirInfo, List<string> filesList)
+    {
+        foreach (var folderDirInfo in dirInfo.GetDirectories())
+        {
+            CollectFiles(folderDirInfo, filesList);
+        }
+
+        foreach (var fileInfo in dirInfo.GetFiles())
+        {
+            var relFilePath = fileInfo.FullName.ToRelativeFilePath(_options.RootPath);
+
+            if (relFilePath.StartsWith("_") &&
+                relFilePath.EndsWith(".globals"))
+            {
+                continue;
+            }
+
+            filesList.Add(relFilePath);
+        }
+    }
+
+    #endregion
 }

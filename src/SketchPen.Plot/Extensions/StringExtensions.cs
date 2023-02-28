@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Text;
 
-namespace SketchPen.Plot.Extensions
+namespace SketchPen.Plot.Extensions;
+
+static class StringExtensions
 {
-    static class StringExtensions
+    static public void AppendCodefileComment(this StringBuilder code, string codeFileName)
     {
-        static public void AppendCodefileComment(this StringBuilder code, string codeFileName)
+        //code.Append($"{ Environment.NewLine }// Codefile: { codeFileName };{ Environment.NewLine }");
+        code.Append($"// Codefile: {codeFileName};{Environment.NewLine}");
+    }
+
+    static public bool IsCodefileComment(this string codeline)
+    {
+        return (codeline.StartsWith("// CodeFile: ", StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    static public string GetCodefile(this string codeline)
+    {
+        if (!codeline.IsCodefileComment())
         {
-            //code.Append($"{ Environment.NewLine }// Codefile: { codeFileName };{ Environment.NewLine }");
-            code.Append($"// Codefile: { codeFileName };{ Environment.NewLine }");
+            return String.Empty;
         }
 
-        static public bool IsCodefileComment(this string codeline)
-        {
-            return (codeline.StartsWith("// CodeFile: ", StringComparison.InvariantCultureIgnoreCase));
-        }
-
-        static public string GetCodefile(this string codeline)
-        {
-            if (!codeline.IsCodefileComment())
-            {
-                return String.Empty;
-            }
-
-            return codeline.Substring("// CodeFile: ".Length);
-        }
+        return codeline.Substring("// CodeFile: ".Length);
     }
 }

@@ -4,66 +4,65 @@ using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Linq;
 
-namespace SketchPen.Plot.Drawing
+namespace SketchPen.Plot.Drawing;
+
+class PlotPath : IPlotPath
 {
-    class PlotPath : IPlotPath
+    private GraphicsPath _path;
+
+    public PlotPath()
     {
-        private GraphicsPath _path;
+        _path = new GraphicsPath();
+    }
 
-        public PlotPath()
+    public object EngineElement => _path;
+
+    public void Start()
+    {
+        if (_path != null)
         {
-            _path = new GraphicsPath();
+            _path.StartFigure();
         }
+    }
 
-        public object EngineElement => _path;
-
-        public void Start()
+    public void Close()
+    {
+        if (_path != null)
         {
-            if (_path != null)
-            {
-                _path.StartFigure();
-            }
+            _path.CloseFigure();
         }
+    }
 
-        public void Close()
+    public void AddArc(CanvasRectangle rect, float startAngle, float sweepAngle)
+    {
+        if (_path != null)
         {
-            if (_path != null)
-            {
-                _path.CloseFigure();
-            }
+            _path.AddArc(rect.ToRectangleF(), startAngle, sweepAngle);
         }
+    }
 
-        public void AddArc(CanvasRectangle rect, float startAngle, float sweepAngle)
+    public void AddLines(IEnumerable<CanvasPoint> points)
+    {
+        if (_path != null)
         {
-            if (_path != null)
-            {
-                _path.AddArc(rect.ToRectangleF(), startAngle, sweepAngle);
-            }
+            _path.AddLines(points.Select(p => p.ToPointF()).ToArray());
         }
+    }
 
-        public void AddLines(IEnumerable<CanvasPoint> points)
+    public void AddPoint(CanvasPoint point)
+    {
+        if (_path != null)
         {
-            if (_path != null)
-            {
-                _path.AddLines(points.Select(p => p.ToPointF()).ToArray());
-            }
+            _path.AddLine(point.ToPointF(), point.ToPointF());
         }
+    }
 
-        public void AddPoint(CanvasPoint point)
+    public void Dispose()
+    {
+        if (_path != null)
         {
-            if (_path != null)
-            {
-                _path.AddLine(point.ToPointF(), point.ToPointF());
-            }
-        }
-
-        public void Dispose()
-        {
-            if (_path != null)
-            {
-                _path.Dispose();
-                _path = null;
-            }
+            _path.Dispose();
+            _path = null;
         }
     }
 }

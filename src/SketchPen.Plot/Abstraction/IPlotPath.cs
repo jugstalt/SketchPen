@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace SketchPen.Plot.Abstraction
+namespace SketchPen.Plot.Abstraction;
+
+public interface IPlotPath : IDisposable
 {
-    public interface IPlotPath : IDisposable
-    {
-        object EngineElement { get; }
+    object EngineElement { get; }
 
-        void Start();
-        void Close();
+    void Start();
+    void Close();
 
-        void AddLines(IEnumerable<CanvasPoint> points);
-        void AddArc(CanvasRectangle rect, float startAngle, float sweepAngle);
-        void AddPoint(CanvasPoint point);
-    }
+    void AddLines(IEnumerable<CanvasPoint> points);
+    void AddArc(CanvasRectangle rect, float startAngle, float sweepAngle);
+    void AddPoint(CanvasPoint point);
 }

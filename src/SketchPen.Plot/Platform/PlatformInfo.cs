@@ -1,38 +1,37 @@
 ﻿using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SketchPen.Plot.Platform
+namespace SketchPen.Plot.Platform;
+
+public class PlatformInfo
 {
-    public class PlatformInfo
+    static public NumberFormatInfo Nhi = CultureInfo.InvariantCulture.NumberFormat;
+    static public NumberFormatInfo Cnf = CultureInfo.CurrentCulture.NumberFormat;
+
+    static public bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+    static public bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+    static public bool IsOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+    static public string Platform
     {
-        static public NumberFormatInfo Nhi = CultureInfo.InvariantCulture.NumberFormat;
-        static public NumberFormatInfo Cnf = CultureInfo.CurrentCulture.NumberFormat;
-
-        static public bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-        static public bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-        static public bool IsOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-
-        static public string Platform
+        get
         {
-            get
+            if (IsLinux)
             {
-                if (IsLinux)
-                {
-                    return OSPlatform.Linux.ToString();
-                }
-
-                if (IsOSX)
-                {
-                    return OSPlatform.OSX.ToString();
-                }
-
-                if (IsWindows)
-                {
-                    return OSPlatform.Windows.ToString();
-                }
-
-                return "Unknown";
+                return OSPlatform.Linux.ToString();
             }
+
+            if (IsOSX)
+            {
+                return OSPlatform.OSX.ToString();
+            }
+
+            if (IsWindows)
+            {
+                return OSPlatform.Windows.ToString();
+            }
+
+            return "Unknown";
         }
     }
 }

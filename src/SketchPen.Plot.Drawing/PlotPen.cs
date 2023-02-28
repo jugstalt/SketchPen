@@ -1,26 +1,25 @@
 ﻿using SketchPen.Plot.Abstraction;
 using System.Drawing;
 
-namespace SketchPen.Plot.Drawing
+namespace SketchPen.Plot.Drawing;
+
+internal class PlotPen : IPen
 {
-    internal class PlotPen : IPen
+    private readonly IPlotContext _context;
+
+    public PlotPen(IPlotContext context, Pen pen, bool isPseudoTransparent)
     {
-        private readonly IPlotContext _context;
+        _context = context;
+        this.EngineElement = pen;
+    }
 
-        public PlotPen(IPlotContext context, Pen pen, bool isPseudoTransparent)
+    public object EngineElement { get; }
+
+    public void Dispose()
+    {
+        if (EngineElement is Pen)
         {
-            _context = context;
-            this.EngineElement = pen;
-        }
-
-        public object EngineElement { get; }
-
-        public void Dispose()
-        {
-            if (EngineElement is Pen)
-            {
-                ((Pen)this.EngineElement).Dispose();
-            }
+            ((Pen)this.EngineElement).Dispose();
         }
     }
 }

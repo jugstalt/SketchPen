@@ -3,37 +3,36 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SketchPen.Plot.Exceptions
+namespace SketchPen.Plot.Exceptions;
+
+public class SyntaxErrorException : Exception
 {
-    public class SyntaxErrorException : Exception
+    private readonly IEnumerable<Token> _statement;
+
+    public SyntaxErrorException(string errorMessage, IEnumerable<Token> statement)
+        : base(errorMessage)
     {
-        private readonly IEnumerable<Token> _statement;
+        _statement = statement;
+    }
 
-        public SyntaxErrorException(string errorMessage, IEnumerable<Token> statement)
-            : base(errorMessage)
+    public string CodeFile
+    {
+        get
         {
-            _statement = statement;
+            return _statement?.FirstOrDefault()?.CodeFile ?? String.Empty;
         }
+    }
 
-        public string CodeFile
+    public string Statement
+    {
+        get
         {
-            get
-            {
-                return _statement?.FirstOrDefault()?.CodeFile ?? String.Empty;
-            }
-        }
+            int? lineNumber = _statement?
+                        .Where(s => s.LineNumber > 0)
+                        .FirstOrDefault()?
+                        .LineNumber;
 
-        public string Statement
-        {
-            get
-            {
-                int? lineNumber = _statement?
-                            .Where(s => s.LineNumber > 0)
-                            .FirstOrDefault()?
-                            .LineNumber;
-
-                return $"{ (lineNumber.HasValue ? lineNumber.Value.ToString() : "") }: { String.Concat(_statement?.Select(s => s.TokenValue).ToArray()) }";
-            }
+            return $"{(lineNumber.HasValue ? lineNumber.Value.ToString() : "")}: {String.Concat(_statement?.Select(s => s.TokenValue).ToArray())}";
         }
     }
 }

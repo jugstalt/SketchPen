@@ -1,30 +1,29 @@
-﻿namespace SketchPen.Plot.Platform
+﻿namespace SketchPen.Plot.Platform;
+
+static public class NumberConverter
 {
-    static public class NumberConverter
+    static public double ToDouble(this string value)
     {
-        static public double ToDouble(this string value)
+        if (PlatformInfo.IsWindows)
         {
-            if (PlatformInfo.IsWindows)
-            {
-                return double.Parse(value.Replace(",", "."), PlatformInfo.Nhi);
-            }
-
-            return double.Parse(value.Replace(",", PlatformInfo.Cnf.NumberDecimalSeparator));
+            return double.Parse(value.Replace(",", "."), PlatformInfo.Nhi);
         }
 
-        static public float ToFloat(this string value)
-        {
-            if (PlatformInfo.IsWindows)
-            {
-                return float.Parse(value.Replace(",", "."), PlatformInfo.Nhi);
-            }
+        return double.Parse(value.Replace(",", PlatformInfo.Cnf.NumberDecimalSeparator));
+    }
 
-            return float.Parse(value.Replace(",", PlatformInfo.Cnf.NumberDecimalSeparator));
+    static public float ToFloat(this string value)
+    {
+        if (PlatformInfo.IsWindows)
+        {
+            return float.Parse(value.Replace(",", "."), PlatformInfo.Nhi);
         }
 
-        static public string ToDoubleString(this double d)
-        {
-            return d.ToString(PlatformInfo.Nhi);
-        }
+        return float.Parse(value.Replace(",", PlatformInfo.Cnf.NumberDecimalSeparator));
+    }
+
+    static public string ToDoubleString(this double d)
+    {
+        return d.ToString(PlatformInfo.Nhi);
     }
 }

@@ -1,75 +1,67 @@
-﻿using SketchPen.Parse.Lexer;
-using SketchPen.Plot;
+﻿using SketchPen.Plot;
 using SketchPen.Plot.Abstraction;
 using SketchPen.Plot.Compile;
-using SketchPen.Plot.Extensions;
-using SketchPen.Plot.Reflection;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 
-namespace SketchPen
+namespace SketchPen;
+
+public class Plotter
 {
-    public class Plotter
+    #region Static Constructor & Fields
+
+    private const int MinPlotSize = 10;
+
+
+    #endregion
+
+    private readonly Type _plotContextType;
+    private IEnumerable<IPlotCommand> _commands;
+
+    public Plotter(Type plotContextType)
     {
-        #region Static Constructor & Fields
-        
-        private const int MinPlotSize = 10;
+        _plotContextType = plotContextType;
+    }
 
+    public void Init(string fileName, string customGlobalsName = "")
+    {
+        var compiler = new Compiler();
+        var code = compiler.PreCompile(fileName, customGlobalsName);
 
-        #endregion
+        _commands = compiler.Compile(code);
+    }
 
-        private readonly Type _plotContextType;
-        private IEnumerable<IPlotCommand> _commands;
-
-        public Plotter(Type plotContextType)
+    public byte[] Plot(int canvasWidth, int canvasHeight)
+    {
+        using (var plotContext = (IPlotContext)Activator.CreateInstance(_plotContextType))
         {
-            _plotContextType = plotContextType;
-        }
+            plotContext.Init(Math.Max(canvasWidth, MinPlotSize), Math.Max(canvasHeight, MinPlotSize));
 
-        public void Init(string fileName, string customGlobalsName = "")
-        {
-            var compiler = new Compiler();
-            var code = compiler.PreCompile(fileName, customGlobalsName);
-
-            _commands = compiler.Compile(code);
-        }
-
-        public byte[] Plot(int canvasWidth, int canvasHeight)
-        {
-            using (var plotContext = (IPlotContext)Activator.CreateInstance(_plotContextType))
+            foreach (var command in _commands)
             {
-                plotContext.Init(Math.Max(canvasWidth, MinPlotSize), Math.Max(canvasHeight, MinPlotSize));
-
-                foreach (var command in _commands)
-                {
-                    command.Execute(plotContext);
-                }
-
-                //var ms = new MemoryStream();
-                //if (_canvasWith < MinPlotSize)
-                //{
-                //    using (var bm = new Bitmap(_canvasWith, _canvasHeight))
-                //    using (var gr = Graphics.FromImage(bm))
-                //    {
-                //        bm.SetResolution(96f, 96f);
-                //        gr.DrawImage(bitmap, new Rectangle(0, 0, _canvasWith, _canvasHeight),
-                //                             new Rectangle(0, 0, bitmap.Width, bitmap.Height),
-                //                             GraphicsUnit.Pixel);
-
-                //        bm.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                //    }
-                //}
-                //else
-                //{
-                //    bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                //}
-
-                return plotContext.Encode(EncodeFormat.Png);
+                command.Execute(plotContext);
             }
+
+            //var ms = new MemoryStream();
+            //if (_canvasWith < MinPlotSize)
+            //{
+            //    using (var bm = new Bitmap(_canvasWith, _canvasHeight))
+            //    using (var gr = Graphics.FromImage(bm))
+            //    {
+            //        bm.SetResolution(96f, 96f);
+            //        gr.DrawImage(bitmap, new Rectangle(0, 0, _canvasWith, _canvasHeight),
+            //                             new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+            //                             GraphicsUnit.Pixel);
+
+            //        bm.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            //    }
+            //}
+            //else
+            //{
+            //    bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            //}
+
+            return plotContext.Encode(EncodeFormat.Png);
         }
     }
 }

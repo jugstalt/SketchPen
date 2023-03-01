@@ -6,6 +6,7 @@ using SketchPen.Plot.Compile;
 using SketchPen.Plot.Exceptions;
 using SketchPen.Plot.Platform;
 using SketchPen.Plot.Reflection;
+using SketchPen.Plot.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -228,7 +229,8 @@ static public class TokenExtensions
         }
     }
 
-    static public IEnumerable<IPlotCommand> GetPlotCommands(this IEnumerable<IEnumerable<Token>> statements)
+    static public IEnumerable<IPlotCommand> GetPlotCommands(this IEnumerable<IEnumerable<Token>> statements,
+                                                            CommandTypesService commandTypes)
     {
         List<IPlotCommand> commands = new List<IPlotCommand>();
 
@@ -236,7 +238,7 @@ static public class TokenExtensions
         {
             var keyword = statement.First().TokenValue; // must be keyword
 
-            var commandType = Compiler.PlotCommandTypes.Where(t => t.GetCustomAttribute<PlotCommandKeywordAttribute>().Keyword == keyword).FirstOrDefault();
+            var commandType = commandTypes.PlotCommandTypes.Where(t => t.GetCustomAttribute<PlotCommandKeywordAttribute>().Keyword == keyword).FirstOrDefault();
             if (commandType == null)
             {
                 throw new Exception($"Unkown plotcommand {keyword}");

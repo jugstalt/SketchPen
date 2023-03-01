@@ -1,4 +1,5 @@
 ﻿using SketchPen.Plot.Exceptions;
+using SketchPen.Plot.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -64,12 +65,16 @@ class Program
                 outFolder = outFolder + "/";
             }
 
+            var commandTypes = new CommandTypesService();
+
             foreach (var fileName in fileNames)
             {
                 var fileInfo = new FileInfo(fileName);
                 Console.WriteLine($"Plot {fileInfo.Name}...");
 
-                var plotter = new Plotter(typeof(SketchPen.Plot.Skia.PlotContext));
+                var plotter = new Plotter(commandTypes,
+                                          typeof(SketchPen.Plot.Skia.PlotContext));
+
                 plotter.Init(fileName, customGlobalsName);
 
                 foreach (var size in sizes)

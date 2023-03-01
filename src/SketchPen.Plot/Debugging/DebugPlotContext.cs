@@ -1,11 +1,10 @@
 ﻿using SketchPen.Plot.Abstraction;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace SketchPen.Plot.Debug;
+namespace SketchPen.Plot.Debugging;
 
-internal class DebugPlotContext : IPlotContext
+public class DebugPlotContext : IPlotContext
 {
     private readonly IDictionary<string, object> _globals;
 
@@ -16,9 +15,9 @@ internal class DebugPlotContext : IPlotContext
 
     public ICanvas Canvas => throw new NotImplementedException();
 
-    public PlotColor PenColor { get;  set; }
-    public float PenWidth { get;  set; }
-    public PenCap PenCap { get;  set; }
+    public PlotColor PenColor { get; set; }
+    public float PenWidth { get; set; }
+    public PenCap PenCap { get; set; }
     public float MaxPenWidth { get; set; }
     public float MinPenWidth { get; set; }
     public PlotColor BrushColor { get; set; }
@@ -30,22 +29,22 @@ internal class DebugPlotContext : IPlotContext
 
     public IBrush CreateBrush(IEnumerable<object> parameters)
     {
-        throw new NotImplementedException();
+        return new DebugBrush();
     }
 
     public IPen CreatePen(IEnumerable<object> parameters)
     {
-        throw new NotImplementedException();
+        return new DebugPen();
     }
 
     public IPlotPath CreatePlotPath()
     {
-        throw new NotImplementedException();
+        return new DebugPlotPath();
     }
 
     public void Dispose()
     {
-        
+
     }
 
     public byte[] Encode(EncodeFormat format)
@@ -55,12 +54,12 @@ internal class DebugPlotContext : IPlotContext
 
     public void Init(int width, int height)
     {
-        
+
     }
 
     public void Init(int width, int height, object canvasObject)
     {
-        
+
     }
 
     public CanvasPoint Project(CanvasPoint point)
@@ -80,6 +79,6 @@ internal class DebugPlotContext : IPlotContext
 
     public void ResetTransform()
     {
-        
+
     }
 }

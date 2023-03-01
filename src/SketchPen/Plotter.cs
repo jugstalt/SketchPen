@@ -1,8 +1,10 @@
 ﻿using SketchPen.Plot;
 using SketchPen.Plot.Abstraction;
 using SketchPen.Plot.Compile;
+using SketchPen.Plot.Services;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace SketchPen;
 
@@ -12,20 +14,22 @@ public class Plotter
 
     private const int MinPlotSize = 10;
 
-
     #endregion
 
+    private readonly CommandTypesService _commandTypes;
     private readonly Type _plotContextType;
     private IEnumerable<IPlotCommand> _commands;
 
-    public Plotter(Type plotContextType)
+    public Plotter(CommandTypesService commandTypes,
+                   Type plotContextType)
     {
+        _commandTypes = commandTypes;
         _plotContextType = plotContextType;
     }
 
     public void Init(string fileName, string customGlobalsName = "")
     {
-        var compiler = new Compiler();
+        var compiler = new CompilerService(_commandTypes);
         var code = compiler.PreCompile(fileName, customGlobalsName);
 
         _commands = compiler.Compile(code);

@@ -5,21 +5,20 @@ using SketchPen.Plot.Services.Abstraction;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace SketchPen.Plot.Services;
+namespace SketchPen.Plot.Services.Editor;
 
 public class EditorLanguageService : IEditorLanguageService
 {
     private readonly IDictionary<string, IEnumerable<EditorCompletionModel>> _editorCompletion;
     private readonly EditorFileType _editorFileType;
 
-    public EditorLanguageService(EditorFileType fileType)
+    public EditorLanguageService(CommandTypesService commandTypes,
+                                 EditorFileType fileType)
     {
-        var compiler = new Compiler(); // create instance => static constructor
-
         _editorCompletion = new Dictionary<string, IEnumerable<EditorCompletionModel>>();
         _editorFileType = fileType;
 
-        foreach (var plotCommandType in Compiler.EditorCompletion.Keys)
+        foreach (var plotCommandType in commandTypes.PlotCommandTypes)
         {
             var fileTypeAttribute = plotCommandType.GetCustomAttribute<PlotCommandSupportedFileTypesAttribute>();
 
@@ -36,7 +35,7 @@ public class EditorLanguageService : IEditorLanguageService
             }
 
             _editorCompletion.TryAdd(keywordAttribute.Keyword,
-                                     new List<EditorCompletionModel>(Compiler.EditorCompletion[plotCommandType]));
+                                     new List<EditorCompletionModel>(commandTypes.EditorCompletion[plotCommandType]));
         }
     }
 

@@ -1,15 +1,21 @@
 ﻿using Microsoft.Extensions.Options;
 using SketchPen.Code.Extensions;
 using SketchPen.Plot;
+using SketchPen.Plot.Abstraction;
+using SketchPen.Plot.Debugging;
+using SketchPen.Plot.Services;
 
 namespace SketchPen.Code.Services;
 
 public class SketchPenCodeService
 {
+    private readonly CompilerService _compiler;
     private readonly SketchPenCodeServiceOptions _options;
 
-    public SketchPenCodeService(IOptions<SketchPenCodeServiceOptions> options)
+    public SketchPenCodeService(CompilerService compiler,
+                                IOptions<SketchPenCodeServiceOptions> options)
     {
+        _compiler = compiler;
         _options = options.Value;
     }
 
@@ -118,6 +124,36 @@ public class SketchPenCodeService
             "globals" => EditorFileType.Globals,
             _ => EditorFileType.Unknown
         };
+    }
+
+    async public Task<IEnumerable<string>> GetGlobalVariableNames(string id)
+    {
+        string globalsFile = Path.Combine(_options.RootPath, id, "_.globals");
+        if (!File.Exists(globalsFile))
+        {
+            return Array.Empty<string>();
+        }
+
+        var code = _compiler.PreCompile(globalsFile);
+        var commands = _compiler.Compile(await File.ReadAllTextAsync(globalsFile));
+
+        //using (var plotContext = new DebugPlotContext())
+        //{
+        //    plotContext.Init(0, 0);
+
+        //    foreach (var command in commands)
+        //    {
+        //        command.Execute(plotContext);
+        //    }
+
+        //    return plotContext
+        //        .Globals
+        //        .Keys
+        //        .Distinct()
+        //        .Order();
+        //}
+
+        return Array.Empty<string>();
     }
 
     #region Helper

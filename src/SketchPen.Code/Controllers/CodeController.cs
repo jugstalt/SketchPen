@@ -3,6 +3,7 @@ using SketchPen.Code.AppCode.Mvc;
 using SketchPen.Code.Extensions;
 using SketchPen.Code.Models.Code;
 using SketchPen.Code.Services;
+using SketchPen.Plot.Services;
 using SketchPen.Plot.Services.Abstraction;
 
 namespace SketchPen.Code.Controllers;
@@ -12,14 +13,17 @@ public class CodeController : BaseController
 {
     private readonly SketchPenCodeService _sketchPenCode;
     private readonly SketchPenPlotService _sketchPenPlot;
+    private readonly CompilerService _compiler;
     private readonly IEnumerable<IEditorLanguageService> _editorLanguages;
 
     public CodeController(SketchPenCodeService sketchPenCode,
                           SketchPenPlotService sketchPenPlot,
+                          CompilerService compiler,
                           IEnumerable<IEditorLanguageService> editorLanguages)
     {
         _sketchPenCode = sketchPenCode;
         _sketchPenPlot = sketchPenPlot;
+        _compiler = compiler;
         _editorLanguages = editorLanguages;
     }
 
@@ -56,6 +60,8 @@ public class CodeController : BaseController
     async public Task<IActionResult> EditFile(string route)
     {
         var fileType = _sketchPenCode.GetEditorFileType(route);
+
+        var variables = await _sketchPenCode.GetGlobalVariableNames(route.Split('/').First());
 
         return View("EditFile", new EditFileModel()
         {

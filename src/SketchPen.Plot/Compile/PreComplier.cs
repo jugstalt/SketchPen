@@ -16,7 +16,11 @@ class PreComplier
 
         StringBuilder code = new StringBuilder();
 
-        DirectoryInfo di = new FileInfo(fileName).Directory;
+        FileInfo fi = new FileInfo(fileName);
+        DirectoryInfo di = fi.Directory;
+
+        string globalsFile = new FileInfo($"{di.FullName}/_.globals").FullName;
+        appendGlobals = appendGlobals && globalsFile != fi.FullName;
 
         if (!String.IsNullOrEmpty(customGlobalsName))
         {

@@ -4,11 +4,13 @@ using SketchPen.Plot.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddEditorLanguagerServices();
-builder.Services.AddSketchPenCodeServices(options =>
-{
-    options.RootPath = builder.Configuration["rootPath"] ?? String.Empty;
-});
+builder.Services
+    .AddCompilerServices()
+    .AddEditorLanguagerServices()
+    .AddSketchPenCodeServices(options =>
+    {
+        options.RootPath = builder.Configuration["rootPath"] ?? String.Empty;
+    });
 
 builder.Services.AddControllersWithViews();
 

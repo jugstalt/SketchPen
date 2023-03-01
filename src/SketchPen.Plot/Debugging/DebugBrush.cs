@@ -1,9 +1,6 @@
 ﻿using SketchPen.Plot.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace SketchPen.Plot.Debug;
+namespace SketchPen.Plot.Debugging;
 
 internal class DebugBrush : IBrush
 {

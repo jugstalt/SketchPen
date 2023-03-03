@@ -33,7 +33,9 @@
             
             //console.log(value);
 
-            registerSketchPenLanguate(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(@Model.EditorCompletion)));
+            registerSketchPenLanguage(
+                @Html.Raw(System.Text.Json.JsonSerializer.Serialize(@Model.EditorCompletion)),
+                @Html.Raw(System.Text.Json.JsonSerializer.Serialize(@Model.GlobalVariables)));
 
             sketchPenCodeEditor.init('@Model.Route', value, "sketchpen");
 

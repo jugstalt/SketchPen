@@ -61,12 +61,11 @@ public class CodeController : BaseController
     {
         var fileType = _sketchPenCode.GetEditorFileType(route);
 
-        var variables = await _sketchPenCode.GetGlobalVariableNames(route.Split('/').First());
-
         return View("EditFile", new EditFileModel()
         {
             Route = route,
             Content = await _sketchPenCode.GetFileContent(route),
+            GlobalVariables = await _sketchPenCode.TryGetGlobalVariableNames(route.Split('/').First()),
             EditorCompletion = _editorLanguages
                                     .Where(l => l.MatchEditorFileType(fileType))
                                     .FirstOrDefault()?

@@ -126,7 +126,7 @@ public class SketchPenCodeService
         };
     }
 
-    async public Task<IEnumerable<string>> GetGlobalVariableNames(string id)
+    async public Task<IEnumerable<string>> TryGetGlobalVariableNames(string id)
     {
         string globalsFile = Path.Combine(_options.RootPath, id, "_.globals");
         if (!File.Exists(globalsFile))
@@ -134,26 +134,36 @@ public class SketchPenCodeService
             return Array.Empty<string>();
         }
 
-        var code = _compiler.PreCompile(globalsFile);
-        var commands = _compiler.Compile(await File.ReadAllTextAsync(globalsFile));
+        try
+        {
+            var code = _compiler.PreCompile(globalsFile);
+            var commands = _compiler.Compile(code);
 
-        //using (var plotContext = new DebugPlotContext())
-        //{
-        //    plotContext.Init(0, 0);
+            using (var plotContext = new DebugPlotContext())
+            {
+                plotContext.Init(0, 0);
 
-        //    foreach (var command in commands)
-        //    {
-        //        command.Execute(plotContext);
-        //    }
+                foreach (var command in commands)
+                {
+                    command.Execute(plotContext);
+                }
 
-        //    return plotContext
-        //        .Globals
-        //        .Keys
-        //        .Distinct()
-        //        .Order();
-        //}
-
-        return Array.Empty<string>();
+                return plotContext
+                    .Globals
+                    .Keys
+                    .Distinct()
+                    .Order();
+            }
+        }
+        catch  
+        {
+            //
+            // maybe, there is an syntax error in _.globals
+            // return empty array and do not throw an exception
+            // Files should load even if there is a problem in _.globals
+            //
+            return Array.Empty<string>();
+        }
     }
 
     #region Helper

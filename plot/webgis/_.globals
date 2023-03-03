@@ -5,8 +5,8 @@ globals.tryset(gradientbrushColor, "#aaa");
 globals.tryset(backgroundBrushColor, "#fefefe");
 globals.tryset(penWidth, 6);
 globals.tryset(penWidthBold, 9);
-globals.set(minPenWidth, 1);
-globals.set(maxPenWidth, 999);
+globals.tryset(minPenWidth, 1);
+globals.tryset(maxPenWidth, 999);
 globals.tryset(penCap, "round");
 
 // Pens & Brushes

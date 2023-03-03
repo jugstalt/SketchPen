@@ -1,7 +1,7 @@
 // import * as monaco from 'monaco-editor';
 
-function registerSketchPenLanguate(rules) {
-    console.log('register-sketchpen-language', rules);
+function registerSketchPenLanguage(rules, globalVariables) {
+    console.log('register-sketchpen-language', rules, globalVariables);
 
     monaco.languages.register({
         id: 'sketchpen',
@@ -22,23 +22,25 @@ function registerSketchPenLanguate(rules) {
                 [/@?[a-zA-Z][\w$]*/, {
                     cases: {
                         '@keywords': 'keyword',
-                        '@default': 'variable'
+                        //'@default': 'variable'
                     }
                 }],
                 [/".*?"/, 'string'],
                 [/\/\//, 'comment'],
-                [/[0-9]/, 'number']
+                [/[0-9]/, 'number'],
+                [/^@@[a-zA-Z][a-zA-Z0-9]*$/, 'variable']
             ]
         }
     });
 
-    monaco.editor.defineTheme('sketchpen-theme', {
-        base: 'vs',
+    monaco.editor.defineTheme('sketchpen-theme-dark', {
+        base: 'vs-dark',
+        inherit: true,
         rules: [
-            //{ token: 'keyword', foreground: '#ff6600', fontStyle: 'bold' },
-            //{ token: 'comment', foreground: '#009900' },
-            //{ token: 'string', foreground: '#ff9966' },
-            //{ token: 'variable', foreground: '#006699' }
+            { token: 'keyword', foreground: '#ff6600', fontStyle: 'bold' },
+            { token: 'comment', foreground: '#009900' },
+            { token: 'string', foreground: '#ff9966' },
+            { token: 'variable', foreground: '#006699' }
         ]
     });
 
@@ -66,13 +68,15 @@ function registerSketchPenLanguate(rules) {
             let suggestions = [];
 
             if (textUntilPosition[textUntilPosition.length - 1] === '@') {
-                suggestions.push({
-                    label: "@@varible1",
-                    insertText: "@varible1",
-                    kind: monaco.languages.CompletionItemKind.Varible,
-                    insertTextRules:
-                        monaco.languages.CompletionItemInsertTextRule.None
-                });
+                for (var globalVariable of globalVariables) {
+                    suggestions.push({
+                        label: "@@"+globalVariable,
+                        insertText: "@"+globalVariable,
+                        kind: monaco.languages.CompletionItemKind.Varible,
+                        insertTextRules:
+                            monaco.languages.CompletionItemInsertTextRule.None
+                    });
+                }
             }
             else if (textUntilPosition.indexOf('.') > 0) {
                 var keyword = textUntilPosition.trim().split('.')[0];

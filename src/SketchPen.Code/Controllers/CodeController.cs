@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using SketchPen.Code.AppCode.Mvc;
 using SketchPen.Code.Extensions;
 using SketchPen.Code.Models.Code;
@@ -7,6 +8,8 @@ using SketchPen.Compose;
 using SketchPen.Compose.Services.Absraction;
 using SketchPen.Plot.Services;
 using SketchPen.Plot.Services.Abstraction;
+using SkiaSharp;
+using System.Collections.Immutable;
 
 namespace SketchPen.Code.Controllers;
 
@@ -187,6 +190,30 @@ public class CodeController : BaseController
         }
 
         return base.BinaryResultStream(composeResult.Data ?? Array.Empty<byte>(), 
+                                       composer.ContentType);
+    }
+
+    #endregion
+
+    #region Package
+
+    [HttpGet]
+    [Route("Package")]
+    public IActionResult Package(string id, string globals, string sizes)
+    {
+        var composer = _composers.Where(c => c.ContentType == "application/zip").FirstOrDefault();
+        if (composer == null)
+        {
+            throw new Exception("Sorry, no image package composer registered");
+        }
+
+        var composeResult = composer.Compose(
+                Path.Combine(_sketchPenPlot.RootPath, id),
+                sizes.Split(',').Select(s => int.Parse(s)),
+                globals.Split(',').Select(g => g.Trim().ToLower()),
+                new[] { 96f, 144f, 192f });
+
+        return base.BinaryResultStream(composeResult.Data ?? Array.Empty<byte>(),
                                        composer.ContentType);
     }
 

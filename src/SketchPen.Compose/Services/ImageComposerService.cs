@@ -21,7 +21,8 @@ internal class ImageComposerService : IComposerService
 
     public ComposeResult Compose(string path,
                                  IEnumerable<int> sizes,
-                                 IEnumerable<string> customGlobals)
+                                 IEnumerable<string> customGlobals,
+                                 IEnumerable<float>? dpiList = null)
     {
         if (sizes.Count() != 1)
         {

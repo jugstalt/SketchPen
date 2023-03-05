@@ -18,4 +18,6 @@ public interface ICanvas : IDisposable
 
     void DrawPath(IPen pen, IPlotPath path);
     void FillPath(IBrush brush, IPlotPath path);
+
+    void DrawImage(IPlotContext sourceContext, CanvasRectangle dest, CanvasRectangle source);
 }

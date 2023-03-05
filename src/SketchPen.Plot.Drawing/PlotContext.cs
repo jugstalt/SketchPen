@@ -17,6 +17,7 @@ public class PlotContext : IPlotContext
     private Bitmap _bitmap;
     private float _projectingFactor = 1f;
     private int _width, _height;
+    private PlotContextOrigin _origin;
 
     public PlotContext()
     {
@@ -38,33 +39,18 @@ public class PlotContext : IPlotContext
 
     #region IPlotContext
 
-    public void Init(int width, int height)
+    public void Init(int width, int height, PlotContextOrigin origin = PlotContextOrigin.Center)
     {
         _disposeBitmap = true;
         _bitmap = new Bitmap(_width = width, _height = height);
         _bitmap.SetResolution(96f, 96f);
         _bitmap.MakeTransparent();
+        _origin = origin;
+        _projectingFactor = (float)width / 100f;
 
-        _projectingFactor = _bitmap.Width / 100f;
         this.Canvas = new Canvas(_bitmap);
         this.ResetTransform();
-
-        Init();
-    }
-
-    public void Init(int width, int height, object canvasObject)
-    {
-        if (canvasObject is Bitmap)
-        {
-            _width = width;
-            _height = height;
-
-            _bitmap = (Bitmap)canvasObject;
-            _projectingFactor = _width / 100f;
-            this.Canvas = new Canvas(_bitmap);
-
-            Init();
-        }
+        this.Init();
     }
 
     public ICanvas Canvas { get; private set; }
@@ -166,7 +152,8 @@ public class PlotContext : IPlotContext
 
     public CanvasPoint Project(CanvasPoint point)
     {
-        return new CanvasPoint(point.X * _projectingFactor, point.Y * _projectingFactor);
+        return new CanvasPoint(point.X * _projectingFactor,
+                               point.Y * _projectingFactor);
     }
 
     public CanvasRectangle Project(CanvasRectangle rect)
@@ -186,7 +173,17 @@ public class PlotContext : IPlotContext
     public void ResetTransform()
     {
         ((Canvas)this.Canvas).Graphics.ResetTransform();
-        ((Canvas)this.Canvas).Graphics.TranslateTransform(Project(50f), Project(50f));
+
+        switch (_origin)
+        {
+            case PlotContextOrigin.UpperLeft:
+                ((Canvas)this.Canvas).Graphics.TranslateTransform(Project(0f), Project(0f));
+                break;
+            default:
+                ((Canvas)this.Canvas).Graphics.TranslateTransform(Project(50f), Project(50f));
+                break;
+        }
+
     }
     public IPlotPath CreatePlotPath() => new PlotPath();
 

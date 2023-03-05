@@ -15,6 +15,12 @@ public enum EncodeFormat
     Jpeg
 }
 
+public enum PlotContextOrigin
+{
+    Center,
+    UpperLeft
+}
+
 [Flags]
 public enum EditorFileType
 {

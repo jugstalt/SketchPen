@@ -35,4 +35,6 @@ public class SketchPenPlotService
             return plotContext.Encode(EncodeFormat.Png);
         }
     }
+
+    public string RootPath => _options.RootPath;
 }

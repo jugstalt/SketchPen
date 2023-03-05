@@ -5,8 +5,7 @@ namespace SketchPen.Plot.Abstraction;
 
 public interface IPlotContext : IDisposable
 {
-    void Init(int width, int height);
-    void Init(int width, int height, object canvasObject);
+    void Init(int width, int height, PlotContextOrigin origin = PlotContextOrigin.Center);
 
     ICanvas Canvas { get; }
 

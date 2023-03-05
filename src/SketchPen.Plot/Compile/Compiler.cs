@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace SketchPen.Plot.Compile;
 
-class Compiler
+public class Compiler
 {
     private readonly CommandTypesService _commandTypes;
 

@@ -14,6 +14,7 @@ public class PlotContext : IPlotContext
     private SKBitmap _bitmap;
     private float _projectingFactor = 1f;
     private int _width, _height;
+    private PlotContextOrigin _origin = PlotContextOrigin.Center;
 
     public PlotContext()
     {
@@ -33,7 +34,7 @@ public class PlotContext : IPlotContext
 
     #region IPlotContext
 
-    public void Init(int width, int height)
+    public void Init(int width, int height, PlotContextOrigin origin = PlotContextOrigin.Center)
     {
         _disposeBitmap = true;
 
@@ -41,18 +42,14 @@ public class PlotContext : IPlotContext
         _bitmap = new SKBitmap(_width = width, _height = height,
                                colorType: SKColorType.Bgra8888,
                                alphaType: SKAlphaType.Premul);
+        _origin = origin;
 
         this.Canvas = new Canvas(_bitmap);
-        _projectingFactor = _bitmap.Width / 100f;
+
+        _projectingFactor = (float)width / 100f;
 
         this.ResetTransform();
-
-        Init();
-    }
-
-    public void Init(int width, int height, object canvasObject)
-    {
-        throw new NotImplementedException();
+        this.Init();
     }
 
     public void Dispose()
@@ -70,6 +67,8 @@ public class PlotContext : IPlotContext
     }
 
     public ICanvas Canvas { get; private set; }
+
+    internal SKBitmap Bitmap => _bitmap;
 
     public PlotColor PenColor { private get; set; }
     public float PenWidth { private get; set; }
@@ -212,7 +211,8 @@ public class PlotContext : IPlotContext
 
     public CanvasPoint Project(CanvasPoint point)
     {
-        return new CanvasPoint(point.X * _projectingFactor, point.Y * _projectingFactor);
+        return new CanvasPoint(point.X * _projectingFactor, 
+                               point.Y * _projectingFactor);
     }
 
     public CanvasRectangle Project(CanvasRectangle rect)
@@ -232,7 +232,16 @@ public class PlotContext : IPlotContext
     public void ResetTransform()
     {
         ((Canvas)this.Canvas).SkCanvas.ResetMatrix();
-        ((Canvas)this.Canvas).SkCanvas.Translate(Project(50f), Project(50f));
+
+        switch(_origin)
+        {
+            case PlotContextOrigin.UpperLeft:
+                ((Canvas)this.Canvas).SkCanvas.Translate(Project(0f), Project(0f));
+                break;
+            default:
+                ((Canvas)this.Canvas).SkCanvas.Translate(Project(50f), Project(50f));
+                break;
+        }
     }
 
     #endregion

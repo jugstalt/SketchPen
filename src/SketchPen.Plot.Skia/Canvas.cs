@@ -82,6 +82,21 @@ class Canvas : ICanvas
         _canvas?.Translate(dx, dy);
     }
 
+    public void DrawImage(IPlotContext sourceContext, CanvasRectangle dest, CanvasRectangle source)
+    {
+        if (sourceContext is PlotContext skiaContext && skiaContext.Bitmap != null)
+        {
+            _canvas.DrawBitmap(skiaContext.Bitmap,
+                               dest.ToSKRect(),
+                               source.ToSKRect(),
+                               new SKPaint()
+                               {
+                                   FilterQuality = SKFilterQuality.High
+                               });
+
+        }
+    }
+   
     #endregion
 
     #region Helper

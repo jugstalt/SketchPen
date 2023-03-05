@@ -82,4 +82,15 @@ internal class Canvas : ICanvas
     {
         _graphics.FillPath((Brush)brush.EngineElement, (System.Drawing.Drawing2D.GraphicsPath)path.EngineElement);
     }
+
+    public void DrawImage(IPlotContext sourceContext, CanvasRectangle dest, CanvasRectangle source)
+    {
+        if (sourceContext is PlotContext drawingContext && drawingContext.Bitmap != null)
+        {
+            _graphics.DrawImage(drawingContext.Bitmap,
+                                dest.ToRectangleF(),
+                                source.ToRectangleF(),
+                                GraphicsUnit.Pixel);
+        }
+    }
 }

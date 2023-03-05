@@ -58,4 +58,9 @@ internal class DebugCanvas : ICanvas
     {
 
     }
+
+    public void DrawImage(IPlotContext sourceContext, CanvasRectangle dest, CanvasRectangle source)
+    {
+
+    }
 }

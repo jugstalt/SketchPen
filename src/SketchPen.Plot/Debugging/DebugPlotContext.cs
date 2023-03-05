@@ -52,12 +52,12 @@ public class DebugPlotContext : IPlotContext
         return Array.Empty<byte>();
     }
 
-    public void Init(int width, int height)
+    public void Init(int width, int height, PlotContextOrigin origin = PlotContextOrigin.Center)
     {
 
     }
 
-    public void Init(int width, int height, object canvasObject)
+    public void SetOrigin(int x, int y, int width, int height)
     {
 
     }

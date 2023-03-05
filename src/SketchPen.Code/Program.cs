@@ -1,5 +1,6 @@
 using SketchPen.Code.Extensions.DependencyInjection;
 using SketchPen.Plot.Extensions.DependencyInjection;
+using SketchPen.Compose.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,8 @@ builder.Services
     .AddSketchPenCodeServices(options =>
     {
         options.RootPath = builder.Configuration["rootPath"] ?? String.Empty;
-    });
+    })
+    .AddComposerServices<SketchPen.Plot.Skia.PlotContext>();
 
 builder.Services.AddControllersWithViews();
 

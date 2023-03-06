@@ -3,10 +3,9 @@ pen.width(4);
 pen.color("#aaa");
 circle.draw( 90,120, 0,50);
 pen.width(@@penWidth);
-pen.color(@@penColor);
-
 
 // sun
+pen.color(@@outlinePenColor);
 circle.fill(32,32, 0,-10);
 circle.draw(32,32, 0,-10);
 

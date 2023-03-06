@@ -7,7 +7,7 @@ path.addarc(240,60, 70,70);
 path.start();
 path.addarc(330,60, 70,70);
 
-path.draw();
+path.draw(@@outlinePenColor);
 
 line.draw(-45,0, 45,0);
 line.draw(0,-45, 0,45);

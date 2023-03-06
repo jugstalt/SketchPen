@@ -34,7 +34,7 @@
                 $("<option>")
                     .attr('value', composer)
                     .text(composer)
-                    .addpendTo($composers);
+                    .appendTo($composers);
             }
         });
     };

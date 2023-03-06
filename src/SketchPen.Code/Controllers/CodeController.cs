@@ -51,7 +51,7 @@ public class CodeController : BaseController
     [Route("Start")]
     public IActionResult Start()
     {
-        return Index(String.Empty);
+        return View();
     }
 
     [HttpGet]

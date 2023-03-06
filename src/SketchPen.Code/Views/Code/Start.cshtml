@@ -1,5 +1,4 @@
-﻿@model SketchPen.Code.Models.Code.IndexModel
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout_empty-sketchpen-code-nocode-frame.cshtml";
     ViewBag.Title = "SketchPen Code";
 }
@@ -25,15 +24,13 @@
 </div>
 
 @section scripts {
-    <script src="~/js/sketchpen-code.js"></script>
-    <script src="~/js/sketchpen-code.events.js"></script>
-    <script src="~/js/sketchpen-code.ui.tree.js"></script>
     <script src="~/js/sketchpen-code.ui.modal.js"></script>
     <script src="~/js/sketchpen-code.ui.download-package.js"></script>
 
     <script type="text/javascript">
+        var sketchPenCode = window.parent.sketchPenCode;
         $(function () {
-            sketchPenCode.start('@Model.CurrentUrl', '@Model.Id');
+            
         });
 
         function downloadPackage() {

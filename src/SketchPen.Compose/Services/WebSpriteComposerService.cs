@@ -8,14 +8,16 @@ using System.Text;
 
 namespace SketchPen.Compose.Services;
 
-internal class WebComposerService : IComposerService
+internal class WebSpriteComposerService : IComposerService
 {
     private readonly ComposeHelperService _composerHelper;
 
-    public WebComposerService(ComposeHelperService composeHelper)
+    public WebSpriteComposerService(ComposeHelperService composeHelper)
     {
         _composerHelper = composeHelper;
     }
+
+    public string Name => "Web Sprites";
 
     public string ContentType => "application/zip";
 

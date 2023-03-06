@@ -4,6 +4,8 @@ namespace SketchPen.Compose.Services.Absraction;
 
 public interface IComposerService
 {
+    string Name { get; }
+
     ComposeResult Compose(string path,
                           IEnumerable<int> sizes,
                           IEnumerable<string> customGlobals,

@@ -19,6 +19,8 @@ internal class ImageComposerService : IComposerService
         _composerHelper = composeHelper;
     }
 
+    public string Name => "Image";
+
     public ComposeResult Compose(string path,
                                  IEnumerable<int> sizes,
                                  IEnumerable<string> customGlobals,

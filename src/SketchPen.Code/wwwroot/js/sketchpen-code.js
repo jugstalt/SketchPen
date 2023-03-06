@@ -203,6 +203,16 @@ var sketchPenCode = new function ($) {
         this.deleteFile = function (filename, callback) {
             this.get('deleteFile', callback, { filename: filename });
         };
+
+        this.getComposers = function (callback) {
+            console.log(sketchPenCode.targetUrl() + '/getComposers');
+            $.ajax({
+                url: sketchPenCode.targetUrl() + '/getComposers',
+                success: function (result) {
+                    callback(result)
+                }
+            });
+        };
     };
 
     this.privileges = new function () {
@@ -434,5 +444,5 @@ var sketchPenCode = new function ($) {
                 }
             });
         };
-     }
+    };
 }(jQuery);

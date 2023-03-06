@@ -51,7 +51,7 @@ public class CodeController : BaseController
     [Route("Start")]
     public IActionResult Start()
     {
-        return View();
+        return Index(String.Empty);
     }
 
     [HttpGet]
@@ -196,6 +196,13 @@ public class CodeController : BaseController
     #endregion
 
     #region Package
+
+    [HttpGet]
+    [Route("GetComposers")]
+    public IActionResult GetComposers()
+    {
+        return base.JsonObject(_composers.Select(c => c.Name));
+    }
 
     [HttpGet]
     [Route("Package")]

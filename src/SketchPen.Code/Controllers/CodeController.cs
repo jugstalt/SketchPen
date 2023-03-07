@@ -206,22 +206,23 @@ public class CodeController : BaseController
 
     [HttpGet]
     [Route("Package")]
-    public IActionResult Package(string id, string globals, string sizes)
+    public IActionResult Package(string id, string composer, string styles, string sizes, string resolutions)
     {
-        var composer = _composers.Where(c => c.ContentType == "application/zip").FirstOrDefault();
-        if (composer == null)
+        var composerInstance = _composers.Where(c => c.Name == composer).FirstOrDefault();
+        if (composerInstance == null)
         {
-            throw new Exception("Sorry, no image package composer registered");
+            throw new Exception($"Sorry, composer with name {composer} registered");
         }
 
-        var composeResult = composer.Compose(
+        var composeResult = composerInstance.Compose(
                 Path.Combine(_sketchPenPlot.RootPath, id),
-                sizes.Split(',').Select(s => int.Parse(s)),
-                globals.Split(',').Select(g => g.Trim().ToLower()),
-                new[] { 96f, 144f, 192f });
+                sizes?.Split(',').Select(s => int.Parse(s)) ?? new[] { 32 },
+                styles?.Split(',').Select(g => g.Trim().ToLower()) ?? new[] { "" },
+                resolutions?.Split(',').Select(r => (float)int.Parse(r)) ?? new[] { 96f });
 
         return base.BinaryResultStream(composeResult.Data ?? Array.Empty<byte>(),
-                                       composer.ContentType);
+                                       "application/octet-stream", // composerInstance.ContentType;
+                                       $"{composerInstance.Name.ToLower()}.{composerInstance.ContentType.Split('/').Last()}");
     }
 
     #endregion

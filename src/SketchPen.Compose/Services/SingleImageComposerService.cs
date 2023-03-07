@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using SketchPen.Compose.Extensions;
 using SketchPen.Compose.Services.Absraction;
 using SketchPen.Plot;
 using SketchPen.Plot.Abstraction;
@@ -10,16 +11,16 @@ using System.Linq;
 
 namespace SketchPen.Compose.Services;
 
-internal class ImageComposerService : IComposerService
+internal class SingleImageComposerService : IComposerService
 {
     private readonly ComposeHelperService _composerHelper;
 
-    public ImageComposerService(ComposeHelperService composeHelper)
+    public SingleImageComposerService(ComposeHelperService composeHelper)
     {
         _composerHelper = composeHelper;
     }
 
-    public string Name => "Image";
+    public string Name => "Image (PNG)";
 
     public ComposeResult Compose(string path,
                                  IEnumerable<int> sizes,
@@ -38,23 +39,9 @@ internal class ImageComposerService : IComposerService
         var size = sizes.First();
         var globals = customGlobals.First();
 
-        List<string> filenames = new List<string>();    
-
-        if (Directory.Exists(path))
-        {
-            foreach (var file in Directory.GetFiles(path, "*.sp"))
-            {
-                filenames.Add(file);
-            }
-        }
-        else
-        {
-            filenames.Add(path);
-        }
-
         return new ComposeResult()
         {
-            Data = _composerHelper.ComposeImage(filenames, size, globals)
+            Data = _composerHelper.ComposeImage(path.CollectFilenames("*.sp"), size, globals)
         };
     }
 

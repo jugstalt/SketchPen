@@ -20,7 +20,8 @@ static public class ServicesExtensions
 
         return services
                 .AddTransient<ComposeHelperService>()
-                .AddTransient<IComposerService, ImageComposerService>()
+                .AddTransient<IComposerService, SingleImageComposerService>()
+                .AddTransient<IComposerService, ImagesComposerService>()
                 .AddTransient<IComposerService, WebSpriteComposerService>();
     }
 }

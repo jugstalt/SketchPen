@@ -17,7 +17,7 @@ internal class WebSpriteComposerService : IComposerService
         _composerHelper = composeHelper;
     }
 
-    public string Name => "Web Sprites";
+    public string Name => "Web Sprites (ZIP)";
 
     public string ContentType => "application/zip";
 
@@ -27,20 +27,6 @@ internal class WebSpriteComposerService : IComposerService
                                  IEnumerable<string> customGlobals,
                                  IEnumerable<float>? dpiList = null)
     {
-        List<string> filenames = new List<string>();
-
-        if (Directory.Exists(path))
-        {
-            foreach (var file in Directory.GetFiles(path, "*.sp"))
-            {
-                filenames.Add(file);
-            }
-        }
-        else
-        {
-            filenames.Add(path);
-        }
-
         using var ms = new MemoryStream();
         using (var zipArchive = new ZipArchive(ms, ZipArchiveMode.Create, true))
         {
@@ -64,7 +50,7 @@ internal class WebSpriteComposerService : IComposerService
                         StringBuilder iconsCss = new StringBuilder();
                         float dpiFactor = dpi / 96f;
 
-                        var imageData = _composerHelper.ComposeImage(filenames, (int)(size * dpiFactor), globals,
+                        var imageData = _composerHelper.ComposeImage(path.CollectFilenames("*.sp"), (int)(size * dpiFactor), globals,
                             (name, x, y) =>
                             {
                                 if (dpiFactor == 1f)

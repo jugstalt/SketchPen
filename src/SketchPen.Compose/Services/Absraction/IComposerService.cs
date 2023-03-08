@@ -11,5 +11,5 @@ public interface IComposerService
                           IEnumerable<string> customGlobals,
                           IEnumerable<float>? dpiList = null);
 
-    string ContentType { get; }
+    string FileExtension { get; }
 }

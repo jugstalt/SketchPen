@@ -163,7 +163,7 @@ public class CodeController : BaseController
     [Route("Preview")]
     public IActionResult Preview(string route, string globals, int width = 512, int height = 512)
     {
-        var composer = _composers.Where(c => c.ContentType == "image/png").FirstOrDefault();
+        var composer = _composers.Where(c => c.FileExtension == "png").FirstOrDefault();
         if (composer == null)
         {
             throw new Exception("Sorry, no image preview composer registered");
@@ -190,7 +190,7 @@ public class CodeController : BaseController
         }
 
         return base.BinaryResultStream(composeResult.Data ?? Array.Empty<byte>(), 
-                                       composer.ContentType);
+                                       "image/png");
     }
 
     #endregion
@@ -201,28 +201,46 @@ public class CodeController : BaseController
     [Route("GetComposers")]
     public IActionResult GetComposers()
     {
-        return base.JsonObject(_composers.Select(c => c.Name));
+        return base.JsonObject(_composers.Select(c => new {
+            type = c.GetType().ToString(),
+            name = $"{c.Name} ({c.FileExtension.ToUpper()}-File)"
+        }));
     }
 
     [HttpGet]
     [Route("Package")]
-    public IActionResult Package(string id, string composer, string styles, string sizes, string resolutions)
+    async public Task<IActionResult> Package(string id, string composer, string styles, string sizes, string resolutions)
     {
-        var composerInstance = _composers.Where(c => c.Name == composer).FirstOrDefault();
+        var composerInstance = _composers
+            .Where(c => c.GetType().ToString().Equals(composer, StringComparison.OrdinalIgnoreCase))
+            .FirstOrDefault();
+
         if (composerInstance == null)
         {
             throw new Exception($"Sorry, composer with name {composer} registered");
         }
 
         var composeResult = composerInstance.Compose(
-                Path.Combine(_sketchPenPlot.RootPath, id),
-                sizes?.Split(',').Select(s => int.Parse(s)) ?? new[] { 32 },
-                styles?.Split(',').Select(g => g.Trim().ToLower()) ?? new[] { "" },
-                resolutions?.Split(',').Select(r => (float)int.Parse(r)) ?? new[] { 96f });
+                path: Path.Combine(_sketchPenPlot.RootPath, id),
+                sizes: sizes?.Split(',').Select(s => int.Parse(s)) ?? new[] { 32 },
+                customGlobals: styles?.Split(',').Select(g => g.Trim().ToLower()) ?? new[] { "" },
+                dpiList: resolutions?.Split(',').Select(r => (float)int.Parse(r)) ?? new[] { 96f });
 
-        return base.BinaryResultStream(composeResult.Data ?? Array.Empty<byte>(),
-                                       "application/octet-stream", // composerInstance.ContentType;
-                                       $"{composerInstance.Name.ToLower()}.{composerInstance.ContentType.Split('/').Last()}");
+        return new JsonResult(new
+        {
+            tempFilename = await _sketchPenPlot.WriteTempFile(composerInstance.Name.ToLower(), composerInstance.FileExtension, composeResult.Data ?? Array.Empty<byte>())
+        });
+    }
+
+    [HttpGet]
+    [Route("DownloadTempFile")]
+    async public Task<IActionResult> DownloadTempFile(string tempFilename)
+    {
+        var tempFileResult = await _sketchPenPlot.ReadTempFile(tempFilename);
+
+        return base.BinaryResultStream(tempFileResult.data ?? Array.Empty<byte>(),
+                                       "application/octet-stream",
+                                       tempFileResult.name);
     }
 
     #endregion

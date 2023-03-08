@@ -152,7 +152,7 @@
                 filename = routeParts[routeParts.length - 1];
 
                 if (filename.indexOf(sketchPenCode.globalsFileExt()) === filename.length - sketchPenCode.globalsFileExt().length) {
-                    console.log('globals-file:', filename);
+                    //console.log('globals-file:', filename);
                 } else {
                     addFileNode($parentNode, filename, collapsedRoutes);
                 }

@@ -205,7 +205,6 @@ var sketchPenCode = new function ($) {
         };
 
         this.getComposers = function (callback) {
-            console.log(sketchPenCode.targetUrl() + '/getComposers');
             $.ajax({
                 url: sketchPenCode.targetUrl() + '/getComposers',
                 success: function (result) {

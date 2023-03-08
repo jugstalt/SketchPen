@@ -17,9 +17,9 @@ internal class ImagesComposerService : IComposerService
         _composerHelper = composeHelper;
     }
 
-    public string Name => "Images (ZIP)";
+    public string Name => "Images";
 
-    public string ContentType => "application/zip";
+    public string FileExtension => "zip";
 
     public ComposeResult Compose(string path, IEnumerable<int> sizes, IEnumerable<string> customGlobals, IEnumerable<float>? dpiList = null)
     {

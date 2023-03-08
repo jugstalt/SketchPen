@@ -2,6 +2,7 @@
 using SketchPen.Plot;
 using SketchPen.Plot.Abstraction;
 using SketchPen.Plot.Services;
+using System.Text;
 
 namespace SketchPen.Code.Services;
 
@@ -37,4 +38,61 @@ public class SketchPenPlotService
     }
 
     public string RootPath => _options.RootPath;
+
+    async public Task<string> WriteTempFile(string title, string extension, byte[] data)
+    {
+        string fileName = $"{title}.{extension}@{CreateRandomTempFileNameExtension()}";
+        string filePath = Path.Combine(GetOrCreateTempDirectory(), fileName);
+
+        await File.WriteAllBytesAsync(filePath, data);
+
+        return fileName;
+    }
+
+    async public Task<(string name, byte[] data)> ReadTempFile(string tempFilename)
+    {
+        if (tempFilename.Replace("\\", "/").Contains("/"))  // avoid /subdir/.. or /../../system/..
+        {
+            throw new ArgumentException("Not allowed Path", nameof(tempFilename));
+        }
+
+        var fi = new FileInfo(Path.Combine(GetOrCreateTempDirectory(), tempFilename));
+        if(!fi.Exists)
+        {
+            throw new FileNotFoundException(tempFilename);
+        }
+
+        var data = await File.ReadAllBytesAsync(fi.FullName);
+        fi.Delete();
+
+        return (tempFilename.Split("@").First(), data);
+    }
+
+    #region Helper
+
+    private string GetOrCreateTempDirectory()
+    {
+        DirectoryInfo directory = new DirectoryInfo(Path.Combine(_options.RootPath, "_temp"));
+
+        if (!directory.Exists)
+        {
+            directory.Create();
+        }
+
+        return directory.FullName;
+    }
+
+    private string CreateRandomTempFileNameExtension()
+    {
+        StringBuilder sb = new();
+
+        for (int i = 0; i < 3; i++)
+        {
+            sb.Append(Guid.NewGuid().ToString("N"));
+        }
+
+        return sb.ToString();
+    }
+
+    #endregion
 }

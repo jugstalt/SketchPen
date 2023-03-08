@@ -179,6 +179,10 @@ body {
         background-color: transparent;
     }
 
+    .sketchpen-code-button.loading {
+        display:none;
+    }
+
 .sketchpen-code-open-tabs {
     list-style: none;
     padding: 0px;

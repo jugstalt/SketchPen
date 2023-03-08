@@ -17,9 +17,9 @@ internal class WebSpriteComposerService : IComposerService
         _composerHelper = composeHelper;
     }
 
-    public string Name => "Web Sprites (ZIP)";
+    public string Name => "Web Sprites";
 
-    public string ContentType => "application/zip";
+    public string FileExtension => "zip";
 
     // https://localhost:7165/code/package?id=basic&globals=,e,kagis,epz&sizes=16,24,32,64
     public ComposeResult Compose(string path,

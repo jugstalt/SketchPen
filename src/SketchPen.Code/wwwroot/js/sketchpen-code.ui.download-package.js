@@ -36,8 +36,8 @@
         sketchPenCode.api.getComposers(function (result) {
             for (var composer of result) {
                 $("<option>")
-                    .attr('value', composer)
-                    .text(composer)
+                    .attr('value', composer.type)
+                    .text(composer.name)
                     .appendTo($composers);
             }
         });
@@ -80,7 +80,7 @@
             .css({ width: 0, height: 0, border: 'none' })
             .appendTo($parent)
             .on('load', function () {
-                alert('loaded');
+                //alert('loaded');
             });
 
         $("<button>")
@@ -88,19 +88,30 @@
             .text("Compose Package")
             .appendTo($parent)
             .click(function () {
+                var $button = $(this);
+                
+                if ($button.hasClass('loading'))
+                    return;
+                    
+                $button.addClass('loading');
+
                 var settings = _collectSettings($(this).parent());
-                console.log(settings);
+                //console.log(settings);
 
-                let cmd = '/package';
-                let url = sketchPenCode.targetUrl() + cmd + '?id=' + sketchPenCode.id() + '&composer=' + settings.composer + '&sizes=' + settings.sizes + '&resolutions=' + settings.resolutions + '&styles=' + settings.styles.toString();
+                let url = sketchPenCode.targetUrl() + '/package?id=' + sketchPenCode.id() + '&composer=' + settings.composer + '&sizes=' + settings.sizes + '&resolutions=' + settings.resolutions + '&styles=' + settings.styles.toString();
 
-                $("<a>")
-                    .attr('href', url)
-                    .appendTo($parent)
-                    .on('load', function () { alert(1); })
-                    [0].click();
-                    //.trigger('click');
-                //$iframe.attr('src', url);
+                $.ajax({
+                    url: url,
+                    success: function (result) {
+                        console.log(result);
+                        $iframe.attr('src', sketchPenCode.targetUrl() + '/DownloadTempFile?tempFilename=' + result.tempFilename);
+
+                        $button.removeClass('loading');
+                    },
+                    error: function () {
+                        $button.removeClass('loading');
+                    }
+                });
             });
     };
 

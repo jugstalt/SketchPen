@@ -20,7 +20,7 @@ internal class SingleImageComposerService : IComposerService
         _composerHelper = composeHelper;
     }
 
-    public string Name => "Image (PNG)";
+    public string Name => "Image";
 
     public ComposeResult Compose(string path,
                                  IEnumerable<int> sizes,
@@ -45,5 +45,5 @@ internal class SingleImageComposerService : IComposerService
         };
     }
 
-    public string ContentType => "image/png";
+    public string FileExtension => "png";
 }

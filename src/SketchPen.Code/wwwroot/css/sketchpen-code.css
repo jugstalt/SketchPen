@@ -1515,30 +1515,40 @@ body {
     max-width: 100% !important;
 }
 
-.sketchpen-code-globals-list {
+.sketchpen-code-globals-list,
+.sketchpen-code-sizes-list {
     list-style: none;
     padding: 0px;
     margin: 0px 0px 4px 0px;
 }
 
-    .sketchpen-code-globals-list .sketchpen-code-globals-list-item {
-        height: 25px;
+    .sketchpen-code-globals-list .sketchpen-code-globals-list-item,
+    .sketchpen-code-sizes-list .sketchpen-code-sizes-list-item {
+        font-size: 12px;
+        overflow: hidden;
+        height: 30px;
         cursor: pointer;
         color: #eee;
         border-bottom: 1px solid #777;
         background-position: 4px center;
         background-repeat: no-repeat;
         background-size: 16px 16px;
-        padding: 6px 36px 4px 30px;
+        padding: 8px 4px 4px 30px;
         box-sizing: border-box;
         position: relative;
+        display: inline-block;
+        width: 200px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
-        .sketchpen-code-globals-list .sketchpen-code-globals-list-item:hover {
+        .sketchpen-code-globals-list .sketchpen-code-globals-list-item:hover,
+        .sketchpen-code-sizes-list .sketchpen-code-sizes-list-item:hover {
             background-color: #777;
         }
 
-        .sketchpen-code-globals-list .sketchpen-code-globals-list-item .checkbox {
+        .sketchpen-code-globals-list .sketchpen-code-globals-list-item .checkbox,
+        .sketchpen-code-sizes-list .sketchpen-code-sizes-list-item .checkbox {
             position: absolute;
             left: 4px;
             top: 5px;
@@ -1550,6 +1560,11 @@ body {
             background-image: url(img/checkbox-unchecked_16@1.png);
         }
 
-            .sketchpen-code-globals-list .sketchpen-code-globals-list-item.checked .checkbox {
-                background-image: url(img/checkbox-checked_16@1.png);
-            }
+        .sketchpen-code-globals-list .sketchpen-code-globals-list-item.checked .checkbox,
+        .sketchpen-code-sizes-list .sketchpen-code-sizes-list-item.checked .checkbox {
+            background-image: url(img/checkbox-checked_16@1.png);
+        }
+
+    .sketchpen-code-sizes-list .sketchpen-code-sizes-list-item {
+        width: 80px;
+    }

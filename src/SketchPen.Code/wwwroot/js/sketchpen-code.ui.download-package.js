@@ -43,16 +43,40 @@
         });
 
         _appendLabel($parent, 'Sizes:');
+        let $sizesList = $("<ul>")
+            .addClass('sketchpen-code-sizes-list')
+            .appendTo($parent);
+        for (var size of [16, 26, 32, 48, 64, 86, 128, 192, 256]) {
+            var $item = $("<li>")
+                .addClass('sketchpen-code-sizes-list-item')
+                .attr('data-value', size)
+                .text(size)
+                .appendTo($sizesList)
+                .click(function (e) {
+                    $(this).toggleClass('checked');
+                });
+
+            $("<div>")
+                .addClass('checkbox')
+                .appendTo($item);
+        }
+
         let $sizesInput = $("<input>")
             .addClass('sketchpen-code-input sizes')
             .attr('placeholder', 'sizes eg: 16,32,64')
             .appendTo($parent);
 
         _appendLabel($parent, 'Resolutions [dpi]:');
-        let $resolutionsInput = $("<input>")
+        let $resolutions = $("<select>")
             .addClass('sketchpen-code-input resolutions')
             .attr('placeholder', 'dpi list eg: 96,144,192')
             .appendTo($parent);
+
+        let res = [];
+        for (var i = 96; i <= 192; i += 48) {
+            res.push(i);
+            $("<option>").attr('value', res.toString()).text(res.toString()).appendTo($resolutions);
+        }
 
         _appendLabel($parent, "Styles (Globals):")
         let $globalsList = $("<ul>")
@@ -64,6 +88,7 @@
                 let $item = $("<li>")
                     .addClass('sketchpen-code-globals-list-item')
                     .attr('data-value', _toGlobalsValue(filename))
+                    .attr('title', _toGlobalsValue(filename))
                     .text(_toGlobalsValue(filename) || '(default)')
                     .appendTo($globalsList)
                     .click(function (e) {

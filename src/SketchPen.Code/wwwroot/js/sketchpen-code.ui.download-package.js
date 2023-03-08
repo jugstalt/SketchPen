@@ -63,7 +63,7 @@
 
         let $sizesInput = $("<input>")
             .addClass('sketchpen-code-input sizes')
-            .attr('placeholder', 'sizes eg: 16,32,64')
+            .attr('placeholder', 'more sizes eg: 50,70,90')
             .appendTo($parent);
 
         _appendLabel($parent, 'Resolutions [dpi]:');
@@ -143,6 +143,8 @@
     let _collectSettings = function ($parent) {
         var styles = [];
         $parent.find('.sketchpen-code-globals-list-item.checked').map(function () { styles.push($(this).attr('data-value')); });
+
+        var sizes = [];
 
         return {
             composer: $parent.children('.composer').val(),

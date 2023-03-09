@@ -46,7 +46,9 @@ internal class WebSpriteComposerService : IComposerService
 
                     foreach (var dpi in dpiList.OrSingle(96f))
                     {
-                        string imageFilename = $"sketchpen-{globals.OrTake("default")}-{size}@{(int)dpi}.png";
+                        string imageFilename = $"sprite.png";
+                        string folderName = $"img/sketchpen/{globals.OrTake("default")}/{size}/{dpi.ToResolutionsFolder()}";
+
                         StringBuilder iconsCss = new StringBuilder();
                         float dpiFactor = dpi / 96f;
 
@@ -69,7 +71,7 @@ internal class WebSpriteComposerService : IComposerService
                             css.Append(Environment.NewLine);
                             css.Append($$"""
                                    .sketchpen-icon-{{globals.OrTake("defaut")}}-{{size}} {
-                                      background-image: url("../img/{{imageFilename}}");
+                                      background-image: url("../{{folderName}}/{{imageFilename}}");
                                       background-repeat: no-repeat;
                                       background-size: {{imageData.imageWidth}}px {{imageData.imageHeight}}px;
                                       width: {{size}}px;
@@ -88,7 +90,7 @@ internal class WebSpriteComposerService : IComposerService
                                                 (min-resolution: {{dpi.ToInvariantString()}}dpi) {
                                          
                                              .sketchpen-icon-{{globals.OrTake("defaut")}}-{{size}} {
-                                                 background-image: url("../img/{{imageFilename}}");
+                                                 background-image: url("../{{folderName}}/{{imageFilename}}");
                                                  background-size: {{(int)(imageData.imageWidth / dpiFactor)}}px {{(int)(imageData.imageHeight / dpiFactor)}}px;
                                              } 
                                          }
@@ -97,7 +99,7 @@ internal class WebSpriteComposerService : IComposerService
 
 
 
-                        var imgEntry = zipArchive.CreateEntry($"content/img/{imageFilename}");
+                        var imgEntry = zipArchive.CreateEntry($"content/{folderName}/{imageFilename}");
                         using (var imgEntryStream = imgEntry.Open())
                         {
                             imgEntryStream.Write(imageData.data);

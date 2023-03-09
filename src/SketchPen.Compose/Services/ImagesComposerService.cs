@@ -40,7 +40,7 @@ internal class ImagesComposerService : IComposerService
 
                             var imageData = _composerHelper.ComposeImage(new[] { filename }, (int)(size * dpiFactor), globals);
 
-                            var imgEntry = zipArchive.CreateEntry($"{globals.OrTake("default")}/{size}/{(int)dpi}/{imageFilename}");
+                            var imgEntry = zipArchive.CreateEntry($"{globals.OrTake("default")}/{size}/{dpi.ToResolutionsFolder()}/{imageFilename}");
                             using (var imgEntryStream = imgEntry.Open())
                             {
                                 imgEntryStream.Write(imageData);

@@ -62,9 +62,11 @@
         }
 
         let $sizesInput = $("<input>")
-            .addClass('sketchpen-code-input sizes')
+            .addClass('sketchpen-code-input custom-sizes')
             .attr('placeholder', 'more sizes eg: 50,70,90')
-            .appendTo($parent);
+            .appendTo($("<li>")
+                .addClass('sketchpen-code-sizes-list-item custom')
+                .appendTo($sizesList));
 
         _appendLabel($parent, 'Resolutions [dpi]:');
         let $resolutions = $("<select>")
@@ -141,14 +143,27 @@
     };
 
     let _collectSettings = function ($parent) {
+        // Collect styles
         var styles = [];
         $parent.find('.sketchpen-code-globals-list-item.checked').map(function () { styles.push($(this).attr('data-value')); });
 
+        // Collect sizes
         var sizes = [];
+        $parent.find('.sketchpen-code-sizes-list-item.checked').map(function () { sizes.push($(this).attr('data-value')) });
+        // Collect customSizes
+        if ($parent.find('.custom-sizes').val()) {
+            for (var size of $parent.find('.custom-sizes').val().split(',')) {
+                size = size.trim();
+
+                if ($.inArray(size, sizes) < 0) {
+                    sizes.push(size);
+                }
+            }
+        }
 
         return {
             composer: $parent.children('.composer').val(),
-            sizes: $parent.children('.sizes').val(),
+            sizes: sizes.toString(),
             resolutions: $parent.children('.resolutions').val(),
             styles: styles.toString()
         };

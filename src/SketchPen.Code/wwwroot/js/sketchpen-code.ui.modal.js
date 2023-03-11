@@ -25,7 +25,8 @@
         dock: 'center',
         mobile_fullscreen: true,
         animate: true,
-        hasBlocker: true
+        hasBlocker: true,
+        maximized: false
     };
     let methods = {
         init: function (options) {
@@ -226,12 +227,23 @@
             }
         }
         else if (options.dock === 'center') {
-            let frameTop = Math.max(0, ($blocker.height() / 2 - $frame.height() / 2) / 2);
-            $frame.css({
-                left: $blocker.width() / 2 - $frame.width() / 2,
-                top: frameTop,
-                maxHeight: 'calc(100% - ' + 2 * frameTop + 'px)'
-            });
+            if (options.maximized === true) {
+                $frame.css({
+                    right: 0,
+                    bottom: 0,
+                    top: 0,
+                    left: 0,
+                    height: 'auto',
+                    width: 'auto'
+                }).addClass('maximized');
+            } else {
+                let frameTop = Math.max(0, ($blocker.height() / 2 - $frame.height() / 2) / 2);
+                $frame.css({
+                    left: $blocker.width() / 2 - $frame.width() / 2,
+                    top: frameTop,
+                    maxHeight: 'calc(100% - ' + 2 * frameTop + 'px)'
+                });
+            }
         }
 
 

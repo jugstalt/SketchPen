@@ -1568,3 +1568,16 @@ body {
     .sketchpen-code-sizes-list .sketchpen-code-sizes-list-item {
         width: 80px;
     }
+
+    .sketchpen-code-sizes-list .sketchpen-code-sizes-list-item.custom {
+        padding:0px;
+        width:240px;
+    }
+
+        .sketchpen-code-sizes-list .sketchpen-code-sizes-list-item.custom input {
+            box-sizing: border-box;
+            width: 100%;
+            position: relative;
+            top: -1px;
+        }
+

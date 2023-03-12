@@ -7,9 +7,9 @@ namespace SketchPen.Plot.Debugging;
 public class DebugPlotContext : IPlotContext
 {
     private readonly IDictionary<string, object> _globals;
-    private readonly ICanvas _canvas;
     private readonly IPlotContext? _context;
     private readonly IPlotContext? _commandContext;
+    private ICanvas _canvas;
 
     public DebugPlotContext()
     {
@@ -21,8 +21,11 @@ public class DebugPlotContext : IPlotContext
     {
         _globals = new Dictionary<string, object>();
         _canvas = new DebugCanvas();
+
         _context = Activator.CreateInstance(plotContextType) as IPlotContext;
         _commandContext = Activator.CreateInstance(plotContextType) as IPlotContext;
+
+        _canvas = new DebugCanvas(_context?.Canvas, _commandContext?.Canvas);
     }
 
     public ICanvas Canvas => _canvas;
@@ -66,12 +69,10 @@ public class DebugPlotContext : IPlotContext
 
     public void Init(int width, int height, PlotContextOrigin origin = PlotContextOrigin.Center)
     {
+        _context?.Init(width, height, origin);
+        _commandContext?.Init(width, height, origin);   
 
-    }
-
-    public void SetOrigin(int x, int y, int width, int height)
-    {
-
+        _canvas = new DebugCanvas(_context?.Canvas, _commandContext?.Canvas);
     }
 
     public CanvasPoint Project(CanvasPoint point)
@@ -91,6 +92,7 @@ public class DebugPlotContext : IPlotContext
 
     public void ResetTransform()
     {
-
+        _context?.ResetTransform();
+        _commandContext?.ResetTransform();
     }
 }

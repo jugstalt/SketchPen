@@ -4,14 +4,26 @@ namespace SketchPen.Plot.Debugging;
 
 internal class DebugCanvas : ICanvas
 {
+    private ICanvas? _canvas;
+    private ICanvas? _commandCanvas;
+
+    public DebugCanvas() { }
+
+    public DebugCanvas(ICanvas? canvas, ICanvas? commandCanvas)
+    {
+        _canvas = canvas;
+        _commandCanvas = commandCanvas;
+    }
+
     public void Dispose()
     {
-
+        _canvas?.Dispose();
+        _commandCanvas?.Dispose();
     }
 
     public void DrawArc(IPen pen, CanvasRectangle rect, float startAngle, float sweepAngle)
     {
-
+        
     }
 
     public void DrawEllipse(IPen pen, CanvasRectangle rect)

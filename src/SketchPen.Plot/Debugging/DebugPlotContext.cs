@@ -7,13 +7,25 @@ namespace SketchPen.Plot.Debugging;
 public class DebugPlotContext : IPlotContext
 {
     private readonly IDictionary<string, object> _globals;
+    private readonly ICanvas _canvas;
+    private readonly IPlotContext? _context;
+    private readonly IPlotContext? _commandContext;
 
     public DebugPlotContext()
     {
         _globals = new Dictionary<string, object>();
+        _canvas = new DebugCanvas();
     }
 
-    public ICanvas Canvas => throw new NotImplementedException();
+    public DebugPlotContext(Type plotContextType)
+    {
+        _globals = new Dictionary<string, object>();
+        _canvas = new DebugCanvas();
+        _context = Activator.CreateInstance(plotContextType) as IPlotContext;
+        _commandContext = Activator.CreateInstance(plotContextType) as IPlotContext;
+    }
+
+    public ICanvas Canvas => _canvas;
 
     public PlotColor PenColor { get; set; }
     public float PenWidth { get; set; }

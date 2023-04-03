@@ -5,74 +5,71 @@ namespace SketchPen.Plot.Debugging;
 internal class DebugCanvas : ICanvas
 {
     private ICanvas? _canvas;
-    private ICanvas? _commandCanvas;
 
     public DebugCanvas() { }
 
-    public DebugCanvas(ICanvas? canvas, ICanvas? commandCanvas)
+    public DebugCanvas(ICanvas? canvas)
     {
         _canvas = canvas;
-        _commandCanvas = commandCanvas;
     }
 
     public void Dispose()
     {
         _canvas?.Dispose();
-        _commandCanvas?.Dispose();
     }
 
     public void DrawArc(IPen pen, CanvasRectangle rect, float startAngle, float sweepAngle)
     {
-        
+        _canvas?.DrawArc(pen, rect, startAngle, sweepAngle);
     }
 
     public void DrawEllipse(IPen pen, CanvasRectangle rect)
     {
-
+        _canvas?.DrawEllipse(pen, rect);
     }
 
     public void DrawLine(IPen pen, CanvasPoint p1, CanvasPoint p2)
     {
-
+        _canvas?.DrawLine(pen, p1, p2);
     }
 
     public void DrawPath(IPen pen, IPlotPath path)
     {
-
+        _canvas?.DrawPath(pen, path);
     }
 
     public void FillEllipse(IBrush brush, CanvasRectangle rect)
     {
-
+        _canvas?.FillEllipse(brush, rect);
     }
 
     public void FillPath(IBrush brush, IPlotPath path)
     {
-
+        _canvas?.FillPath(brush, path);
     }
 
     public void FillPie(IBrush brush, CanvasRectangle rect, float startAngle, float sweepAngle)
     {
-
+        _canvas?.FillPie(brush, rect, startAngle, sweepAngle);
     }
 
     public void RotateTransform(float angle)
     {
-
+        _canvas?.RotateTransform(angle);
     }
 
     public void ScaleTransform(float sx, float sy)
     {
-
+        _canvas?.ScaleTransform(sx, sy);
     }
 
     public void TranslateTransform(float dx, float dy)
     {
-
+        _canvas?.TranslateTransform(dx, dy);
     }
 
     public void DrawImage(IPlotContext sourceContext, CanvasRectangle dest, CanvasRectangle source)
     {
-
+        _canvas?.DrawImage(sourceContext, dest, source);
     }
 }

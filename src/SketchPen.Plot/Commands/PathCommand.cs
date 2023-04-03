@@ -14,7 +14,7 @@ namespace SketchPen.Plot.Commands;
 [PlotCommandMethod("start", snippet: "start();")]
 [PlotCommandMethod("close", snippet: "close();")]
 
-[PlotCommandMethod("addlines", snippet: "addlines(${1:x1}, ${2:y1}, ${3:x2}, ${4:y2}, ${5:...});")]
+[PlotCommandMethod("addlines", snippet: "addlines(${1:x1},${2:y1}, ${3:x2},${4:y2}, ${5:...});")]
 
 [PlotCommandMethod("addarc", suggestion: "addarc(startAngle, sweepAngle, diameter)", snippet: "addarc(${1:startAngle}, ${2:sweepAngle}, ${3:diameter});")]
 [PlotCommandMethod("addarc", suggestion: "addarc(startAngle, sweepAngle, diameterX, diameterY)", snippet: "addarc(${1:startAngle}, ${2:sweepAngle}, ${3:diameterX}, ${4:diameterY});")]

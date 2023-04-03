@@ -8,7 +8,7 @@
             return methods.init.apply(this, arguments);
         }
         else {
-            $.error('Method ' + method + ' does not exist on jQuery.sketchPenCode_blockframe');
+            $.error('Method ' + method + ' does not exist on jExt.sketchPenCode_blockframe');
         }
     };
     let defaults = {

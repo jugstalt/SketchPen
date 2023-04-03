@@ -1,0 +1,15 @@
+// cash.spt.sp
+
+path.begin();
+path.addarc(-20, -230, 45,35, 0, -18);
+path.addarc(270, 230, 60,40, 0, 20);
+
+path.draw();
+
+path.begin();
+path.addlines(-7,45, -7,-45);
+path.draw();
+
+path.begin();
+path.addlines(7,45, 7,-45);
+path.draw();

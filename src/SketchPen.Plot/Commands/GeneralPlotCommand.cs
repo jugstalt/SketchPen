@@ -53,7 +53,7 @@ abstract class GeneralPlotCommand : IPlotCommand
                 }
                 else
                 {
-                    return p;
+                    return p!;
                 }
             }) ?? Array.Empty<object>());
         }

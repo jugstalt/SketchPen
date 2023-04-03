@@ -8,7 +8,7 @@
             return methods.init.apply(this, arguments);
         }
         else {
-            $.error('Method ' + method + ' does not exist on jQuery.sketchPenCode_tree');
+            $.error('Method ' + method + ' does not exist on jExt.sketchPenCode_tree');
         }
     };
     let defaults = {
@@ -321,4 +321,4 @@
         }
     };
 
-})(jQuery);
+})(jExt);

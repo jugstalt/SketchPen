@@ -8,7 +8,7 @@
             return methods.init.apply(this, arguments);
         }
         else {
-            $.error('Method ' + method + ' does not exist on jQuery.sketchPenCode_download_package');
+            $.error('Method ' + method + ' does not exist on jExt.sketchPenCode_download_package');
         }
     };
 
@@ -145,7 +145,8 @@
     let _collectSettings = function ($parent) {
         // Collect styles
         var styles = [];
-        $parent.find('.sketchpen-code-globals-list-item.checked').map(function () { styles.push($(this).attr('data-value')); });
+        $parent.find('.sketchpen-code-globals-list-item.checked')
+               .map(function () { styles.push($(this).attr('data-value')); });
 
         // Collect sizes
         var sizes = [];
@@ -184,4 +185,4 @@
 
         return '';
     };
-})(jQuery);
+})(jExt);

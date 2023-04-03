@@ -73,7 +73,7 @@ public class CodeController : BaseController
         {
             Route = route,
             Content = await _sketchPenCode.GetFileContent(route),
-            GlobalVariables = await _sketchPenCode.TryGetGlobalVariableNames(route.Split('/').First()),
+            GlobalVariables = _sketchPenCode.TryGetGlobalVariableNames(route.Split('/').First()),
             EditorCompletion = _editorLanguages
                                     .Where(l => l.MatchEditorFileType(fileType))
                                     .FirstOrDefault()?

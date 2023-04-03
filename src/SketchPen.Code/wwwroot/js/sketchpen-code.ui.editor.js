@@ -8,7 +8,7 @@
             return methods.init.apply(this, arguments);
         }
         else {
-            $.error('Method ' + method + ' does not exist on jQuery.sketchPenCode_editor');
+            $.error('Method ' + method + ' does not exist on jExt.sketchPenCode_editor');
         }
     };
     let defaults = {
@@ -353,4 +353,4 @@
         $editor.children('.selected').removeClass('selected');
         $frame.addClass('selected');
     };
-})(jQuery);
+})(jExt);

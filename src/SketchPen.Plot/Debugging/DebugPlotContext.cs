@@ -8,7 +8,6 @@ public class DebugPlotContext : IPlotContext
 {
     private readonly IDictionary<string, object> _globals;
     private readonly IPlotContext? _context;
-    private readonly IPlotContext? _commandContext;
     private ICanvas _canvas;
 
     public DebugPlotContext()
@@ -23,76 +22,155 @@ public class DebugPlotContext : IPlotContext
         _canvas = new DebugCanvas();
 
         _context = Activator.CreateInstance(plotContextType) as IPlotContext;
-        _commandContext = Activator.CreateInstance(plotContextType) as IPlotContext;
-
-        _canvas = new DebugCanvas(_context?.Canvas, _commandContext?.Canvas);
+        _canvas = new DebugCanvas(_context?.Canvas);
     }
 
     public ICanvas Canvas => _canvas;
 
-    public PlotColor PenColor { get; set; }
-    public float PenWidth { get; set; }
-    public PenCap PenCap { get; set; }
-    public float MaxPenWidth { get; set; }
-    public float MinPenWidth { get; set; }
-    public PlotColor BrushColor { get; set; }
-    public PlotColor GradientBrushColor { get; set; }
-    public CanvasPoint GradientBrushPoint1 { get; set; }
-    public CanvasPoint GradientBrushPoint2 { get; set; }
+    public PlotColor PenColor
+    {
+        set
+        {
+            if (_context != null)
+            {
+                _context.PenColor = value;
+            }
+        }
+    }
 
-    public IDictionary<string, object> Globals => _globals;
+    public float PenWidth
+    {
+        set
+        {
+            if (_context != null)
+            {
+                _context.PenWidth = value;
+            }
+        }
+    }
+
+    public PenCap PenCap
+    {
+        set
+        {
+            if (_context != null)
+            {
+                _context.PenCap = value;
+            }
+        }
+    }
+
+    public float MaxPenWidth
+    {
+        set
+        {
+            if (_context != null)
+            {
+                _context.MaxPenWidth = value;
+            }
+        }
+    }
+
+    public float MinPenWidth
+    {
+        set
+        {
+            if (_context != null)
+            {
+                _context.MinPenWidth = value;
+            }
+        }
+    }
+
+    public PlotColor BrushColor
+    {
+        set
+        {
+            if (_context != null)
+            {
+                _context.BrushColor = value;
+            }
+        }
+    }
+
+    public PlotColor GradientBrushColor
+    {
+        set
+        {
+            if (_context != null)
+            {
+                _context.GradientBrushColor = value;
+            }
+        }
+    }
+
+    public CanvasPoint GradientBrushPoint1
+    {
+        set
+        {
+            if (_context != null)
+            {
+                _context.GradientBrushPoint1 = value;
+            }
+        }
+    }
+
+    public CanvasPoint GradientBrushPoint2
+    {
+        set
+        {
+            if (_context != null)
+            {
+                _context.GradientBrushPoint2 = value;
+            }
+        }
+    }
+
+    public IDictionary<string, object> Globals 
+        => _context?.Globals ?? _globals;
 
     public IBrush CreateBrush(IEnumerable<object> parameters)
-    {
-        return new DebugBrush();
-    }
+        => _context?.CreateBrush(parameters) ?? new DebugBrush();
+
 
     public IPen CreatePen(IEnumerable<object> parameters)
-    {
-        return new DebugPen();
-    }
+        => _context?.CreatePen(parameters) ?? new DebugPen();
+
 
     public IPlotPath CreatePlotPath()
-    {
-        return new DebugPlotPath();
-    }
+        => _context?.CreatePlotPath() ?? new DebugPlotPath();
+
 
     public void Dispose()
     {
-
+        _context?.Dispose();
     }
 
     public byte[] Encode(EncodeFormat format)
-    {
-        return Array.Empty<byte>();
-    }
+        => _context?.Encode(format) ?? Array.Empty<byte>();
+
 
     public void Init(int width, int height, PlotContextOrigin origin = PlotContextOrigin.Center)
     {
         _context?.Init(width, height, origin);
-        _commandContext?.Init(width, height, origin);   
 
-        _canvas = new DebugCanvas(_context?.Canvas, _commandContext?.Canvas);
+        _canvas = new DebugCanvas(_context?.Canvas);
     }
 
     public CanvasPoint Project(CanvasPoint point)
-    {
-        return point;
-    }
+        => _context?.Project(point) ?? point;
+
 
     public CanvasRectangle Project(CanvasRectangle rect)
-    {
-        return rect;
-    }
+        => _context?.Project(rect) ?? rect;
+
 
     public float Project(float number)
-    {
-        return number;
-    }
+        => _context?.Project(number) ?? number;
+
 
     public void ResetTransform()
     {
         _context?.ResetTransform();
-        _commandContext?.ResetTransform();
     }
 }

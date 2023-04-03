@@ -200,7 +200,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
             return methods.init.apply(this, arguments);
         }
         else {
-            $.error('Method ' + method + ' does not exist on jQuery.sketchPenCode_editor_switcher');
+            $.error('Method ' + method + ' does not exist on jExt.sketchPenCode_editor_switcher');
         }
     };
     let defaults = {
@@ -238,7 +238,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
 
         $code.trigger('click');
     };
-})(jQuery);
+})(jExt);
 
 (function ($) {
     "use strict";
@@ -250,7 +250,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
             return methods.init.apply(this, arguments);
         }
         else {
-            $.error('Method ' + method + ' does not exist on jQuery.sketchPenCode_editor_properties_form');
+            $.error('Method ' + method + ' does not exist on jExt.sketchPenCode_editor_properties_form');
         }
     };
     let defaults = {
@@ -288,7 +288,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
 
         $("<br/>").insertAfter($parent.find('.sketchpen-input,.sketchpen-label'));
     };
-})(jQuery);
+})(jExt);
 
 (function ($) {
     "use strict"
@@ -300,7 +300,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
             return methods.init.apply(this, arguments);
         }
         else {
-            $.error('Method ' + method + ' does not exist on jQuery.sketchpen_autocomplete_multiselect');
+            $.error('Method ' + method + ' does not exist on jExt.sketchpen_autocomplete_multiselect');
         }
     };
 
@@ -516,7 +516,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
         }
     };
 
-})(jQuery);
+})(jExt);
 
 (function ($) {
     "use strict"
@@ -528,7 +528,7 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
             return methods.init.apply(this, arguments);
         }
         else {
-            $.error('Method ' + method + ' does not exist on jQuery.sketchPenCode_editor_errors');
+            $.error('Method ' + method + ' does not exist on jExt.sketchPenCode_editor_errors');
         }
     };
 
@@ -667,4 +667,4 @@ sketchPenCode.implementEventController(sketchPenCodeEditor);
         }
     };
 
-})(jQuery);
+})(jExt);

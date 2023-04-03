@@ -371,4 +371,4 @@
         let id = dialogId(options);
         return (id === '' ? '.sketchpen-code-modal' : '#' + id + '.sketchpen-code-modal');
     };
-})(jQuery);
+})(jExt);

@@ -8,7 +8,7 @@
             return methods.init.apply(this, arguments);
         }
         else {
-            $.error('Method ' + method + ' does not exist on jQuery.sketchPenCode_toolbar');
+            $.error('Method ' + method + ' does not exist on jExt.sketchPenCode_toolbar');
         }
     };
     let defaults = {
@@ -124,4 +124,4 @@
             });
         });
     };
-})(jQuery);
+})(jExt);

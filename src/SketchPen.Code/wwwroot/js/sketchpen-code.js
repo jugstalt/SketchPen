@@ -444,4 +444,4 @@ var sketchPenCode = new function ($) {
             });
         };
     };
-}(jQuery);
+}(jExt);

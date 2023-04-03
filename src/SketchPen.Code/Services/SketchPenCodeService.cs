@@ -126,7 +126,7 @@ public class SketchPenCodeService
         };
     }
 
-    async public Task<IEnumerable<string>> TryGetGlobalVariableNames(string id)
+    public IEnumerable<string> TryGetGlobalVariableNames(string id)
     {
         string globalsFile = Path.Combine(_options.RootPath, id, "_.globals");
         if (!File.Exists(globalsFile))

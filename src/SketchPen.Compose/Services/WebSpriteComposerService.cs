@@ -22,7 +22,8 @@ internal class WebSpriteComposerService : IComposerService
     public string FileExtension => "zip";
 
     // https://localhost:7165/code/package?id=basic&globals=,e,kagis,epz&sizes=16,24,32,64
-    public ComposeResult Compose(string path,
+    public ComposeResult Compose(string id, 
+                                 string path,
                                  IEnumerable<int> sizes,
                                  IEnumerable<string> customGlobals,
                                  IEnumerable<float>? dpiList = null)
@@ -35,7 +36,7 @@ internal class WebSpriteComposerService : IComposerService
 
             foreach (var globals in customGlobals)
             {
-                string cssFileName = $"sketchpen-{globals.OrTake("default")}.css";
+                string cssFileName = $"sketchpen-{id}-{globals.OrTake("default")}.css";
                 StringBuilder css = new StringBuilder();
 
                 htmlLinks.AppendLine($"""<link rel="stylesheet" href="content/css/{cssFileName}">""");
@@ -58,11 +59,11 @@ internal class WebSpriteComposerService : IComposerService
                                 if (dpiFactor == 1f)
                                 {
                                     iconsCss.AppendLine($$"""
-                                               .sketchpen-icon-{{globals.OrTake("defaut")}}-{{size}}.{{name}} {
+                                               .sketchpen-icon-{{id}}-{{globals.OrTake("default")}}-{{size}}.{{name}} {
                                                     background-position: -{{x}}px -{{y}}px
                                                }
                                                """);
-                                    htmlBody.AppendLine($"""<div class="sketchpen-icon-{globals.OrTake("defaut")}-{size} {name}" title="{name}"></div>""");
+                                    htmlBody.AppendLine($"""<div class="sketchpen-icon-{id}-{globals.OrTake("default")}-{size} {name}" title="{name}"></div>""");
                                 }
                             });
 
@@ -70,7 +71,7 @@ internal class WebSpriteComposerService : IComposerService
                         {
                             css.Append(Environment.NewLine);
                             css.Append($$"""
-                                   .sketchpen-icon-{{globals.OrTake("defaut")}}-{{size}} {
+                                   .sketchpen-icon-{{id}}-{{globals.OrTake("default")}}-{{size}} {
                                       background-image: url("../{{folderName}}/{{imageFilename}}");
                                       background-repeat: no-repeat;
                                       background-size: {{imageData.imageWidth}}px {{imageData.imageHeight}}px;
@@ -89,7 +90,7 @@ internal class WebSpriteComposerService : IComposerService
                                          @media (-webkit-min-device-pixel-ratio: {{(dpi / 96f).ToInvariantString()}}), 
                                                 (min-resolution: {{dpi.ToInvariantString()}}dpi) {
                                          
-                                             .sketchpen-icon-{{globals.OrTake("defaut")}}-{{size}} {
+                                             .sketchpen-icon-{{id}}-{{globals.OrTake("default")}}-{{size}} {
                                                  background-image: url("../{{folderName}}/{{imageFilename}}");
                                                  background-size: {{(int)(imageData.imageWidth / dpiFactor)}}px {{(int)(imageData.imageHeight / dpiFactor)}}px;
                                              } 
@@ -99,7 +100,7 @@ internal class WebSpriteComposerService : IComposerService
 
 
 
-                        var imgEntry = zipArchive.CreateEntry($"content/{folderName}/{imageFilename}");
+                        var imgEntry = zipArchive.CreateEntry($"{id}/content/{folderName}/{imageFilename}");
                         using (var imgEntryStream = imgEntry.Open())
                         {
                             imgEntryStream.Write(imageData.data);
@@ -107,14 +108,14 @@ internal class WebSpriteComposerService : IComposerService
                     }
                 }
 
-                var cssEntry = zipArchive.CreateEntry($"content/css/{cssFileName}");
+                var cssEntry = zipArchive.CreateEntry($"{id}/content/css/{cssFileName}");
                 using (var cssEntryStream = cssEntry.Open())
                 {
                     cssEntryStream.Write(Encoding.UTF8.GetBytes(css.ToString()));
                 }
             }
 
-            var htmlEntry = zipArchive.CreateEntry("sketchpen.html");
+            var htmlEntry = zipArchive.CreateEntry($"{id}/sketchpen.html");
             using (var htmlEntryStream = htmlEntry.Open())
             {
                 htmlEntryStream.Write(Encoding.UTF8.GetBytes($"""

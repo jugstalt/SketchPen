@@ -22,7 +22,8 @@ internal class SingleImageComposerService : IComposerService
 
     public string Name => "Image";
 
-    public ComposeResult Compose(string path,
+    public ComposeResult Compose(string id, 
+                                 string path,
                                  IEnumerable<int> sizes,
                                  IEnumerable<string> customGlobals,
                                  IEnumerable<float>? dpiList = null)

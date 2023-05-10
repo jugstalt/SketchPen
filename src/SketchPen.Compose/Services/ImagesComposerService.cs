@@ -21,7 +21,11 @@ internal class ImagesComposerService : IComposerService
 
     public string FileExtension => "zip";
 
-    public ComposeResult Compose(string path, IEnumerable<int> sizes, IEnumerable<string> customGlobals, IEnumerable<float>? dpiList = null)
+    public ComposeResult Compose(string id,
+                                 string path,
+                                 IEnumerable<int> sizes, 
+                                 IEnumerable<string> customGlobals, 
+                                 IEnumerable<float>? dpiList = null)
     {
         using var ms = new MemoryStream();
         using (var zipArchive = new ZipArchive(ms, ZipArchiveMode.Create, true))

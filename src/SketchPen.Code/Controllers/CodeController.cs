@@ -174,16 +174,18 @@ public class CodeController : BaseController
 
         if (fileType == Plot.EditorFileType.Globals)
         {
-            string fileTitle = route.Split('/').Last();
+            string fileTitle = route.Split('/').Last(), id = route.Split('/')[0];
 
             composeResult = composer.Compose(
-                Path.Combine(_sketchPenPlot.RootPath, route.Split('/')[0]),
+                id,
+                Path.Combine(_sketchPenPlot.RootPath, id),
                 new[] { 64 },
                 new string[] { fileTitle.Substring(1, fileTitle.Length - ".globals".Length - 1) });
         }
         else
         {
             composeResult = composer.Compose(
+                route.Split("/").First(),
                 Path.Combine(_sketchPenPlot.RootPath, route),
                 new[] { width },
                 new string[] { globals });
@@ -221,6 +223,7 @@ public class CodeController : BaseController
         }
 
         var composeResult = composerInstance.Compose(
+                id: id,
                 path: Path.Combine(_sketchPenPlot.RootPath, id),
                 sizes: sizes?.Split(',').Select(s => int.Parse(s)) ?? new[] { 32 },
                 customGlobals: styles?.Split(',').Select(g => g.Trim().ToLower()) ?? new[] { "" },

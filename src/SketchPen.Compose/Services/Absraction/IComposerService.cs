@@ -6,7 +6,8 @@ public interface IComposerService
 {
     string Name { get; }
 
-    ComposeResult Compose(string path,
+    ComposeResult Compose(string id,
+                          string path,
                           IEnumerable<int> sizes,
                           IEnumerable<string> customGlobals,
                           IEnumerable<float>? dpiList = null);

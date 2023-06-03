@@ -8,7 +8,7 @@
             return methods.init.apply(this, arguments);
         }
         else {
-            $.error('Method ' + method + ' does not exist on jQuery.sketchPen_code_modal');
+            $.error('Method ' + method + ' does not exist on jExt.sketchPen_code_modal');
         }
     };
     let defaults = {

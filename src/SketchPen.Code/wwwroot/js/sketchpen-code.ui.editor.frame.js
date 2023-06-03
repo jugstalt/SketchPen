@@ -1,194 +1,197 @@
-"use strict"
-var  sketchPenCode = window.parent.sketchPenCode;
+(function ($) {
+    "use strict"
+    window.$ = jExt;
+    window.sketchPenCode = window.parent.sketchPenCode;
 
-var sketchPenCodeEditor = new function () {
-    let _route, _this;
-    let _editor = null;
-    let _editorDecorations = null;
+    window.sketchPenCodeEditor = new function () {
+        let _route, _this;
+        let _editor = null;
+        let _editorDecorations = null;
 
-    this.route = () => _route;
-    this.editor = () => _editor;
+        this.route = () => _route;
+        this.editor = () => _editor;
 
-    this.init = function (route, value, language) {
-        _route = route;
+        this.init = function (route, value, language) {
+            _route = route;
 
-        //console.log('init editor', id, value, language);
+            //console.log('init editor', id, value, language);
 
-        $('.sketchpen-code-editor-switcher').sketchPenCode_editor_switcher();
-        $('.sketchpen-code-editor-settings').sketchPenCode_editor_settings_form();
-        $('.sketchpen-code-editor-code-errors').sketchPenCode_editor_errors();
+            $('.sketchpen-code-editor-switcher').sketchPenCode_editor_switcher();
+            $('.sketchpen-code-editor-settings').sketchPenCode_editor_settings_form();
+            $('.sketchpen-code-editor-code-errors').sketchPenCode_editor_errors();
 
-        if ($('#sketchpen-code-editor-code').length === 1) {
+            if ($('#sketchpen-code-editor-code').length === 1) {
 
-            // register a completion item provider for DLH
-            // monaco.languages.registerCompletionItemProvider('razor', getDlhCompletionProvider(monaco));
-            
-            console.log('create editor with language: ', language || 'text');
-            _editor = monaco.editor.create(document.getElementById('sketchpen-code-editor-code'), {
-                language: language || 'text',
-                automaticLayout: true,
-                theme: sketchPenCode.editorTheme()
-            });
+                // register a completion item provider for DLH
+                // monaco.languages.registerCompletionItemProvider('razor', getDlhCompletionProvider(monaco));
 
-            _editor.setValue(value || '');
-            _editor.getModel().onDidChangeContent((event) => {
-                sketchPenCodeEditor.events.fire('editor-value-changed', { route: _route, value: _editor.getValue() });
+                console.log('create editor with language: ', language || 'text');
+                _editor = monaco.editor.create(document.getElementById('sketchpen-code-editor-code'), {
+                    language: language || 'text',
+                    automaticLayout: true,
+                    theme: sketchPenCode.editorTheme()
+                });
 
-                this.setDirty();
-                this.removeDecoration();
-            });
+                _editor.setValue(value || '');
+                _editor.getModel().onDidChangeContent((event) => {
+                    sketchPenCodeEditor.events.fire('editor-value-changed', { route: _route, value: _editor.getValue() });
 
-        } else {
-            $('.sketchpen-code-editor-settings').css('display', 'block');
-        }
+                    this.setDirty();
+                    this.removeDecoration();
+                });
 
-        if ($('.sketchpen-code-editor-settings .sketchpen-access-control').length > 0) {
-            sketchPenCode.api.get('authprefixes', function (result) {
-                $('.sketchpen-code-editor-settings .sketchpen-access-control').each(function (i, element) {
-                    $(element).sketchpen_autocomplete_multiselect({
-                        source: 'AuthAutocomplete',
-                        name: 'access_string',
-                        prefixes: result,
-                        value: $(element).attr('data-value')
+            } else {
+                $('.sketchpen-code-editor-settings').css('display', 'block');
+            }
+
+            if ($('.sketchpen-code-editor-settings .sketchpen-access-control').length > 0) {
+                sketchPenCode.api.get('authprefixes', function (result) {
+                    $('.sketchpen-code-editor-settings .sketchpen-access-control').each(function (i, element) {
+                        $(element).sketchpen_autocomplete_multiselect({
+                            source: 'AuthAutocomplete',
+                            name: 'access_string',
+                            prefixes: result,
+                            value: $(element).attr('data-value')
+                        });
                     });
                 });
-            });
-        }
+            }
 
-        sketchPenCode.events.on('save-document', _event_save_document);
-        sketchPenCode.events.on('verify-document', _event_verify_document);
-        sketchPenCode.events.on('before-run-document', _event_before_run_document);
-        sketchPenCode.events.on('destroy-editor', _event_destroy_editor);
-        sketchPenCode.events.on('theme-changed', _event_theme_changed, this);
+            sketchPenCode.events.on('save-document', _event_save_document);
+            sketchPenCode.events.on('verify-document', _event_verify_document);
+            sketchPenCode.events.on('before-run-document', _event_before_run_document);
+            sketchPenCode.events.on('destroy-editor', _event_destroy_editor);
+            sketchPenCode.events.on('theme-changed', _event_theme_changed, this);
 
-        sketchPenCode.bindDocumentEvents(window.document);
+            sketchPenCode.bindDocumentEvents(window.document);
 
-        sketchPenCode.events.fire('document-opened', { route: _route });
-    };
+            sketchPenCode.events.fire('document-opened', { route: _route });
+        };
 
-    let _event_save_document = function (channel, args) {
-        if (args.route === _route) {
-            sketchPenCodeEditor.submitForm();
-        }
-    };
+        let _event_save_document = function (channel, args) {
+            if (args.route === _route) {
+                sketchPenCodeEditor.submitForm();
+            }
+        };
 
-    let _event_verify_document = function (channel, args) {
-        if (args.route === _route) {
-            let ids = args.route.split('@')
-            if (ids.length === 3) {  // view
-                sketchPenCodeEditor.submitForm(true);
+        let _event_verify_document = function (channel, args) {
+            if (args.route === _route) {
+                let ids = args.route.split('@')
+                if (ids.length === 3) {  // view
+                    sketchPenCodeEditor.submitForm(true);
+                }
+            }
+        };
+
+        let _event_before_run_document = function (channel, args) {
+            if (args.route === _route) {
+                args.urlParameters = "route=" + args.route + '&globals=' + args.globals;
+            }
+        };
+
+        let _event_destroy_editor = function (channel, args) {
+            if (args.route === _route) {
+                console.log('destroy editor ' + _route);
+                sketchPenCode.events.off('save-document', _event_save_document);
+                sketchPenCode.events.off('verify-document', _event_verify_document);
+                sketchPenCode.events.off('before-run-document', _event_before_run_document);
+                sketchPenCode.events.off('theme-changed', _event_theme_changed);
+                //sketchPenCode.events.off('destroy-editor', _event_destroy_editor);
+
+                _route = null;
             }
         }
-    };
 
-    let _event_before_run_document = function (channel, args) {
-        if (args.route === _route) {
-            args.urlParameters = "route=" + args.route + '&globals=' + args.globals;
-        }
-    };
+        let _event_theme_changed = function (channel, args) {
+            if (_editor) {
+                _editor.updateOptions({ theme: args.theme });
+            }
+        };
 
-    let _event_destroy_editor = function (channel, args) {
-        if (args.route === _route) {
-            console.log('destroy editor ' + _route);
-            sketchPenCode.events.off('save-document', _event_save_document);
-            sketchPenCode.events.off('verify-document', _event_verify_document);
-            sketchPenCode.events.off('before-run-document', _event_before_run_document);
-            sketchPenCode.events.off('theme-changed', _event_theme_changed);
-            //sketchPenCode.events.off('destroy-editor', _event_destroy_editor);
+        this.refreshToken = function (index) {
+            $("input[name=sketchpen_token" + index + "]").val(this.generateRandomToken(64));
+            sketchPenCodeEditor.setDirty();
+        };
+        this.clearToken = function (index) {
+            $("input[name=sketchpen_token" + index + "]").val('');
+            sketchPenCodeEditor.setDirty();
+        };
 
-            _route = null;
-        }
-    }
+        this.generateRandomToken = function (length) {
+            let chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
-    let _event_theme_changed = function (channel, args) {
-        if (_editor) {
-            _editor.updateOptions({ theme: args.theme });
-        }
-    };
+            let token = '';
+            for (let i = 0; i < length; i++) {
+                token += chars[parseInt((Math.random()) * 0x10000) % chars.length];
+            }
 
-    this.refreshToken = function (index) {
-        $("input[name=sketchpen_token" + index + "]").val(this.generateRandomToken(64));
-        sketchPenCodeEditor.setDirty();
-    };
-    this.clearToken = function (index) {
-        $("input[name=sketchpen_token" + index + "]").val('');
-        sketchPenCodeEditor.setDirty();
-    };
+            return token;
+        };
 
-    this.generateRandomToken = function (length) {
-        let chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        this.addErrorDecoration = function (lineNumber) {
+            if (lineNumber <= 0) {
+                this.removeDecoration();
+                return;
+            }
 
-        let token = '';
-        for (let i = 0; i < length; i++) {
-            token += chars[parseInt((Math.random()) * 0x10000) % chars.length];
-        }
-
-        return token;
-    };
-
-    this.addErrorDecoration = function (lineNumber) {
-        if (lineNumber <= 0) {
-            this.removeDecoration();
-            return;
-        }
-
-        _editorDecorations = sketchPenCodeEditor.editor().deltaDecorations(
-            _editorDecorations || [],
-            [
-                {
-                    range: new monaco.Range(lineNumber, 1, lineNumber, 1),
-                    options: {
-                        isWholeLine: true,
-                        linesDecorationsClassName: 'errorLineDecoration'
+            _editorDecorations = sketchPenCodeEditor.editor().deltaDecorations(
+                _editorDecorations || [],
+                [
+                    {
+                        range: new monaco.Range(lineNumber, 1, lineNumber, 1),
+                        options: {
+                            isWholeLine: true,
+                            linesDecorationsClassName: 'errorLineDecoration'
+                        }
                     }
-                }
-            ]
-        );
-    };
-    this.removeDecoration = function () {
-        if (_editorDecorations) {
-            sketchPenCodeEditor.editor().deltaDecorations(_editorDecorations, []);
-            _editorDecorations = null;
+                ]
+            );
+        };
+        this.removeDecoration = function () {
+            if (_editorDecorations) {
+                sketchPenCodeEditor.editor().deltaDecorations(_editorDecorations, []);
+                _editorDecorations = null;
 
-            sketchPenCodeEditor.events.fire('editor-decoration-removed');
+                sketchPenCodeEditor.events.fire('editor-decoration-removed');
+            }
         }
-    }
 
-    this.delete = function () {
-        sketchPenCode.events.fire('delete-document', { route: _route });
-    };
+        this.delete = function () {
+            sketchPenCode.events.fire('delete-document', { route: _route });
+        };
 
-    this.setDirty = function () {
-        sketchPenCode.events.fire('document-changed', { route: _route });
-    };
+        this.setDirty = function () {
+            sketchPenCode.events.fire('document-changed', { route: _route });
+        };
 
-    this.submitForm = function (verifyOnly) {
-        let $form =
-            $(".sketchpen-code-editor-settings")
-                .children('form');
+        this.submitForm = function (verifyOnly) {
+            let $form =
+                $(".sketchpen-code-editor-settings")
+                    .children('form');
 
-        let actionUrl = $form.attr('action');
+            let actionUrl = $form.attr('action');
 
-        $.ajax({
-            type: "POST",
-            url: actionUrl + '?verifyOnly=' + (verifyOnly ? 'true' : 'false'),
-            data: $form.serialize(), // serializes the form's elements.
-            success: function (data) {
-                if (data.success === true) {
-                    if (verifyOnly === true) {
-                        sketchPenCode.events.fire('document-verified', { route: _route });
+            $.ajax({
+                type: "POST",
+                url: actionUrl + '?verifyOnly=' + (verifyOnly ? 'true' : 'false'),
+                data: $form.serialize(), // serializes the form's elements.
+                success: function (data) {
+                    if (data.success === true) {
+                        if (verifyOnly === true) {
+                            sketchPenCode.events.fire('document-verified', { route: _route });
+                        } else {
+                            sketchPenCode.events.fire('document-saved', { route: _route });
+                        }
                     } else {
-                        sketchPenCode.events.fire('document-saved', { route: _route });
+                        sketchPenCode.events.fire('document-errors', { route: _route, errors: data });
                     }
-                } else {
-                    sketchPenCode.events.fire('document-errors', { route: _route, errors: data });
                 }
-            }
-        });
-    };
-}();
+            });
+        };
+    }();
 
-sketchPenCode.implementEventController(sketchPenCodeEditor);
+    window.sketchPenCode.implementEventController(sketchPenCodeEditor);
+})(jExt);
 
 (function ($) {
     "use strict";

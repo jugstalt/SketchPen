@@ -89,17 +89,21 @@
             .addClass('sketchpen-code-toolbutton help')
             .appendTo($parent);
 
+        // ToDo: Login / Logout Button
+        /*   
         let $logout = $("<div>")
             .data('event', 'logout')
             .addClass('sketchpen-code-toolbutton logout')
             .appendTo($parent);
 
+        
         $("<div>")
             .text(sketchPenCode.loginUsername() || '???')
             .appendTo($logout);
         $("<div>")
             .text('Logout...')
             .appendTo($logout);
+        */
 
         $parent
             .children('.sketchpen-code-toolbutton')

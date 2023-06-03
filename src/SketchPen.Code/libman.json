@@ -5,6 +5,11 @@
     {
       "library": "monaco-editor@0.33.0",
       "destination": "wwwroot/lib/monaco-editor/"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "@jugstalt/jextend@0.1.2",
+      "destination": "wwwroot/lib/jextend/"
     }
   ]
 }

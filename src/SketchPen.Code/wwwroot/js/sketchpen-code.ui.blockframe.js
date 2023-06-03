@@ -48,4 +48,4 @@
             options.onShow($content);
         }
     };
-})(jQuery);
+})(jExt);

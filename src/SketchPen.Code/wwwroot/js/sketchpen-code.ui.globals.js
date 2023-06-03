@@ -135,4 +135,4 @@
 
         return '';
     };
-})(jQuery);
+})(jExt);

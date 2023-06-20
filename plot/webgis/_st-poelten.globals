@@ -1,0 +1,15 @@
+// _st_poelten.globals
+
+//globals.set(penColor, "#406314");
+//globals.set(penColor, "#1f2e0a");
+globals.set(penColor,"#555");
+globals.set(outlinePenColor, "#d11317");
+//globals.set(penColor,"#fff");
+
+globals.set(brushColor, "#fff");
+globals.set(gradientbrushColor, "#e2e2e2");
+globals.set(penWidth, 6);
+globals.set(penWidthBold, 9);
+globals.set(minPenWidth, 3);
+//globals.set(maxPenWidth, 4);
+globals.set(penCap, "round");

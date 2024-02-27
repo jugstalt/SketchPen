@@ -1,5 +1,5 @@
 path.begin();
-path.addarc(0,360, 95,95);
+path.addarc(0,360, 90,90);
 path.fill();
 
 path.draw(@@outlinePenColor);

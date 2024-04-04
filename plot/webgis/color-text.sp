@@ -1,0 +1,12 @@
+pen.width(@@penWidthBold);
+pen.color("#ff0000")
+
+path.begin();
+path.addlines(-30,-35, -30,-40, 30,-40, 30,-35);
+path.start();
+path.addlines(0,-40, 0,40);
+path.start();
+path.addlines(7,40, -7,40);
+path.draw();
+
+pen.width(@@penWidth);

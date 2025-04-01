@@ -1,0 +1,15 @@
+// link2.sp
+
+path.begin();
+path.addlines(-13, -11, -13, -33);
+path.addarc(-180, 180, 26, 0, -33);
+path.addlines(13,-33, 13, -5);
+path.addarc(0, 115, 26, 0, -5);
+path.draw();
+
+path.begin();
+path.addlines(13, 11, 13, 33);
+path.addarc( 0, 180, 26, 0, 33);
+path.addlines(-13, 33, -13, 5);
+path.addarc(180, 115, 26, 0, 5);
+path.draw();

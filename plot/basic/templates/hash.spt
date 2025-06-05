@@ -1,0 +1,8 @@
+// hash.spt.sp
+
+line.draw(-11, -37,-17, 37);
+line.draw( 17, -37, 11, 37);
+
+line.draw(-37, -13, 37,-13);
+line.draw(-37,  13, 37, 13);
+

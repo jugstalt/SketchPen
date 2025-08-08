@@ -1,6 +1,7 @@
 ﻿using SketchPen.Plot.Abstraction;
 using SketchPen.Plot.Drawing.Extensions;
 using SketchPen.Plot.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -148,6 +149,31 @@ public class PlotContext : IPlotContext
         }
 
         return new PlotBrush(this, brush, brushColor.Equals(PlotColor.Transparent));
+    }
+
+    public IFont CreateFont(IEnumerable<object> parameters)
+    {
+        var size = 12f;
+        var fontFamily = "Arial";
+
+        if (parameters?.CountElements() == 1)
+        {
+            if (parameters.First() is string fontName)
+            {
+                fontFamily = fontName;
+            }
+            else if (parameters.First() is float fontSize)
+            {
+                size = fontSize;
+            }
+        }
+        else if (parameters?.CountElements() >= 2)
+        {
+            fontFamily = parameters.ElementAtOrDefault(0)?.ToString() ?? "Arial";
+            size = (float)parameters.ElementAtOrDefault(1);
+        }
+
+        return new PlotFont(this, new Font(fontFamily, Project(size)));
     }
 
     public CanvasPoint Project(CanvasPoint point)

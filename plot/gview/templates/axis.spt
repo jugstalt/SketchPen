@@ -1,0 +1,23 @@
+// axis.spt
+pen.width(1);
+
+line.draw(-20, 0, 20, 0);
+line.draw(0, -20, 0, 20);
+
+line.draw(-20, 0, -17, -3); 
+line.draw(-20, 0, -17,  3); 
+
+transform.rotate(90);
+line.draw(-20, 0, -17, -3); 
+line.draw(-20, 0, -17,  3); 
+
+transform.rotate(90);
+line.draw(-20, 0, -17, -3); 
+line.draw(-20, 0, -17,  3); 
+
+transform.rotate(90);
+line.draw(-20, 0, -17, -3); 
+line.draw(-20, 0, -17,  3); 
+
+transform.reset();
+pen.width(@@penWidth);

@@ -96,7 +96,15 @@ class Canvas : ICanvas
 
         }
     }
-   
+
+    public void DrawText(IFont font, string text, CanvasPoint position, IBrush brush = null)
+    {
+        var skFont = (SKFont)font.EngineElement;
+        var skPaint = GetSKPaint(brush);
+
+        _canvas?.DrawText(text, position.X, position.Y, skFont, skPaint);
+    }
+
     #endregion
 
     #region Helper

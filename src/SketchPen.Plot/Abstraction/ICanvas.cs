@@ -20,4 +20,6 @@ public interface ICanvas : IDisposable
     void FillPath(IBrush brush, IPlotPath path);
 
     void DrawImage(IPlotContext sourceContext, CanvasRectangle dest, CanvasRectangle source);
+
+    void DrawText(IFont font, string text, CanvasPoint position, IBrush? brush = null);
 }

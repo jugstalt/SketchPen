@@ -27,6 +27,8 @@ public interface IPlotContext : IDisposable
     IPen CreatePen(IEnumerable<object> parameters);
     IBrush CreateBrush(IEnumerable<object> parameters);
 
+    IFont CreateFont(IEnumerable<object> parameters);
+
     CanvasPoint Project(CanvasPoint point);
     CanvasRectangle Project(CanvasRectangle rect);
 

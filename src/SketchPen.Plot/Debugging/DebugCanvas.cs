@@ -72,4 +72,9 @@ internal class DebugCanvas : ICanvas
     {
         _canvas?.DrawImage(sourceContext, dest, source);
     }
+
+    public void DrawText(IFont font, string text, CanvasPoint position, IBrush? brush = null)
+    {
+        _canvas?.DrawText(font, text, position);
+    }
 }

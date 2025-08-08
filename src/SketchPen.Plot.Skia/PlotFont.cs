@@ -4,18 +4,15 @@ using System;
 
 namespace SketchPen.Plot.Skia;
 
-internal class PlotPen : IPen
+internal class PlotFont : IFont
 {
     private readonly IPlotContext _context;
-
-    public PlotPen(IPlotContext context, SKPaint skPaint)
+    public PlotFont(IPlotContext context, SKFont skFont)
     {
         _context = context;
-        this.EngineElement = skPaint;
+        this.EngineElement = skFont;
     }
-
     public object EngineElement { get; }
-
     public void Dispose()
     {
         ((IDisposable)this.EngineElement).Dispose();

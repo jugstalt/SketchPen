@@ -93,4 +93,21 @@ internal class Canvas : ICanvas
                                 GraphicsUnit.Pixel);
         }
     }
+
+    public void DrawText(IFont font, string text, CanvasPoint position, IBrush brush = null)
+    {
+        // implementation for drawing text
+        if (font == null || string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+
+        _graphics.DrawString(
+            text,
+            (Font)font.EngineElement,
+            brush?.EngineElement is Brush b
+                ? b
+                : Brushes.Black,
+            new PointF(position.X, position.Y));
+    }
 }

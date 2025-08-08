@@ -244,5 +244,41 @@ public class PlotContext : IPlotContext
         }
     }
 
+    public IFont CreateFont(IEnumerable<object> parameters)
+    {
+        // implementation for creating a font
+        var size = 12f;
+        var fontFamily = "Arial";
+
+        if (parameters?.CountElements() == 1)
+        {
+            if (parameters.First() is string fontName)
+            {
+                fontFamily = fontName;
+            }
+            else if (parameters.First() is float fontSize)
+            {
+                size = fontSize;
+            }
+        }
+        else if (parameters?.CountElements() >= 2)
+        {
+            fontFamily = parameters.ElementAtOrDefault(0)?.ToString() ?? "Arial";
+            size = (float)parameters.ElementAtOrDefault(1);
+        }
+
+        var skTypeface = SKTypeface.FromFamilyName(fontFamily);
+        if (skTypeface == null)
+        {
+            skTypeface = SKTypeface.Default;
+        }
+        var skFont = new SKFont(skTypeface, Project(size))
+        {
+            Edging = SKFontEdging.Antialias
+        };
+
+        return new PlotFont(this, skFont);
+    }
+
     #endregion
 }

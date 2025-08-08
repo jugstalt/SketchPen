@@ -132,6 +132,8 @@ public class DebugPlotContext : IPlotContext
     public IBrush CreateBrush(IEnumerable<object> parameters)
         => _context?.CreateBrush(parameters) ?? new DebugBrush();
 
+    public IFont CreateFont(IEnumerable<object> parameters)
+        => _context?.CreateFont(parameters) ?? new DebugFont();
 
     public IPen CreatePen(IEnumerable<object> parameters)
         => _context?.CreatePen(parameters) ?? new DebugPen();

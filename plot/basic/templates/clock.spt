@@ -1,0 +1,34 @@
+// clock.spt.sp
+
+circle.fill(90);
+circle.draw(90, 90, 0, 0, @@outlinePenColor);
+
+path.addlines(14,14, 0,0, 0, -30);
+path.draw();
+
+pen.width(1);
+transform.rotate(0);
+circle.draw(2, 0, -38);
+transform.rotate(30);
+circle.draw(2, 0, -38);
+transform.rotate(30);
+circle.draw(2, 0, -38);
+transform.rotate(30);
+circle.draw(2, 0, -38);
+transform.rotate(30);
+circle.draw(2, 0, -38);
+transform.rotate(30);
+circle.draw(2, 0, -38);
+transform.rotate(30);
+circle.draw(2, 0, -38);
+transform.rotate(30);
+circle.draw(2, 0, -38);
+transform.rotate(30);
+circle.draw(2, 0, -38);
+transform.rotate(30);
+circle.draw(2, 0, -38);
+transform.rotate(30);
+circle.draw(2, 0, -38);
+transform.rotate(30);
+circle.draw(2, 0, -38);
+transform.reset();

@@ -3,8 +3,8 @@
 circle.fill(90);
 circle.draw(90, 90, 0, 0, @@outlinePenColor);
 
-path.addlines(14,14, 0,0, 0, -30);
-path.draw();
+line.draw(0, 0,14,14);
+line.draw(0, 0,0,-30);
 
 pen.width(1);
 transform.rotate(0);

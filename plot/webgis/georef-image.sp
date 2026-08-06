@@ -23,4 +23,4 @@ transform.reset();
 transform.translate(10,-10);
 transform.rotate(45);
 transform.scale(0.8);
-#include "./../basic/templates/pin.spt"
+#include "./../basic/templates/pin-filled.spt"

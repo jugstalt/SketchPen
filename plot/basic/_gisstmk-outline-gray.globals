@@ -1,12 +1,9 @@
-//globals.set(penColor, "#406314");
-//globals.set(penColor, "#1f2e0a");
+// _gisstmk-outline-gray.globals
 globals.set(penColor,"#555");
-// "#82C828"
-globals.set(outlinePenColor, "#426414");
-//globals.set(penColor,"#fff");
+globals.set(outlinePenColor, "#1f744f");
 
 globals.set(brushColor, "#fff");
-globals.set(gradientbrushColor, "#e2e2e2");
+globals.set(gradientbrushColor, "#ccc");
 globals.set(penWidth, 6);
 globals.set(penWidthBold, 9);
 globals.set(minPenWidth, 3);

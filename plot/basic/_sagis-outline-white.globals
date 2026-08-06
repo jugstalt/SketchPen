@@ -1,11 +1,12 @@
-globals.set(penColor, "#82C828");
+// _sagis-outline-white.globals
 //globals.set(penColor, "#406314");
 //globals.set(penColor, "#1f2e0a");
 globals.set(penColor,"#555");
+globals.set(outlinePenColor, "#d20a11");
 //globals.set(penColor,"#fff");
 
-globals.set(brushColor, "#00fefefe");
-globals.set(gradientbrushColor, "#00fefefe");
+globals.set(brushColor, "#fff");
+globals.set(gradientbrushColor, "#fff");
 globals.set(penWidth, 6);
 globals.set(penWidthBold, 9);
 globals.set(minPenWidth, 3);

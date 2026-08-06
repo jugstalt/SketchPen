@@ -2,6 +2,7 @@
 
 // marker
 brush.color(@@penColor);
+path.begin();
 path.start();
 path.addarc(150,240, 30,30,0,-5);
 path.addpoint(0, 22);

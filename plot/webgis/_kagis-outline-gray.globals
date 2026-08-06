@@ -1,0 +1,11 @@
+// _kagis-outline-gray.globals
+globals.set(penColor,"#555");
+globals.set(outlinePenColor, "#7F8F98");
+
+globals.set(brushColor, "#fff");
+globals.set(gradientbrushColor, "#ccc");
+globals.set(penWidth, 6);
+globals.set(penWidthBold, 9);
+globals.set(minPenWidth, 3);
+//globals.set(maxPenWidth, 4);
+globals.set(penCap, "round");

@@ -1,4 +1,5 @@
-line.draw(-42,20,  42,20);
+line.draw(-42,20,  42,20, @@outlinePenColor);
+
 line.draw(-42, 0, -42,40);
 line.draw( 42, 0,  42,40);
 

@@ -5,4 +5,4 @@ path.addlines(0,-45, 0,-45);
 path.close();
 
 path.fill(@@penColor);
-path.draw();
+path.draw(@@outlinePenColor);

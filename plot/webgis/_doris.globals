@@ -1,0 +1,10 @@
+// _doris.globals
+globals.set(penColor,"#414754");
+globals.set(outlinePenColor, "#ef3b42");
+
+globals.set(brushColor, "#fff");
+globals.set(gradientbrushColor, "#ccc");
+globals.set(penWidth, 6);
+globals.set(penWidthBold, 9);
+globals.set(minPenWidth, 3);
+globals.set(penCap, "round");

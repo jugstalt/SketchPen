@@ -1,6 +1,6 @@
 path.begin();
 path.addlines(-42,42, 20,0, 42,-42);
-path.draw();
+path.draw(@@outlinePenColor);
 
 brush.color(@@penColor);
 gradientbrush.color(@@penColor);

@@ -1,4 +1,6 @@
+pen.color(@@outlinePenColor);
 #include "templates/axis3d.spt"
+pen.color(@@penColor);
 
 transform.reset();
 transform.translate(35,35);

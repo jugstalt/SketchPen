@@ -1,4 +1,5 @@
 //pen.width(4);
+path.begin();
 path.start();
 path.addlines(0,-46, 9,-16, 0,-21, -9,-16, 0,-46);
 path.fill();

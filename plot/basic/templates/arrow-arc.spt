@@ -1,6 +1,6 @@
 pen.width(@@penWidthBold);
 
-circle.arc(200,140, 75, 75, 0,0);
+circle.arc(200,140, 75, 75, 0,0, @@outlinePenColor);
 
 transform.translate(-35, -12);
 transform.rotate(27);

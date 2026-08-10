@@ -42,7 +42,7 @@ class Program
             List<string> fileNames = new List<string>();
             if (new FileInfo(path).Exists)
             {
-                fileNames.Append(path);
+                fileNames.Add(path);
             }
             else if (new DirectoryInfo(path).Exists)
             {

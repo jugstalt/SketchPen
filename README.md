@@ -74,7 +74,6 @@ Ready-made example icon sets live under [`plot/`](plot):
 src/
   SketchPen.Parse         Lexer/tokenizer for the SketchPen language
   SketchPen.Plot           Compiler, commands (pen/brush/path/circle/...), abstractions
-  SketchPen.Plot.Drawing    Rendering backend based on System.Drawing (GDI+)
   SketchPen.Plot.Skia       Rendering backend based on SkiaSharp (cross-platform, used by CLI & web app)
   SketchPen.Compose         Export/packaging logic (single PNG/SVG, ZIP with sizes/styles, web sprite + CSS)
   SketchPen               Command-line tool (SketchPen.exe)

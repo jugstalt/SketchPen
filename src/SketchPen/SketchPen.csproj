@@ -42,7 +42,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SketchPen.Compose\SketchPen.Compose.csproj" />
-    <ProjectReference Include="..\SketchPen.Plot.Drawing\SketchPen.Plot.Drawing.csproj" />
     <ProjectReference Include="..\SketchPen.Plot.Skia\SketchPen.Plot.Skia.csproj" />
     <ProjectReference Include="..\SketchPen.Plot\SketchPen.Plot.csproj" />
   </ItemGroup>

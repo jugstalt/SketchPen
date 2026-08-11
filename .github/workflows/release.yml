@@ -34,7 +34,7 @@ jobs:
 
       - name: Pack SketchPen.Cli
         # `dotnet pack` builds implicitly; only src/SketchPen and its own
-        # ProjectReferences (SketchPen.Compose/Plot/Plot.Skia/Plot.Drawing) are
+        # ProjectReferences (SketchPen.Compose/Plot/Plot.Skia) are
         # touched here -- the SketchPen.Code web app is intentionally not
         # built as part of this release.
         run: >

@@ -32,6 +32,7 @@ Reference implementation in code:
 - [Variables (`@@name`)](#variables-name)
 - [`.globals` files and styling](#globals-files-and-styling)
 - [`#include`](#include)
+- [`repeat`](#repeat)
 - [Comments](#comments)
 - [Full example](#full-example)
 
@@ -444,6 +445,43 @@ point:
 - Since `#include` is plain text substitution **before** actual compilation, the
   included and including file share the same `path` state, the same `pen`/`brush`
   settings, and any `@@variables` already defined.
+
+## `repeat`
+
+Textually duplicates a block of statements a fixed number of times, before
+compilation (a preprocessor macro, exactly like `#include`):
+
+```csharp
+repeat(n) {
+    ...statements...
+}
+```
+
+- `n` must be a positive integer literal — not an expression, not a `@@variable`.
+- The `repeat(n) {` header must be alone on its own line, and the closing `}`
+  must be alone on its own line too.
+- There is no loop-index variable. `repeat` is most useful together with
+  `transform.rotate`/`translate`/`scale`, which are cumulative across
+  iterations — a block that rotates a bit further each time it runs replaces
+  what would otherwise be `n` near-identical copy-pasted statements:
+
+```csharp
+// One gear tooth, repeated 8 times around the circle instead of copy-pasted:
+repeat(8) {
+    path.begin();
+    path.addlines(-6,-30, -6,-42, 6,-42, 6,-30);
+    path.fill();
+    path.addarc(285, 15, 60,60, 0,0);
+    path.draw(@@outlinePenColor);
+    transform.rotate(45);
+}
+```
+
+- `repeat` blocks can be nested, and can contain `#include` (and vice versa).
+- **Line numbers inside a `repeat` body are approximate**: an error on, say,
+  the 3rd line of the 5th unrolled copy is reported relative to that copy's
+  own re-emission, not the original source line — the same coarse-grained
+  tracking `#include` already has, not a precise per-iteration offset.
 
 ## Comments
 

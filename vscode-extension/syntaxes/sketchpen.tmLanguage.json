@@ -6,6 +6,7 @@
   "patterns": [
     { "include": "#comments" },
     { "include": "#include-directive" },
+    { "include": "#repeat-directive" },
     { "include": "#strings" },
     { "include": "#char-constants" },
     { "include": "#variables" },
@@ -24,6 +25,16 @@
       "captures": {
         "1": { "name": "keyword.control.directive.sketchpen" },
         "2": { "name": "string.quoted.double.sketchpen" }
+      }
+    },
+    "repeat-directive": {
+      "match": "^\\s*\\b(repeat)\\b\\s*(\\()\\s*([0-9]+)\\s*(\\))\\s*(\\{)",
+      "captures": {
+        "1": { "name": "keyword.control.sketchpen" },
+        "2": { "name": "punctuation.sketchpen" },
+        "3": { "name": "constant.numeric.sketchpen" },
+        "4": { "name": "punctuation.sketchpen" },
+        "5": { "name": "punctuation.sketchpen" }
       }
     },
     "strings": {
@@ -57,7 +68,7 @@
       }
     },
     "punctuation": {
-      "match": "[(),.]",
+      "match": "[(),.{}]",
       "name": "punctuation.sketchpen"
     }
   }

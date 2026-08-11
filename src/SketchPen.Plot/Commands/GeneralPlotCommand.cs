@@ -1,6 +1,7 @@
 ﻿using SketchPen.Parse.Lexer;
 using SketchPen.Plot.Abstraction;
 using SketchPen.Plot.Exceptions;
+using SketchPen.Plot.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,11 @@ abstract class GeneralPlotCommand : IPlotCommand
         {
             ExecuteCommand(context, parameters: Parameters?.Select(p =>
             {
-                if (p != null && p.ToString().StartsWith("@@"))
+                if (p is ParamExpr expr)
+                {
+                    return expr.Evaluate(context.Globals, _statement);
+                }
+                else if (p != null && p.ToString().StartsWith("@@"))
                 {
                     var variableName = p.ToString().Substring(2);
                     if (!context.Globals.ContainsKey(variableName))

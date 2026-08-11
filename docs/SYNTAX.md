@@ -30,6 +30,7 @@ Reference implementation in code:
   - [`transform`](#transform)
   - [`globals`](#globals)
 - [Variables (`@@name`)](#variables-name)
+- [Arithmetic expressions](#arithmetic-expressions)
 - [`.globals` files and styling](#globals-files-and-styling)
 - [`#include`](#include)
 - [`repeat`](#repeat)
@@ -366,6 +367,30 @@ path.fill(@@fillcolor);
 During compilation, `@@name` is replaced by the currently effective value from the
 loaded `.globals` files. If the variable is not defined, compilation fails with an
 error (`Unknown variable: name`).
+
+## Arithmetic expressions
+
+Any parameter that expects a number can also be a small arithmetic expression
+instead of a bare literal or bare `@@name` — `+`, `-`, `*`, `/`, and
+parentheses for grouping, with the usual precedence (`*`/`/` before `+`/`-`):
+
+```csharp
+globals.set(percent, 75);
+path.addarc(0, -3.6 * @@percent, 90,90, 0,0);   // sweep angle derived from a percentage
+
+path.addlines(@@x-40, @@y-10, @@x, @@y);        // subtraction, no spaces needed
+rect.fill(20, 10, 0);
+transform.rotate(-45, (@@x+@@y)/2, 0);          // parenthesized sub-expression
+```
+
+- Scope is deliberately minimal: only numeric arithmetic (`+ - * /` and
+  parens) on numeric literals and `@@name`s that resolve to numbers — no
+  string concatenation, no comparison/boolean operators, no function calls.
+- A bare literal or bare `@@name` (no operators at all) behaves exactly as
+  before — expressions are only parsed when a parameter actually contains
+  more than one token.
+- Using a non-numeric global (e.g. a color hex string) in an arithmetic
+  position fails with a clear compile error.
 
 ## `.globals` files and styling
 

@@ -13,6 +13,7 @@
     { "include": "#numbers" },
     { "include": "#keywords" },
     { "include": "#method-call" },
+    { "include": "#operators" },
     { "include": "#punctuation" }
   ],
   "repository": {
@@ -66,6 +67,10 @@
       "captures": {
         "1": { "name": "entity.name.function.sketchpen" }
       }
+    },
+    "operators": {
+      "match": "[+\\-*/]",
+      "name": "keyword.operator.arithmetic.sketchpen"
     },
     "punctuation": {
       "match": "[(),.{}]",

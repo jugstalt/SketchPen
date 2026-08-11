@@ -148,9 +148,17 @@ static public class TokenExtensions
         return token.TokenType == TokenType.Identifier && syntax.Comments.Contains(token.TokenValue);
     }
 
-    static public List<Token> CollectParameters(this Token[] tokens, ref int index)
+    /// <summary>
+    /// Groups a call's parameter tokens by top-level comma -- one <see cref="List{Token}"/> per
+    /// parameter, so a multi-token parameter (an arithmetic expression) stays intact instead of
+    /// being flattened together with its siblings. Nested `(`/`)` (e.g. a parenthesized
+    /// sub-expression like `(-3.6*@@x)`) are still correctly depth-tracked, exactly as before --
+    /// this only changes how top-level commas split the result.
+    /// </summary>
+    static public List<List<Token>> CollectParameters(this Token[] tokens, ref int index)
     {
-        List<Token> parametes = new List<Token>();
+        List<List<Token>> parameterGroups = new List<List<Token>>();
+        List<Token> current = new List<Token>();
         var operatorToken = tokens[index];
 
         if (operatorToken.TokenType != TokenType.Operator)
@@ -160,7 +168,7 @@ static public class TokenExtensions
 
         if (operatorToken.TokenValue == "()")
         {
-            return parametes;
+            return parameterGroups;
         }
 
         string closingTokken = String.Empty;
@@ -203,9 +211,22 @@ static public class TokenExtensions
                 }
             }
 
-            if (!tokens[i].IsCommaOperator())
+            if (tokens[i].IsCommaOperator() && level == 0)
             {
-                parametes.Add(tokens[i]);
+                // A stray double comma (or a leading comma) produces an empty slot here -- silently
+                // skip it instead of adding an empty group, matching the pre-Tier-3 flat
+                // CollectParameters, which stripped every comma unconditionally without grouping
+                // and so never produced a placeholder for a missing value either (some existing
+                // .sp files, e.g. plot/webgis/construct-ortho-close.sp, rely on this).
+                if (current.Count > 0)
+                {
+                    parameterGroups.Add(current);
+                    current = new List<Token>();
+                }
+            }
+            else if (!tokens[i].IsCommaOperator())
+            {
+                current.Add(tokens[i]);
             }
         }
 
@@ -214,7 +235,12 @@ static public class TokenExtensions
             throw new LexerException($"CollectParameters: {tokens.ToCommandLine()}");
         }
 
-        return parametes;
+        if (current.Count > 0)
+        {
+            parameterGroups.Add(current);
+        }
+
+        return parameterGroups;
     }
 
     static public object ParameterValue(this Token token)
@@ -258,18 +284,18 @@ static public class TokenExtensions
             }
 
             string method = tokens[2].TokenValue;
-            IEnumerable<Token> parameters = Array.Empty<Token>();
+            IEnumerable<List<Token>> parameterGroups = Array.Empty<List<Token>>();
 
             for (int i = 2; i < tokens.Length; i++)
             {
                 if (tokens[i].TokenType == TokenType.Operator)
                 {
-                    parameters = tokens.CollectParameters(ref i);
+                    parameterGroups = tokens.CollectParameters(ref i);
                 }
             }
 
             command.Init(statement);
-            command.SetStatement(method, parameters.Select(t => t.ParameterValue()));
+            command.SetStatement(method, parameterGroups.Select(p => p.ToParameterValue(statement)));
             commands.Add(command);
         }
 

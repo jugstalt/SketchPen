@@ -99,6 +99,23 @@ public class LexicalAnalyser
 
         for (int i = 0; i < item.Length; i++)
         {
+            // "/" is now also the division operator (Tier 3 arithmetic expressions), which would
+            // otherwise make the various operator/boundary checks below cut a leading "//" into a
+            // standalone Operator("/") token instead of a comment. Comments are only ever
+            // encountered here at i==0 of a fresh call -- PreComplier guarantees a "//" is always
+            // preceded by a newline or a delimiter character, itself consumed as its own token by
+            // the previous call, so the next call always starts exactly at the comment. This
+            // produces the same 2-char Identifier("//") token the lexer has always produced (via
+            // the plain "next char is a space" boundary check, before "/" was an operator at all)
+            // -- TokenExtensions.GetStatements/IsComment depends on seeing exactly that, including
+            // for parsing the "// CodeFile: ...;" markers PreComplier inserts around #include/repeat.
+            if (i == 0 && item.Length >= 2 && item[0] == '/' && item[1] == '/')
+            {
+                tokenString.Append(item.Substring(0, 2));
+                item = item.Remove(0, 2);
+                return Parse(tokenString.ToString());
+            }
+
             if (CheckDelimiter(item[i].ToString()))
             {
                 if (i + 1 < item.Length && CheckDelimiter(item.Substring(i, 2)))

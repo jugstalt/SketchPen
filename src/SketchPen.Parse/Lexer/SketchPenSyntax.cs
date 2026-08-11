@@ -14,7 +14,7 @@ public class SketchPenSyntax : ISyntax
 
     private string[] _comments = new[] { "//" };
 
-    private string[] _operators = new[] { "(", ")", ",", "()", "." };
+    private string[] _operators = new[] { "(", ")", ",", "()", ".", "+", "-", "*", "/" };
 
     #endregion
 

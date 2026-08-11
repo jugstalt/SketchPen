@@ -23,6 +23,9 @@ namespace SketchPen.Plot.Commands;
 
 [PlotCommandMethod("addpoint", snippet: "addpoint(${1:x}, ${2:y});")]
 
+[PlotCommandMethod("addcubic", suggestion: "addcubic(cp1x, cp1y, cp2x, cp2y, x, y)", snippet: "addcubic(${1:cp1x}, ${2:cp1y}, ${3:cp2x}, ${4:cp2y}, ${5:x}, ${6:y});")]
+[PlotCommandMethod("addquad", suggestion: "addquad(cpx, cpy, x, y)", snippet: "addquad(${1:cpx}, ${2:cpy}, ${3:x}, ${4:y});")]
+
 [PlotCommandMethod("draw", suggestion: "draw()", snippet: "draw();")]
 [PlotCommandMethod("draw", suggestion: "draw(color)", snippet: "draw(\"${1:hexColor}\");")]
 
@@ -67,6 +70,14 @@ class PathCommand : GeneralPlotCommand
             case "addpoint":
                 _path?.AddPoint(
                     parameters.ToPoints().Select(p => context.Project(p)).First());
+                break;
+            case "addcubic":
+                var cubic = parameters.ToPoints().Select(p => context.Project(p)).ToArray();
+                _path?.AddCubic(cubic[0], cubic[1], cubic[2]);
+                break;
+            case "addquad":
+                var quad = parameters.ToPoints().Select(p => context.Project(p)).ToArray();
+                _path?.AddQuad(quad[0], quad[1]);
                 break;
             case "close":
                 _path?.Close();

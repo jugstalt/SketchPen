@@ -24,6 +24,16 @@ internal class DebugPlotPath : IPlotPath
 
     }
 
+    public void AddCubic(CanvasPoint controlPoint1, CanvasPoint controlPoint2, CanvasPoint end)
+    {
+
+    }
+
+    public void AddQuad(CanvasPoint controlPoint, CanvasPoint end)
+    {
+
+    }
+
     public void Close()
     {
 

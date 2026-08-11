@@ -10,7 +10,8 @@ namespace SketchPen.Plot.Commands;
 [PlotCommandKeyword("transform")]
 [PlotCommandSupportedFileTypes(EditorFileType.Template | EditorFileType.Code)]
 [PlotCommandMethod("translate", snippet: "translate(${1:x}, ${2:y});")]
-[PlotCommandMethod("rotate", snippet: "rotate(${1:angle});")]
+[PlotCommandMethod("rotate", suggestion: "rotate(angle)", snippet: "rotate(${1:angle});")]
+[PlotCommandMethod("rotate", suggestion: "rotate(angle, pivotX, pivotY)", snippet: "rotate(${1:angle}, ${2:pivotX}, ${3:pivotY});")]
 [PlotCommandMethod("scale", suggestion: "scale(ratio)", snippet: "scale(${1:ratio});")]
 [PlotCommandMethod("scale", suggestion: "scale(ratioX, ratioY)", snippet: "scale(${1:ratioX}, ${2:ratioY});")]
 [PlotCommandMethod("reset", snippet: "reset();")]
@@ -26,7 +27,17 @@ class TransformCommand : GeneralPlotCommand
                     context.Project(parameters.Get<float>(1)));
                 break;
             case "rotate":
-                context.Canvas.RotateTransform(parameters.Get<float>(0));
+                if (parameters.Count() >= 3)
+                {
+                    context.Canvas.RotateTransform(
+                        parameters.Get<float>(0),
+                        context.Project(parameters.Get<float>(1)),
+                        context.Project(parameters.Get<float>(2)));
+                }
+                else
+                {
+                    context.Canvas.RotateTransform(parameters.Get<float>(0));
+                }
                 break;
             case "scale":
                 context.Canvas.ScaleTransform(

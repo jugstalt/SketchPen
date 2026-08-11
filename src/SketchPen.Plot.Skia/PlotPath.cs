@@ -88,6 +88,26 @@ class PlotPath : IPlotPath
         }
     }
 
+    public void AddCubic(CanvasPoint controlPoint1, CanvasPoint controlPoint2, CanvasPoint end)
+    {
+        if (_startFigure)
+        {
+            throw new System.Exception("path.addcubic: no current point -- call addpoint/addlines/addarc first to establish a starting point.");
+        }
+
+        _path.CubicTo(controlPoint1.ToSKPoint(), controlPoint2.ToSKPoint(), end.ToSKPoint());
+    }
+
+    public void AddQuad(CanvasPoint controlPoint, CanvasPoint end)
+    {
+        if (_startFigure)
+        {
+            throw new System.Exception("path.addquad: no current point -- call addpoint/addlines/addarc first to establish a starting point.");
+        }
+
+        _path.QuadTo(controlPoint.ToSKPoint(), end.ToSKPoint());
+    }
+
     #endregion
 
     #region IDisposable

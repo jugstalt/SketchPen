@@ -43,6 +43,16 @@ internal class DebugCanvas : ICanvas
         _canvas?.FillEllipse(brush, rect);
     }
 
+    public void DrawRect(IPen pen, CanvasRectangle rect, float cornerRadius = 0)
+    {
+        _canvas?.DrawRect(pen, rect, cornerRadius);
+    }
+
+    public void FillRect(IBrush brush, CanvasRectangle rect, float cornerRadius = 0)
+    {
+        _canvas?.FillRect(brush, rect, cornerRadius);
+    }
+
     public void FillPath(IBrush brush, IPlotPath path)
     {
         _canvas?.FillPath(brush, path);
@@ -56,6 +66,11 @@ internal class DebugCanvas : ICanvas
     public void RotateTransform(float angle)
     {
         _canvas?.RotateTransform(angle);
+    }
+
+    public void RotateTransform(float angle, float pivotX, float pivotY)
+    {
+        _canvas?.RotateTransform(angle, pivotX, pivotY);
     }
 
     public void ScaleTransform(float sx, float sy)

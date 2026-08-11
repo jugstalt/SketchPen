@@ -2,7 +2,7 @@
 
 This page describes the scripting language used to define SketchPen icons:
 file types, coordinate system, all commands (`pen`, `brush`, `gradientbrush`, `line`,
-`circle`, `path`, `text`, `transform`, `globals`), variables, includes, and
+`rect`, `circle`, `path`, `text`, `transform`, `globals`), variables, includes, and
 styling via `.globals` files.
 
 Reference implementation in code:
@@ -23,6 +23,7 @@ Reference implementation in code:
   - [`brush`](#brush)
   - [`gradientbrush`](#gradientbrush)
   - [`line`](#line)
+  - [`rect`](#rect)
   - [`circle`](#circle)
   - [`path`](#path)
   - [`text`](#text)
@@ -212,6 +213,22 @@ A simple straight line. Valid in `.spt`, `.sp`.
 line.draw(-45, 0, -10, 0);
 ```
 
+### `rect`
+
+An axis-aligned rectangle, optionally with rounded corners, centered at
+`(0,0)` before any `transform`. Valid in `.spt`, `.sp`.
+
+| Method | Signature | Description |
+|---|---|---|
+| `draw` | `rect.draw(width, height[, cornerRadius[, color]])` | Draw the outline (pen). |
+| `fill` | `rect.fill(width, height[, cornerRadius[, color]])` | Fill the area (brush). |
+
+```csharp
+rect.fill(60, 40);                    // centered, 60x40
+rect.fill(60, 40, 10);                // + rounded corners
+rect.draw(60, 40, 10, "#ff0000");     // + outline color override
+```
+
 ### `circle`
 
 Circle/ellipse, either as a full circle, circular arc (outline only), or pie
@@ -253,6 +270,8 @@ previous one.
 | `addlines` | `path.addlines(x1,y1, x2,y2, ...)` | Append one or more line segments to the current subfigure. |
 | `addarc` | `path.addarc(startAngle, sweepAngle, diameter)` / `(startAngle, sweepAngle, diameterX, diameterY)` / `(startAngle, sweepAngle, diameter, x, y)` / `(startAngle, sweepAngle, diameterX, diameterY, x, y)` | Append a circular arc to the current subfigure. |
 | `addpoint` | `path.addpoint(x, y)` | Append a single point. |
+| `addcubic` | `path.addcubic(cp1x,cp1y, cp2x,cp2y, x,y)` | Append a cubic Bezier curve from the current point through two control points to `(x,y)`. Requires a current point (from a prior `addpoint`/`addlines`/`addarc`). |
+| `addquad` | `path.addquad(cpx,cpy, x,y)` | Append a quadratic Bezier curve from the current point through one control point to `(x,y)`. Requires a current point. |
 | `close` | `path.close()` | Close the current subfigure (line back to the start point), turning it into a polygon. |
 | `draw` | `path.draw()` / `path.draw(color)` | Stroke the path with the current or the given pen. |
 | `fill` | `path.fill()` / `path.fill(color)` | Fill the path with the current or the given brush. |
@@ -269,6 +288,12 @@ path.draw();
 path.begin();
 path.addarc(-20, -230, 45, 35, 0, -18);
 path.addarc(270, 230, 60, 40, 0, 20);
+path.draw();
+
+// Open path with a smooth curve (cubic Bezier)
+path.begin();
+path.addpoint(-30, 0);
+path.addcubic(-10,-40, 10,-40, 30,0);
 path.draw();
 ```
 
@@ -293,7 +318,7 @@ rotation, and scaling are cumulative until `transform.reset()` is called). Valid
 | Method | Signature | Description |
 |---|---|---|
 | `translate` | `transform.translate(x, y)` | Shift the origin. |
-| `rotate` | `transform.rotate(angle)` | Rotate by `angle` degrees (clockwise). |
+| `rotate` | `transform.rotate(angle)` / `transform.rotate(angle, pivotX, pivotY)` | Rotate by `angle` degrees (clockwise), around the origin or around `(pivotX,pivotY)`. |
 | `scale` | `transform.scale(ratio)` / `transform.scale(ratioX, ratioY)` | Scale uniformly or per axis. |
 | `reset` | `transform.reset()` | Return to the initial state (origin at the center of the canvas, no rotation/scaling). |
 
@@ -462,12 +487,3 @@ Included via an associated `.sp` file, e.g.:
 More real-world examples: [`plot/basic`](../plot/basic) (general UI icons),
 [`plot/webgis`](../plot/webgis) (GIS-specific icons),
 [`plot/gview`](../plot/gview) (axis/coordinate system symbols).
-
----
-
-## Appendix: reserved but not (yet) implemented keywords
-
-`rect` is reserved as a keyword in the lexer (`SketchPenSyntax.cs`), but there is
-currently no corresponding command class. A `rect.*` call currently results in a
-compile error `Unkown plotcommand rect`. Rectangles can instead be drawn via
-`path.addlines` (four corner points + `path.close()`).

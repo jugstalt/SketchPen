@@ -52,6 +52,16 @@ class Canvas : ICanvas
         _canvas?.DrawOval(new SKRect(rect.X, rect.Y, rect.X + rect.Width, rect.Y + rect.Height), GetSKPaint(brush));
     }
 
+    public void DrawRect(IPen pen, CanvasRectangle rect, float cornerRadius = 0)
+    {
+        _canvas?.DrawRoundRect(rect.ToSKRect(), cornerRadius, cornerRadius, GetSKPaint(pen));
+    }
+
+    public void FillRect(IBrush brush, CanvasRectangle rect, float cornerRadius = 0)
+    {
+        _canvas?.DrawRoundRect(rect.ToSKRect(), cornerRadius, cornerRadius, GetSKPaint(brush));
+    }
+
     public void DrawLine(IPen pen, CanvasPoint p1, CanvasPoint p2)
     {
         _canvas?.DrawLine(p1.ToSKPoint(), p2.ToSKPoint(), GetSKPaint(pen));
@@ -70,6 +80,11 @@ class Canvas : ICanvas
     public void RotateTransform(float angle)
     {
         _canvas?.RotateDegrees(angle);
+    }
+
+    public void RotateTransform(float angle, float pivotX, float pivotY)
+    {
+        _canvas?.RotateDegrees(angle, pivotX, pivotY);
     }
 
     public void ScaleTransform(float sx, float sy)

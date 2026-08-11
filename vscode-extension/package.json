@@ -1,0 +1,187 @@
+{
+  "name": "sketchpen",
+  "displayName": "SketchPen",
+  "description": "Edit .sp/.spt/.globals icon scripts: completion, live preview, syntax highlighting, and export via the sketchpen CLI.",
+  "version": "0.1.0",
+  "publisher": "jugstalt",
+  "icon": "images/icon.png",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jugstalt/SketchPen"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Visualization"
+  ],
+  "activationEvents": [
+    "onLanguage:sketchpen",
+    "onCommand:sketchpen.init",
+    "onCommand:sketchpen.installCli"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "sketchpen",
+        "aliases": [
+          "SketchPen",
+          "sketchpen"
+        ],
+        "extensions": [
+          ".sp",
+          ".spt",
+          ".globals"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "sketchpen",
+        "scopeName": "source.sketchpen",
+        "path": "./syntaxes/sketchpen.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "sketchpen.installCli",
+        "title": "SketchPen: Install CLI"
+      },
+      {
+        "command": "sketchpen.init",
+        "title": "SketchPen: Init (scaffold _.globals, templates/, and a starter icon)"
+      },
+      {
+        "command": "sketchpen.preview",
+        "title": "SketchPen: Preview Icon",
+        "icon": "$(open-preview)"
+      },
+      {
+        "command": "sketchpen.exportSvg",
+        "title": "SketchPen: Export as SVG"
+      },
+      {
+        "command": "sketchpen.exportPng",
+        "title": "SketchPen: Export as PNG"
+      },
+      {
+        "command": "sketchpen.exportPackage",
+        "title": "SketchPen: Export Package…"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "sketchpen.explorerSubmenu",
+        "label": "SketchPen",
+        "icon": "images/icon.png"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "sketchpen.preview",
+          "when": "resourceLangId == sketchpen && resourceExtname == .sp",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+          "submenu": "sketchpen.explorerSubmenu",
+          "when": "resourceLangId == sketchpen && resourceExtname == .sp",
+          "group": "navigation"
+        }
+      ],
+      "sketchpen.explorerSubmenu": [
+        {
+          "command": "sketchpen.preview",
+          "when": "resourceLangId == sketchpen && resourceExtname == .sp",
+          "group": "1_preview"
+        },
+        {
+          "command": "sketchpen.exportSvg",
+          "when": "resourceLangId == sketchpen && resourceExtname == .sp",
+          "group": "2_export"
+        },
+        {
+          "command": "sketchpen.exportPng",
+          "when": "resourceLangId == sketchpen && resourceExtname == .sp",
+          "group": "2_export"
+        },
+        {
+          "command": "sketchpen.exportPackage",
+          "when": "resourceLangId == sketchpen && resourceExtname == .sp",
+          "group": "2_export"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "SketchPen",
+      "properties": {
+        "sketchpen.cliPath": {
+          "type": "string",
+          "default": "sketchpen",
+          "description": "Path to the sketchpen CLI executable, if it isn't on PATH (installed via 'dotnet tool install -g SketchPen.Cli')."
+        },
+        "sketchpen.previewSize": {
+          "type": "number",
+          "default": 128,
+          "description": "Reference size (logical units) used when rendering the live preview."
+        }
+      }
+    },
+    "walkthroughs": [
+      {
+        "id": "sketchpenGettingStarted",
+        "title": "Get Started with SketchPen",
+        "description": "Install the CLI, scaffold an icon set, and render your first icon.",
+        "icon": "images/icon.png",
+        "steps": [
+          {
+            "id": "installCli",
+            "title": "Install the SketchPen CLI",
+            "description": "Install the `sketchpen` CLI, which the extension shells out to for rendering, completion, and diagnostics.",
+            "media": { "markdown": "media/walkthrough/install-cli.md" },
+            "completionEvents": ["onCommand:sketchpen.installCli"]
+          },
+          {
+            "id": "initProject",
+            "title": "Scaffold an icon set",
+            "description": "Create a `_.globals`, a `templates/` folder, and a starter `icon.sp` in one step.",
+            "media": { "markdown": "media/walkthrough/init-project.md" },
+            "completionEvents": ["onCommand:sketchpen.init"]
+          },
+          {
+            "id": "preview",
+            "title": "Preview an icon",
+            "description": "Save a `.sp` file to render a live preview, with inline error diagnostics.",
+            "media": { "markdown": "media/walkthrough/preview.md" },
+            "completionEvents": ["onCommand:sketchpen.preview"]
+          },
+          {
+            "id": "export",
+            "title": "Export an icon",
+            "description": "Export as a single SVG/PNG, or as a full package (batch ZIP, web sprites, CSS-variable HTML).",
+            "media": { "markdown": "media/walkthrough/export.md" },
+            "completionEvents": ["onCommand:sketchpen.exportSvg", "onCommand:sketchpen.exportPng", "onCommand:sketchpen.exportPackage"]
+          }
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.0",
+    "@vscode/vsce": "^2.24.0"
+  }
+}

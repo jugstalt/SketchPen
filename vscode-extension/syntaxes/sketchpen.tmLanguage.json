@@ -1,0 +1,64 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "SketchPen",
+  "scopeName": "source.sketchpen",
+  "fileTypes": ["sp", "spt", "globals"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#include-directive" },
+    { "include": "#strings" },
+    { "include": "#char-constants" },
+    { "include": "#variables" },
+    { "include": "#numbers" },
+    { "include": "#keywords" },
+    { "include": "#method-call" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "comments": {
+      "name": "comment.line.double-slash.sketchpen",
+      "match": "//.*$"
+    },
+    "include-directive": {
+      "match": "^\\s*(#include)\\s+(\"[^\"]*\"|\\S+)",
+      "captures": {
+        "1": { "name": "keyword.control.directive.sketchpen" },
+        "2": { "name": "string.quoted.double.sketchpen" }
+      }
+    },
+    "strings": {
+      "name": "string.quoted.double.sketchpen",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        { "name": "constant.character.escape.sketchpen", "match": "\\\\." }
+      ]
+    },
+    "char-constants": {
+      "name": "string.quoted.single.sketchpen",
+      "match": "'(\\\\.|[^'\\\\])'"
+    },
+    "variables": {
+      "name": "variable.other.sketchpen",
+      "match": "@@[a-zA-Z][a-zA-Z0-9]*"
+    },
+    "numbers": {
+      "name": "constant.numeric.sketchpen",
+      "match": "-?[0-9]+(\\.[0-9]+)?"
+    },
+    "keywords": {
+      "match": "\\b(globals|pen|brush|gradientbrush|line|rect|circle|text|transform|path)\\b(?=\\s*\\.)",
+      "name": "keyword.control.sketchpen"
+    },
+    "method-call": {
+      "match": "\\.\\s*([a-zA-Z][a-zA-Z0-9]*)\\s*(?=\\()",
+      "captures": {
+        "1": { "name": "entity.name.function.sketchpen" }
+      }
+    },
+    "punctuation": {
+      "match": "[(),.]",
+      "name": "punctuation.sketchpen"
+    }
+  }
+}

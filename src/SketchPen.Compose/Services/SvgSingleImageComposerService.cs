@@ -15,6 +15,8 @@ internal class SvgSingleImageComposerService : IComposerService
         _composerHelper = composeHelper;
     }
 
+    public string Id => "svg";
+
     public string Name => "Vector Image";
 
     public string FileExtension => "svg";

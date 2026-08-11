@@ -1,12 +1,22 @@
 # SketchPen CLI Reference (`SketchPen.exe`)
 
-`SketchPen.exe` is the command-line tool that batch-renders `.sp` icon scripts to
-PNG files. It is the tool typically used to (re-)generate a whole icon set as part
-of a build/CI step. It has no interactive UI — use the
+`SketchPen.exe` is the command-line tool for rendering `.sp` icon scripts. It is
+built on [`System.CommandLine`](https://www.nuget.org/packages/System.CommandLine)
+and the .NET Generic Host (dependency injection), and is intended to become the
+primary way to produce icons — it exposes every export mode (PNG, SVG, ZIP
+batches, the CSS-variable HTML page) that the web app's composers provide, via
+the [`compose`](#the-compose-subcommand) subcommand, in addition to its original
+render syntax. It has no interactive UI — use the
 [web application](../README.md#web-application-sketchpencode) if you want a code
 editor with live preview.
 
+**The original invocation syntax (documented in [Usage](#usage) below) is
+unchanged and fully supported** — it is the root command's own behavior, not a
+separate legacy mode; existing scripts keep working without modification.
+
 Source: [`src/SketchPen/Program.cs`](../src/SketchPen/Program.cs),
+[`src/SketchPen/Commands/RenderCommandHandler.cs`](../src/SketchPen/Commands/RenderCommandHandler.cs),
+[`src/SketchPen/Commands/ComposeCommandHandler.cs`](../src/SketchPen/Commands/ComposeCommandHandler.cs),
 [`src/SketchPen/Plotter.cs`](../src/SketchPen/Plotter.cs).
 For the scripting language itself (`.sp`/`.spt`/`.globals`), see
 [docs/SYNTAX.md](SYNTAX.md).
@@ -21,6 +31,8 @@ For the scripting language itself (`.sp`/`.spt`/`.globals`), see
 - [Vector (SVG) output](#vector-svg-output)
 - [Styling (custom globals)](#styling-custom-globals)
 - [Examples](#examples)
+- [The `compose` subcommand](#the-compose-subcommand)
+- [Machine-readable output (`--output json`)](#machine-readable-output---output-json)
 - [Convenience scripts (`plot.bat` / `plot.sh`)](#convenience-scripts-plotbat--plotsh)
 - [Exit codes and error output](#exit-codes-and-error-output)
 - [Known limitations](#known-limitations)
@@ -40,7 +52,7 @@ self-contained single-file executable, use `dotnet publish` with the usual
 ## Usage
 
 ```bash
-SketchPen.exe <path> [-outfolder <folder>] [-custom_globals <stylename>] [-format png|svg]
+SketchPen.exe <path> [-outfolder <folder>] [-custom_globals <stylename>] [-format png|svg] [--output text|json]
 ```
 
 Running the tool with no arguments prints a short usage line and exits
@@ -58,10 +70,15 @@ Usage: SketchPen.exe path [options]
 | `-outfolder <folder>` | No | Directory the generated PNGs are written to. Created automatically if it doesn't exist. Default: current working directory. |
 | `-custom_globals <stylename>` | No | Name of a style, without leading underscore and without the `.globals` extension. Loads `_<stylename>.globals` from the same directory as the input file(s) in addition to the default `_.globals`. See [Styling](#styling-custom-globals) and [docs/SYNTAX.md](SYNTAX.md#globals-files-and-styling). Default: no custom style (only `_.globals`, if present). |
 | `-format png\|svg` | No | Output format. `png` (default) renders the fixed raster size/resolution matrix described below. `svg` renders one resolution-independent vector file per icon instead — see [Vector (SVG) output](#vector-svg-output). Default: `png`. |
+| `--output text\|json` | No | Console output mode — see [Machine-readable output](#machine-readable-output---output-json). Default: `text` (today's exact console output). |
 
-Options take exactly one value and can be given in any order. There is
-currently no option to change the rendered PNG sizes/resolutions — see
-[Known limitations](#known-limitations).
+Every option accepts both its original single-dash spelling (`-outfolder`,
+`-custom_globals`, `-format`) and a newer double-dash kebab-case alias
+(`--outfolder`, `--custom-globals`, `--format`) — both work identically, use
+whichever you prefer. Options take exactly one value and can be given in any
+order. There is currently no option to change the rendered PNG sizes/resolutions
+on the root command — see [Known limitations](#known-limitations) and
+[The `compose` subcommand](#the-compose-subcommand) for a way to do that today.
 
 ## What gets rendered
 
@@ -169,6 +186,95 @@ Render the `webgis` set:
 SketchPen.exe plot/webgis -outfolder plot/webgis-img
 ```
 
+## The `compose` subcommand
+
+```bash
+SketchPen.exe compose <path> --composer <id> [--sizes 16,32,64] [--styles ,bg-dark] [--resolutions 96,144] [--out <file>]
+```
+
+Invokes any registered `IComposerService` directly — the same abstraction that
+powers every export mode in the web app's download-package flow — instead of
+the root command's fixed PNG/SVG behavior. Useful whenever you need a ZIP batch,
+a web sprite, or the CSS-variable HTML page from the command line, or want a
+different SVG size than the root command's fixed reference size (see
+[Vector (SVG) output](#vector-svg-output)).
+
+> **Common mistake:** `<path>` must come right **after** `compose`, not before
+> it — `SketchPen.exe compose plot/webgis --composer svg-zip` is correct,
+> `SketchPen.exe plot/webgis compose --composer svg-zip` is **not**. The root
+> command (see [Usage](#usage)) also accepts a `<path>` argument; if it appears
+> before `compose`, the root command consumes it and `compose` is left without
+> one, failing with `Missing required <path> argument`. Everything *after* the
+> `compose` keyword — the path and all `--options` — can be given in any order.
+> Run `SketchPen.exe compose --help` for the full option list and worked
+> examples (also reproduced below).
+
+| Option | Required | Description |
+|---|---|---|
+| `<path>` (positional) | Yes | Same file-or-directory semantics as the root command's `<path>`. |
+| `--composer <id>` | Yes | Which composer to invoke — see the table below. |
+| `--sizes <csv>` | No | Comma-separated sizes, e.g. `16,32,64`. Composers that export a single icon (`png`, `svg`) require exactly one value; batch composers pick a sensible default or reference size if omitted (see each composer's behavior). |
+| `--styles <csv>` | No | Comma-separated style names; an empty entry means the default style. Omitted = default style only, matching `--styles ""`. Multiple styles only make sense with the batch (`*-zip`) composers. |
+| `--resolutions <csv>` | No | Comma-separated DPI values, e.g. `96,144,192`. Only meaningful for `png-zip`/`web-sprite-zip`; ignored by the SVG composers (vector output is resolution-independent). |
+| `--out <file>` | No | Output file path. Default: `<name>.<extension>` in the current directory, where `<name>` is the last path segment of `<path>` and `<extension>` is the composer's own file extension. |
+
+Composer ids (see [README.md](../README.md#web-application-sketchpencode) for
+what each one produces — they are the exact same composers used by the web
+app's `Package` endpoint, just selected by a short id instead of a full CLR type
+name):
+
+| `--composer` id | Web app composer name | Output |
+|---|---|---|
+| `png` | Image | A single PNG. Requires exactly one size, one style, one `.sp` file. |
+| `png-zip` | Images | ZIP with all icons of a set, split into `style/size/resolution/`. |
+| `web-sprite-zip` | Web Sprites | ZIP with CSS sprite PNGs, generated CSS, and a demo HTML page. |
+| `svg` | Vector Image | A single SVG. Requires exactly one size, one style, one `.sp` file. |
+| `svg-zip` | Images (SVG) | ZIP with all icons of a set as individual SVGs, split into `style/`. |
+| `svg-vars-zip` | Images (CSS Variables) | ZIP with one self-contained, themeable HTML page per icon — see the README for the CSS-variable mechanism and its inline-SVG requirement. |
+
+Examples:
+
+```bash
+# One SVG at a custom reference size (the root command's -format svg always uses 128)
+SketchPen.exe compose plot/basic/disk.sp --composer svg --sizes 64 --out disk.svg
+
+# Whole set, two styles, as individual SVGs in a zip
+SketchPen.exe compose plot/webgis --composer svg-zip --styles ",bg-dark" --out webgis-svg.zip
+
+# Whole set as themeable CSS-variable HTML pages
+SketchPen.exe compose plot/basic --composer svg-vars-zip --out basic-themeable.zip
+
+# Same PNG sprite sheet the web app's "Web Sprites" download produces
+SketchPen.exe compose plot/basic --composer web-sprite-zip --sizes 16,32,64 --out basic-sprites.zip
+```
+
+An unknown `--composer` id fails with a clear error listing the valid ids
+(exit code `1`), consistent with [Exit codes and error output](#exit-codes-and-error-output).
+
+## Machine-readable output (`--output json`)
+
+Both the root command and `compose` accept `--output json` to emit exactly one
+JSON document to stdout instead of the human-readable progress text — intended
+for tooling (e.g. an editor extension) that invokes `SketchPen.exe` and wants a
+single structured result rather than parsing text. Exit codes (`0`/`1`) are
+identical between `text` and `json` modes.
+
+Shape:
+
+```jsonc
+// success
+{"success": true, "filesWritten": ["disk_16@1.png", "..."], "error": null, "message": null}
+
+// failure (compile-time syntax error in a .sp/.spt/.globals file)
+{"success": false, "filesWritten": [], "error": {"type": "syntax", "message": "...", "codeFile": "...", "statement": "..."}, "message": null}
+
+// failure (any other error, e.g. bad path, unknown composer id)
+{"success": false, "filesWritten": [], "error": {"type": "generic", "message": "...", "codeFile": null, "statement": null}, "message": null}
+
+// no <path> given
+{"success": true, "filesWritten": [], "error": null, "message": "Usage: SketchPen.exe path [options]"}
+```
+
 ## Convenience scripts (`plot.bat` / `plot.sh`)
 
 [`plot/plot.bat`](../plot/plot.bat) (Windows) and [`plot/plot.sh`](../plot/plot.sh)
@@ -211,12 +317,14 @@ For any other exception, the message is printed (`Exception: <message>`); in a
 
 ## Known limitations
 
-- **Rendered PNG sizes/resolutions are fixed** (`16, 26, 32, 64, 128` × `@1/@2/@3`)
-  and cannot currently be changed via a CLI option, unlike the web app's
-  `Package` endpoint (`sizes`/`resolutions` query parameters).
-- **Only one style per invocation** — see [Styling](#styling-custom-globals).
-- **SVG output is one fixed reference size per icon** (128) — no CLI option to
-  pick a different reference size (the web app's "Vector Image"/"Images (SVG)"
-  composers do accept a `sizes` parameter for this). No `DrawImage`/embedded-
-  raster support, no text-to-path outlining — see
-  [Vector (SVG) output](#vector-svg-output).
+- **The root command's rendered PNG sizes/resolutions are fixed** (`16, 26, 32,
+  64, 128` × `@1/@2/@3`), and its SVG output uses one fixed reference size
+  (`128`) — this preserves the original tool's exact, unconfigurable behavior.
+  Use [`compose`](#the-compose-subcommand) (`--composer png-zip`/`svg`/`svg-zip`
+  with `--sizes`/`--resolutions`) for configurable sizes/resolutions/batches.
+- **The root command only supports one style per invocation** — see
+  [Styling](#styling-custom-globals). `compose --styles a,b,c` supports multiple
+  styles in one call for the batch composers.
+- No `DrawImage`/embedded-raster support in SVG output, no text-to-path
+  outlining — see [Vector (SVG) output](#vector-svg-output). Applies to both the
+  root command and every SVG-based composer.

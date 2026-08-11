@@ -17,6 +17,8 @@ internal class WebSpriteComposerService : IComposerService
         _composerHelper = composeHelper;
     }
 
+    public string Id => "web-sprite-zip";
+
     public string Name => "Web Sprites";
 
     public string FileExtension => "zip";

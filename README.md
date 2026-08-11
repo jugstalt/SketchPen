@@ -53,7 +53,8 @@ There are three ways to work with SketchPen:
    [web application](#web-application-sketchpencode).
 2. **`SketchPen` (CLI)** – renders a single script or an entire directory to PNGs in
    several standard sizes and resolutions, or to one resolution-independent SVG per
-   icon, suitable for scripting/CI.
+   icon, suitable for scripting/CI; the `compose` subcommand additionally exposes
+   every composer (batch PNG/SVG, web sprites, themeable CSS-variable HTML).
 3. **`SketchPen.Code` (web app)** – browser-based editor with a file/style tree, live
    preview, and export as a ZIP package (individual PNG/SVG images, batch PNG/SVG,
    a web sprite + CSS, or a batch of themeable CSS-variable SVG/HTML pages).
@@ -119,9 +120,27 @@ sizes (`16, 26, 32, 64, 128` px) and resolutions (`@1`/`@2`/`@3`), named
 [`plot/basic-img`](plot/basic-img) from [`plot/basic`](plot/basic). With
 `-format svg`, it instead renders one resolution-independent `<iconname>.svg` per
 icon. This makes it straightforward to script icon generation or wire it into CI.
+**This original syntax is fully preserved** — it's the built-in behavior of the
+tool's root command, not a deprecated compatibility shim.
 
-➡️ Full parameter reference, output naming, styling, exit codes, and known
-limitations: **[docs/CLI.md](docs/CLI.md)**.
+Built on `System.CommandLine` + the .NET Generic Host (dependency injection),
+the CLI additionally exposes every web-app export mode directly via a `compose`
+subcommand — the same composers behind the web app's download-package flow
+(single/batch PNG, single/batch SVG, web sprites, themeable CSS-variable HTML),
+selected by a short id:
+
+```bash
+SketchPen.exe compose plot/basic/disk.sp --composer svg --sizes 64 --out disk.svg
+SketchPen.exe compose plot/webgis --composer svg-vars-zip --styles ",bg-dark" --out webgis-themeable.zip
+```
+
+Both the root command and `compose` accept `--output json` to emit one
+structured result to stdout instead of human-readable text, for tooling that
+invokes `SketchPen.exe` programmatically.
+
+➡️ Full parameter reference, the `compose` subcommand, composer ids, JSON output
+shape, output naming, styling, exit codes, and known limitations:
+**[docs/CLI.md](docs/CLI.md)**.
 
 ## Web application (`SketchPen.Code`)
 

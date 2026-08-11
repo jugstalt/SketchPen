@@ -17,6 +17,8 @@ internal class ImagesComposerService : IComposerService
         _composerHelper = composeHelper;
     }
 
+    public string Id => "png-zip";
+
     public string Name => "Images";
 
     public string FileExtension => "zip";

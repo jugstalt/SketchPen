@@ -1,0 +1,144 @@
+using SketchPen.Output;
+using SketchPen.Plot;
+using SketchPen.Plot.Exceptions;
+using SketchPen.Plot.Services;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace SketchPen.Commands;
+
+/// <summary>
+/// The original, legacy CLI behavior — <c>SketchPen.exe &lt;path&gt; [-outfolder ...]
+/// [-custom_globals ...] [-format png|svg]</c> — moved unchanged into a DI-constructed class so
+/// it can be invoked as the <see cref="System.CommandLine.RootCommand"/>'s own action. This is a
+/// structural move only: file collection, the fixed <c>16,26,32,64,128 × @1,2,3</c> PNG loop, the
+/// single-SVG-per-icon branch, and error handling are an exact behavioral port of the original
+/// <c>Program.cs</c>/<c>Main</c> body — output files, console text, and exit codes are unchanged.
+/// </summary>
+public class RenderCommandHandler
+{
+    private const int SvgReferenceSize = 128;
+
+    private static readonly int[] Sizes = { 16, 26, 32, 64, 128 };
+
+    private readonly CommandTypesService _commandTypes;
+
+    public RenderCommandHandler(CommandTypesService commandTypes)
+    {
+        _commandTypes = commandTypes;
+    }
+
+    public int Execute(string? path, string outFolder, string customGlobalsName, string format, IConsoleReporter reporter)
+    {
+        try
+        {
+            format = string.IsNullOrEmpty(format) ? "png" : format.ToLowerInvariant();
+
+            if (format != "png" && format != "svg")
+            {
+                throw new Exception($"Unsupported -format '{format}'. Supported formats: png, svg");
+            }
+
+            if (string.IsNullOrEmpty(path))
+            {
+                reporter.Usage();
+                reporter.Complete(true);
+                return 0;
+            }
+
+            #region Collect filenames
+
+            List<string> fileNames = new List<string>();
+            if (new FileInfo(path).Exists)
+            {
+                fileNames.Add(path);
+            }
+            else if (new DirectoryInfo(path).Exists)
+            {
+                fileNames.AddRange(new DirectoryInfo(path).GetFiles("*.sp").Select(fi => fi.FullName));
+            }
+            else
+            {
+                throw new Exception($"Can't find part of the path '{path}'");
+            }
+
+            #endregion
+
+            if (!string.IsNullOrEmpty(outFolder))
+            {
+                outFolder = outFolder + "/";
+            }
+
+            Type plotContextType = format == "svg"
+                ? typeof(SketchPen.Plot.Skia.SvgPlotContext)
+                : typeof(SketchPen.Plot.Skia.PlotContext);
+
+            foreach (var fileName in fileNames)
+            {
+                var fileInfo = new FileInfo(fileName);
+                string baseName = fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf("."));
+                reporter.PlotStart(fileInfo.Name);
+
+                var plotter = new Plotter(_commandTypes, plotContextType);
+                plotter.Init(fileName, customGlobalsName);
+
+                if (format == "svg")
+                {
+                    reporter.PlotProgress("svg");
+
+                    var imageData = plotter.Plot(SvgReferenceSize, SvgReferenceSize, EncodeFormat.Svg);
+
+                    var targetFileInfo = new FileInfo($"{outFolder}{baseName}.svg");
+                    if (!targetFileInfo.Directory!.Exists)
+                    {
+                        targetFileInfo.Directory.Create();
+                    }
+
+                    File.WriteAllBytes(targetFileInfo.FullName, imageData);
+                    reporter.FileWritten(targetFileInfo.FullName);
+                }
+                else
+                {
+                    foreach (var size in Sizes)
+                    {
+                        for (int ratio = 1; ratio <= 3; ratio++)
+                        {
+                            string targetFile = $"{baseName}_{size}@{ratio}.png";
+                            reporter.PlotProgress($"{size}@{ratio}");
+
+                            var imageData = plotter.Plot(size * ratio, size * ratio);
+
+                            var targetFileInfo = new FileInfo($"{outFolder}{targetFile}");
+                            if (!targetFileInfo.Directory!.Exists)
+                            {
+                                targetFileInfo.Directory.Create();
+                            }
+
+                            File.WriteAllBytes(targetFileInfo.FullName, imageData);
+                            reporter.FileWritten(targetFileInfo.FullName);
+                        }
+                    }
+                }
+
+                reporter.PlotDone();
+            }
+
+            reporter.Complete(true);
+            return 0;
+        }
+        catch (SyntaxErrorException see)
+        {
+            reporter.SyntaxError(see.CodeFile, see.Message, see.Statement);
+            reporter.Complete(false);
+            return 1;
+        }
+        catch (Exception ex)
+        {
+            reporter.GenericError(ex.Message, ex.StackTrace);
+            reporter.Complete(false);
+            return 1;
+        }
+    }
+}

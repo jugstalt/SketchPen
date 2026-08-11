@@ -18,7 +18,7 @@ public class Plotter
 
     private readonly CommandTypesService _commandTypes;
     private readonly Type _plotContextType;
-    private IEnumerable<IPlotCommand> _commands;
+    private IEnumerable<IPlotCommand> _commands = null!;
 
     public Plotter(CommandTypesService commandTypes,
                    Type plotContextType)
@@ -37,7 +37,7 @@ public class Plotter
 
     public byte[] Plot(int canvasWidth, int canvasHeight, EncodeFormat format = EncodeFormat.Png)
     {
-        using (var plotContext = (IPlotContext)Activator.CreateInstance(_plotContextType))
+        using (var plotContext = (IPlotContext)Activator.CreateInstance(_plotContextType)!)
         {
             plotContext.Init(Math.Max(canvasWidth, MinPlotSize), Math.Max(canvasHeight, MinPlotSize));
 

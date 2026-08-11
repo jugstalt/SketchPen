@@ -20,6 +20,8 @@ internal class SingleImageComposerService : IComposerService
         _composerHelper = composeHelper;
     }
 
+    public string Id => "png";
+
     public string Name => "Image";
 
     public ComposeResult Compose(string id, 

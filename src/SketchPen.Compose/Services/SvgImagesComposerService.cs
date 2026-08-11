@@ -29,6 +29,8 @@ internal class SvgImagesComposerService : IComposerService
         _composerHelper = composeHelper;
     }
 
+    public string Id => "svg-zip";
+
     public string Name => "Images (SVG)";
 
     public string FileExtension => "zip";

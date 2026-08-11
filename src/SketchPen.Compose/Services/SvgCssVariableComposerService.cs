@@ -33,6 +33,8 @@ internal class SvgCssVariableComposerService : IComposerService
         _composerHelper = composeHelper;
     }
 
+    public string Id => "svg-vars-zip";
+
     public string Name => "Images (CSS Variables)";
 
     public string FileExtension => "zip";

@@ -35,7 +35,7 @@ public class Plotter
         _commands = compiler.Compile(code);
     }
 
-    public byte[] Plot(int canvasWidth, int canvasHeight)
+    public byte[] Plot(int canvasWidth, int canvasHeight, EncodeFormat format = EncodeFormat.Png)
     {
         using (var plotContext = (IPlotContext)Activator.CreateInstance(_plotContextType))
         {
@@ -65,7 +65,7 @@ public class Plotter
             //    bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             //}
 
-            return plotContext.Encode(EncodeFormat.Png);
+            return plotContext.Encode(format);
         }
     }
 }

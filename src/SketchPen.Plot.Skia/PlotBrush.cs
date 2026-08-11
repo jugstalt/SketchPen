@@ -6,11 +6,11 @@ namespace SketchPen.Plot.Skia;
 
 internal class PlotBrush : IBrush
 {
-    private readonly PlotContext _plotContext;
+    private readonly IPlotContext _plotContext;
     private readonly Canvas _graphicsContext;
     private readonly bool _isPseudeoTransparent;
 
-    public PlotBrush(PlotContext context, SKPaint skPaint, bool isPseudoTransparent)
+    public PlotBrush(IPlotContext context, SKPaint skPaint, bool isPseudoTransparent)
     {
         _plotContext = context;
         _graphicsContext = (Canvas)context.Canvas;

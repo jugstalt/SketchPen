@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SketchPen.Plot\SketchPen.Plot.csproj" />
+    <ProjectReference Include="..\SketchPen.Plot.Skia\SketchPen.Plot.Skia.csproj" />
   </ItemGroup>
 
 </Project>

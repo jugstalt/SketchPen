@@ -1,4 +1,5 @@
-﻿using SketchPen.Plot.Exceptions;
+﻿using SketchPen.Plot;
+using SketchPen.Plot.Exceptions;
 using SketchPen.Plot.Services;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ class Program
             List<int> sizes = new List<int>();
             string outFolder = String.Empty;
             string customGlobalsName = String.Empty;
+            string format = "png";
 
             for (int i = 1; i < args.Length - 1; i++)
             {
@@ -28,7 +30,15 @@ class Program
                     case "-custom_globals":
                         customGlobalsName = args[++i];
                         break;
+                    case "-format":
+                        format = args[++i].ToLowerInvariant();
+                        break;
                 }
+            }
+
+            if (format != "png" && format != "svg")
+            {
+                throw new Exception($"Unsupported -format '{format}'. Supported formats: png, svg");
             }
 
             if (String.IsNullOrEmpty(path))
@@ -67,32 +77,57 @@ class Program
 
             var commandTypes = new CommandTypesService();
 
+            Type plotContextType = format == "svg" ?
+                typeof(SketchPen.Plot.Skia.SvgPlotContext) :
+                typeof(SketchPen.Plot.Skia.PlotContext);
+
+            // SVG is resolution-independent: one file per icon, at a single reference
+            // size (used only to scale pen-width min/max clamping), no @1/@2/@3 axis.
+            const int SvgReferenceSize = 128;
+
             foreach (var fileName in fileNames)
             {
                 var fileInfo = new FileInfo(fileName);
+                string baseName = fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf("."));
                 Console.WriteLine($"Plot {fileInfo.Name}...");
 
-                var plotter = new Plotter(commandTypes,
-                                          typeof(SketchPen.Plot.Skia.PlotContext));
+                var plotter = new Plotter(commandTypes, plotContextType);
 
                 plotter.Init(fileName, customGlobalsName);
 
-                foreach (var size in sizes)
+                if (format == "svg")
                 {
-                    for (int ratio = 1; ratio <= 3; ratio++)
+                    Console.Write($"...svg");
+
+                    var imageData = plotter.Plot(SvgReferenceSize, SvgReferenceSize, EncodeFormat.Svg);
+
+                    var targetFileInfo = new FileInfo($"{outFolder}{baseName}.svg");
+                    if (!targetFileInfo.Directory.Exists)
                     {
-                        string targetFile = $"{fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf("."))}_{size}@{ratio}.png";
-                        Console.Write($"...{size}@{ratio}");
+                        targetFileInfo.Directory.Create();
+                    }
 
-                        var imageData = plotter.Plot(size * ratio, size * ratio);
-
-                        var targetFileInfo = new FileInfo($"{outFolder}{targetFile}");
-                        if (!targetFileInfo.Directory.Exists)
+                    File.WriteAllBytes(targetFileInfo.FullName, imageData);
+                }
+                else
+                {
+                    foreach (var size in sizes)
+                    {
+                        for (int ratio = 1; ratio <= 3; ratio++)
                         {
-                            targetFileInfo.Directory.Create();
-                        }
+                            string targetFile = $"{baseName}_{size}@{ratio}.png";
+                            Console.Write($"...{size}@{ratio}");
 
-                        File.WriteAllBytes(targetFileInfo.FullName, imageData);
+                            var imageData = plotter.Plot(size * ratio, size * ratio);
+
+                            var targetFileInfo = new FileInfo($"{outFolder}{targetFile}");
+                            if (!targetFileInfo.Directory.Exists)
+                            {
+                                targetFileInfo.Directory.Create();
+                            }
+
+                            File.WriteAllBytes(targetFileInfo.FullName, imageData);
+                        }
                     }
                 }
 

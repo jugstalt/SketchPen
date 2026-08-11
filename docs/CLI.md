@@ -18,6 +18,7 @@ For the scripting language itself (`.sp`/`.spt`/`.globals`), see
 - [Arguments](#arguments)
 - [What gets rendered](#what-gets-rendered)
 - [Output naming and location](#output-naming-and-location)
+- [Vector (SVG) output](#vector-svg-output)
 - [Styling (custom globals)](#styling-custom-globals)
 - [Examples](#examples)
 - [Convenience scripts (`plot.bat` / `plot.sh`)](#convenience-scripts-plotbat--plotsh)
@@ -39,7 +40,7 @@ self-contained single-file executable, use `dotnet publish` with the usual
 ## Usage
 
 ```bash
-SketchPen.exe <path> [-outfolder <folder>] [-custom_globals <stylename>]
+SketchPen.exe <path> [-outfolder <folder>] [-custom_globals <stylename>] [-format png|svg]
 ```
 
 Running the tool with no arguments prints a short usage line and exits
@@ -56,10 +57,11 @@ Usage: SketchPen.exe path [options]
 | `<path>` (first, positional) | Yes | Either a single `.sp` file, or a directory containing `.sp` files. See [What gets rendered](#what-gets-rendered). |
 | `-outfolder <folder>` | No | Directory the generated PNGs are written to. Created automatically if it doesn't exist. Default: current working directory. |
 | `-custom_globals <stylename>` | No | Name of a style, without leading underscore and without the `.globals` extension. Loads `_<stylename>.globals` from the same directory as the input file(s) in addition to the default `_.globals`. See [Styling](#styling-custom-globals) and [docs/SYNTAX.md](SYNTAX.md#globals-files-and-styling). Default: no custom style (only `_.globals`, if present). |
+| `-format png\|svg` | No | Output format. `png` (default) renders the fixed raster size/resolution matrix described below. `svg` renders one resolution-independent vector file per icon instead — see [Vector (SVG) output](#vector-svg-output). Default: `png`. |
 
-Both options take exactly one value and can be given in any order. There is
-currently no option to change the rendered sizes, resolutions, or output image
-format — see [Known limitations](#known-limitations).
+Options take exactly one value and can be given in any order. There is
+currently no option to change the rendered PNG sizes/resolutions — see
+[Known limitations](#known-limitations).
 
 ## What gets rendered
 
@@ -73,10 +75,10 @@ format — see [Known limitations](#known-limitations).
 
 ## Output naming and location
 
-For every rendered `.sp` file, the tool always generates **5 sizes × 3
-resolutions = 15 PNGs**, with fixed sizes `16, 26, 32, 64, 128` (logical/CSS
-pixels) and resolution multipliers `@1`, `@2`, `@3` (i.e. actual bitmap pixels =
-`size × ratio`):
+For every rendered `.sp` file, `-format png` (the default) always generates **5
+sizes × 3 resolutions = 15 PNGs**, with fixed sizes `16, 26, 32, 64, 128`
+(logical/CSS pixels) and resolution multipliers `@1`, `@2`, `@3` (i.e. actual
+bitmap pixels = `size × ratio`):
 
 ```
 <iconname>_<size>@<ratio>.png
@@ -97,13 +99,38 @@ admin_32@1.png … admin_128@3.png (384×384 px)
 This is exactly the naming scheme used for the pre-rendered
 [`plot/basic-img`](../plot/basic-img) and [`plot/webgis-img`](../plot/webgis-img)
 folders, and matches common `@1x`/`@2x`/`@3x` asset-catalog conventions (iOS,
-Android, Electron, …).
+Android, Electron, …). `-format svg` produces one `<iconname>.svg` per icon
+instead — see [Vector (SVG) output](#vector-svg-output).
 
 Files are written to `<outfolder>/` (or the current directory if `-outfolder`
 is omitted); the folder is created if it doesn't exist yet. All sizes/styles of
 one CLI run are written **flat into the same folder** — there is no
 per-size/per-style subfolder structure (unlike the web app's "Images" ZIP
 composer).
+
+## Vector (SVG) output
+
+```bash
+SketchPen.exe plot/basic/disk.sp -outfolder out -format svg
+```
+
+writes a single `disk.svg` to `out/` — **one file per icon**, not one per
+size/resolution: SVG is resolution-independent, so multiplying by the `@1/@2/@3`
+raster-DPI axis (or by the 5 standard sizes) would just produce near-duplicate
+files. The icon is rendered once, internally at a fixed reference width of
+**128** logical units — this only affects the pen-width min/max clamping (see
+[docs/SYNTAX.md](SYNTAX.md#coordinate-system)), i.e. how thick strokes look
+relative to the shape; it does **not** limit how large the resulting SVG can be
+displayed, since vector output scales losslessly to any size.
+
+Notes:
+- `gradientbrush` is exported as a native SVG `<linearGradient>`.
+- `text.draw` is exported as a native SVG `<text font-family="...">` element —
+  rendering depends on the viewer having that font installed, so appearance may
+  differ slightly from the PNG rendition (which bakes in whatever font Skia
+  resolved at generation time). There is no text-to-path outlining.
+- Combining `-format svg` with `-custom_globals <stylename>` works exactly like
+  the PNG path (see [Styling](#styling-custom-globals)) — one style per run.
 
 ## Styling (custom globals)
 
@@ -184,8 +211,12 @@ For any other exception, the message is printed (`Exception: <message>`); in a
 
 ## Known limitations
 
-- **Rendered sizes/resolutions are fixed** (`16, 26, 32, 64, 128` × `@1/@2/@3`) and
-  cannot currently be changed via a CLI option, unlike the web app's `Package`
-  endpoint (`sizes`/`resolutions` query parameters).
+- **Rendered PNG sizes/resolutions are fixed** (`16, 26, 32, 64, 128` × `@1/@2/@3`)
+  and cannot currently be changed via a CLI option, unlike the web app's
+  `Package` endpoint (`sizes`/`resolutions` query parameters).
 - **Only one style per invocation** — see [Styling](#styling-custom-globals).
-- **Output format is always PNG.**
+- **SVG output is one fixed reference size per icon** (128) — no CLI option to
+  pick a different reference size (the web app's "Vector Image"/"Images (SVG)"
+  composers do accept a `sizes` parameter for this). No `DrawImage`/embedded-
+  raster support, no text-to-path outlining — see
+  [Vector (SVG) output](#vector-svg-output).

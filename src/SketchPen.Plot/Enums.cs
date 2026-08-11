@@ -12,7 +12,8 @@ public enum PenCap
 public enum EncodeFormat
 {
     Png,
-    Jpeg
+    Jpeg,
+    Svg
 }
 
 public enum PlotContextOrigin

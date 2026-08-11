@@ -1,4 +1,4 @@
-﻿using SketchPen.Plot.Abstraction;
+using SketchPen.Plot.Abstraction;
 using SketchPen.Plot.Extensions;
 using SketchPen.Plot.Skia.Extensions;
 using SkiaSharp;
@@ -8,15 +8,24 @@ using System.Linq;
 
 namespace SketchPen.Plot.Skia;
 
-public class PlotContext : IPlotContext
+/// <summary>
+/// Vector (SVG) rendering backend. Draws the same plot commands as <see cref="PlotContext"/>,
+/// but records them into an SKSvgCanvas instead of painting onto a bitmap.
+/// </summary>
+/// <remarks>
+/// Unlike the raster <see cref="PlotContext"/>, whose <see cref="Encode"/> is a non-destructive,
+/// repeatable read of an already-fully-drawn bitmap, SkiaSharp's SVG canvas only finalizes
+/// (writes the closing &lt;/svg&gt; tag) when it is disposed. <see cref="Encode"/> therefore
+/// disposes the drawing canvas as part of producing its output and can only be called once.
+/// </remarks>
+public class SvgPlotContext : IPlotContext
 {
-    private bool _disposeBitmap = false;
-    private SKBitmap _bitmap;
+    private SKDynamicMemoryWStream _stream;
     private float _projectingFactor = 1f;
     private int _width, _height;
     private PlotContextOrigin _origin = PlotContextOrigin.Center;
 
-    public PlotContext()
+    public SvgPlotContext()
     {
         this.Globals = new Dictionary<string, object>();
     }
@@ -36,17 +45,15 @@ public class PlotContext : IPlotContext
 
     public void Init(int width, int height, PlotContextOrigin origin = PlotContextOrigin.Center)
     {
-        _disposeBitmap = true;
+        _stream = new SKDynamicMemoryWStream();
+        var svgCanvas = SKSvgCanvas.Create(new SKRect(0, 0, width, height), _stream);
 
-        //_bitmap = new SKBitmap(_width = width, _height = height, true);
-        _bitmap = new SKBitmap(_width = width, _height = height,
-                               colorType: SKColorType.Bgra8888,
-                               alphaType: SKAlphaType.Premul);
         _origin = origin;
 
-        this.Canvas = new Canvas(new SKCanvas(_bitmap));
+        this.Canvas = new Canvas(svgCanvas);
 
-        _projectingFactor = (float)width / 100f;
+        _projectingFactor = (float)(_width = width) / 100f;
+        _height = height;
 
         this.ResetTransform();
         this.Init();
@@ -59,23 +66,20 @@ public class PlotContext : IPlotContext
             this.Canvas.Dispose();
             this.Canvas = null;
         }
-        if (_disposeBitmap && _bitmap != null)
+        if (_stream != null)
         {
-            _bitmap.Dispose();
-            _bitmap = null;
+            _stream.Dispose();
+            _stream = null;
         }
     }
 
     public ICanvas Canvas { get; private set; }
-
-    internal SKBitmap Bitmap => _bitmap;
 
     public PlotColor PenColor { private get; set; }
     public float PenWidth { private get; set; }
     public PenCap PenCap { private get; set; }
     public float MaxPenWidth { private get; set; }
     public float MinPenWidth { private get; set; }
-
 
     public PlotColor BrushColor { private get; set; }
 
@@ -101,7 +105,7 @@ public class PlotContext : IPlotContext
             gradientBrushColor = parameters.Slice(1).ToColor();
         }
 
-        SKPaint sKPaint = null;
+        SKPaint sKPaint;
         if (!gradientBrushColor.Equals(PlotColor.Transparent) &&
            this.GradientBrushPoint1 != null &&
            this.GradientBrushPoint2 != null)
@@ -183,70 +187,8 @@ public class PlotContext : IPlotContext
         return new PlotPen(this, skPaint);
     }
 
-    public IPlotPath CreatePlotPath()
-    {
-        return new PlotPath();
-    }
-
-    public byte[] Encode(EncodeFormat format)
-    {
-        var image = SKImage.FromBitmap(_bitmap);
-        int quality = 0;
-
-        SKData skData = null;
-        switch (format)
-        {
-            case EncodeFormat.Png:
-                skData = image.Encode(SKEncodedImageFormat.Png, quality > 0 ? quality : 75);
-                break;
-            case EncodeFormat.Jpeg:
-                skData = image.Encode(SKEncodedImageFormat.Jpeg, quality > 0 ? quality : 75);
-                break;
-            default:
-                throw new Exception($"Unsported image format: {format}");
-        }
-
-        return skData?.ToArray();
-    }
-
-    public CanvasPoint Project(CanvasPoint point)
-    {
-        return new CanvasPoint(point.X * _projectingFactor, 
-                               point.Y * _projectingFactor);
-    }
-
-    public CanvasRectangle Project(CanvasRectangle rect)
-    {
-        return new CanvasRectangle(
-            rect.X * _projectingFactor,
-            rect.Y * _projectingFactor,
-            rect.Width * _projectingFactor,
-            rect.Height * _projectingFactor);
-    }
-
-    public float Project(float number)
-    {
-        return number * _projectingFactor;
-    }
-
-    public void ResetTransform()
-    {
-        ((Canvas)this.Canvas).SkCanvas.ResetMatrix();
-
-        switch(_origin)
-        {
-            case PlotContextOrigin.UpperLeft:
-                ((Canvas)this.Canvas).SkCanvas.Translate(Project(0f), Project(0f));
-                break;
-            default:
-                ((Canvas)this.Canvas).SkCanvas.Translate(Project(50f), Project(50f));
-                break;
-        }
-    }
-
     public IFont CreateFont(IEnumerable<object> parameters)
     {
-        // implementation for creating a font
         var size = 12f;
         var fontFamily = "Arial";
 
@@ -278,6 +220,73 @@ public class PlotContext : IPlotContext
         };
 
         return new PlotFont(this, skFont);
+    }
+
+    public IPlotPath CreatePlotPath()
+    {
+        return new PlotPath();
+    }
+
+    public CanvasPoint Project(CanvasPoint point)
+    {
+        return new CanvasPoint(point.X * _projectingFactor,
+                               point.Y * _projectingFactor);
+    }
+
+    public CanvasRectangle Project(CanvasRectangle rect)
+    {
+        return new CanvasRectangle(
+            rect.X * _projectingFactor,
+            rect.Y * _projectingFactor,
+            rect.Width * _projectingFactor,
+            rect.Height * _projectingFactor);
+    }
+
+    public float Project(float number)
+    {
+        return number * _projectingFactor;
+    }
+
+    public void ResetTransform()
+    {
+        ((Canvas)this.Canvas).SkCanvas.ResetMatrix();
+
+        switch (_origin)
+        {
+            case PlotContextOrigin.UpperLeft:
+                ((Canvas)this.Canvas).SkCanvas.Translate(Project(0f), Project(0f));
+                break;
+            default:
+                ((Canvas)this.Canvas).SkCanvas.Translate(Project(50f), Project(50f));
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Finalizes the SVG document and returns its bytes. Disposes the underlying drawing
+    /// canvas as part of finalizing the SVG output (SkiaSharp only writes the closing
+    /// &lt;/svg&gt; tag on disposal) — can only be called once per instance.
+    /// </summary>
+    public byte[] Encode(EncodeFormat format)
+    {
+        if (format != EncodeFormat.Svg)
+        {
+            throw new Exception($"Unsported image format: {format}");
+        }
+
+        if (this.Canvas == null)
+        {
+            throw new InvalidOperationException($"{nameof(SvgPlotContext)}.{nameof(Encode)}(...) can only be called once.");
+        }
+
+        // Disposing the SKSvgCanvas flushes the closing </svg> tag into the stream.
+        this.Canvas.Dispose();
+        this.Canvas = null;
+
+        using (var data = _stream.DetachAsData())
+        {
+            return data.ToArray();
+        }
     }
 
     #endregion

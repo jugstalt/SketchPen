@@ -1,10 +1,10 @@
 ﻿# SketchPen
 
 SketchPen is a small toolkit for **defining icons once as a script** and generating
-any number of PNG variants from them – in different sizes, resolutions
-(`@1x`/`@2x`/`@3x`), and color styles ("themes"). Instead of maintaining SVGs or
-pixel-perfect bitmaps per icon, you describe shape, pen, and fill as a simple text
-file (`.sp`), which is rendered at run time.
+any number of PNG or SVG variants from them – in different sizes, resolutions
+(`@1x`/`@2x`/`@3x`), and color styles ("themes"). Instead of maintaining hand-drawn
+SVGs or pixel-perfect bitmaps per icon, you describe shape, pen, and fill as a
+simple text file (`.sp`), which is rendered at run time.
 
 ```csharp
 // database.sp
@@ -52,9 +52,11 @@ There are three ways to work with SketchPen:
    the [command-line tool](#command-line-tool-sketchpenexe) or the
    [web application](#web-application-sketchpencode).
 2. **`SketchPen` (CLI)** – renders a single script or an entire directory to PNGs in
-   several standard sizes and resolutions, suitable for scripting/CI.
+   several standard sizes and resolutions, or to one resolution-independent SVG per
+   icon, suitable for scripting/CI.
 3. **`SketchPen.Code` (web app)** – browser-based editor with a file/style tree, live
-   preview, and export as a ZIP package (individual images or web sprite + CSS).
+   preview, and export as a ZIP package (individual PNG/SVG images, batch PNG/SVG,
+   a web sprite + CSS, or a batch of themeable CSS-variable SVG/HTML pages).
 
 Ready-made example icon sets live under [`plot/`](plot):
 
@@ -73,7 +75,7 @@ src/
   SketchPen.Plot           Compiler, commands (pen/brush/path/circle/...), abstractions
   SketchPen.Plot.Drawing    Rendering backend based on System.Drawing (GDI+)
   SketchPen.Plot.Skia       Rendering backend based on SkiaSharp (cross-platform, used by CLI & web app)
-  SketchPen.Compose         Export/packaging logic (single image, ZIP with sizes/styles, web sprite + CSS)
+  SketchPen.Compose         Export/packaging logic (single PNG/SVG, ZIP with sizes/styles, web sprite + CSS)
   SketchPen               Command-line tool (SketchPen.exe)
   SketchPen.Code           ASP.NET Core web application with a browser-based editor
 plot/                      Example icon sets (scripts, templates, styles, rendered PNGs)
@@ -83,8 +85,8 @@ docs/CLI.md                 SketchPen.exe command-line reference
 
 Processing pipeline: **script (`.sp`/`.spt`/`.globals`) → `PreComplier`** (resolve
 includes, prepend globals, normalize syntax) **→ `Lexer`/`Compiler`** (tokens →
-command list) **→ `IPlotContext` implementation** (Drawing or Skia backend) **→ PNG
-bytes**.
+command list) **→ `IPlotContext` implementation** (raster `PlotContext` or vector
+`SvgPlotContext`, both SkiaSharp-based) **→ PNG or SVG bytes**.
 
 ## Requirements
 
@@ -102,19 +104,21 @@ dotnet build src/SketchPen/SketchPen.csproj -c Debug
 Usage:
 
 ```bash
-SketchPen.exe <directory> [-outfolder <path>] [-custom_globals <stylename>]
+SketchPen.exe <directory> [-outfolder <path>] [-custom_globals <stylename>] [-format png|svg]
 ```
 
 ```bash
 SketchPen.exe plot/basic -outfolder plot/basic-img
 SketchPen.exe plot/basic -outfolder plot/basic-img -custom_globals bg-dark
+SketchPen.exe plot/basic -outfolder plot/basic-svg -format svg
 ```
 
-Renders every `*.sp` file in `<directory>` to PNGs in a fixed set of sizes
-(`16, 26, 32, 64, 128` px) and resolutions (`@1`/`@2`/`@3`), named
+By default, renders every `*.sp` file in `<directory>` to PNGs in a fixed set of
+sizes (`16, 26, 32, 64, 128` px) and resolutions (`@1`/`@2`/`@3`), named
 `<iconname>_<size>@<resolution>.png` — exactly the scheme that produces
-[`plot/basic-img`](plot/basic-img) from [`plot/basic`](plot/basic). This makes it
-straightforward to script icon generation or wire it into CI.
+[`plot/basic-img`](plot/basic-img) from [`plot/basic`](plot/basic). With
+`-format svg`, it instead renders one resolution-independent `<iconname>.svg` per
+icon. This makes it straightforward to script icon generation or wire it into CI.
 
 ➡️ Full parameter reference, output naming, styling, exit codes, and known
 limitations: **[docs/CLI.md](docs/CLI.md)**.
@@ -154,6 +158,21 @@ Available export composers (`SketchPen.Compose`):
 - **Images** – ZIP with all icons of a set, split into `style/size/resolution/`.
 - **Web Sprites** – ZIP with CSS sprite PNGs per style/size, generated CSS
   (incl. `@media` rules for `@2x`/`@3x`), and a `sketchpen.html` preview page.
+- **Vector Image** – a single SVG (exactly one icon, one style).
+- **Images (SVG)** – ZIP with all icons of a set as individual SVGs, split into
+  `style/` (no size/resolution split — SVG is resolution-independent).
+- **Images (CSS Variables)** – ZIP with all icons of a set, split into `style/`,
+  each as a self-contained HTML page: the icon as an inline SVG whose colors are
+  wired to CSS custom properties (`--sketchpen-<globalsName>`, e.g.
+  `--sketchpen-penColor`), a matching `:root` block with the default values, a
+  copy-paste-ready escaped snippet, and one color picker per variable to try
+  live restyling. The colors substituted are exactly the ones sourced from
+  `.globals` variables (see
+  [docs/SYNTAX.md](docs/SYNTAX.md#globals-files-and-styling)) — colors set
+  directly inline in a `.sp` script stay literal. **The SVG must stay inline in
+  the consuming page's DOM** for the CSS variables to resolve — loading it via
+  `<img src="icon.svg">` or a CSS `background-image` reference puts it in an
+  isolated document that can't see the page's `--sketchpen-*` variables.
 
 ## Further reading
 

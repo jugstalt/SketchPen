@@ -22,6 +22,13 @@ static public class ServicesExtensions
                 .AddTransient<ComposeHelperService>()
                 .AddTransient<IComposerService, SingleImageComposerService>()
                 .AddTransient<IComposerService, ImagesComposerService>()
-                .AddTransient<IComposerService, WebSpriteComposerService>();
+                .AddTransient<IComposerService, WebSpriteComposerService>()
+                // SVG composers hardcode SketchPen.Plot.Skia.SvgPlotContext (the only SVG
+                // backend) rather than the generic <T>, so they are registered
+                // unconditionally here regardless of the raster PlotContextType <T>.
+                .AddTransient<SvgComposeHelperService>()
+                .AddTransient<IComposerService, SvgSingleImageComposerService>()
+                .AddTransient<IComposerService, SvgImagesComposerService>()
+                .AddTransient<IComposerService, SvgCssVariableComposerService>();
     }
 }

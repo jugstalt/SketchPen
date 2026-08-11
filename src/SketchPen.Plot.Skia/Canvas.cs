@@ -9,9 +9,9 @@ class Canvas : ICanvas
 {
     private SKCanvas _canvas;
 
-    public Canvas(SKBitmap bitmap)
+    public Canvas(SKCanvas canvas)
     {
-        _canvas = new SKCanvas(bitmap);
+        _canvas = canvas;
     }
 
     #region ICanvas

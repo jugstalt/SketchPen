@@ -161,22 +161,26 @@ public class CodeController : BaseController
 
     [HttpGet]
     [Route("Preview")]
-    public IActionResult Preview(string route, string globals, int width = 512, int height = 512)
+    public IActionResult Preview(string route, string globals, int width = 512, int height = 512, string format = "png")
     {
-        var composer = _composers.Where(c => c.FileExtension == "png").FirstOrDefault();
-        if (composer == null)
+        var pngComposer = _composers.Where(c => c.FileExtension == "png").FirstOrDefault();
+        if (pngComposer == null)
         {
             throw new Exception("Sorry, no image preview composer registered");
         }
 
         var fileType = _sketchPenCode.GetEditorFileType(route);
         ComposeResult composeResult;
+        string contentType = "image/png";
 
         if (fileType == Plot.EditorFileType.Globals)
         {
+            // Style/globals preview renders the whole set as one composite thumbnail
+            // (see ComposeHelperService's multi-file grid layout) — vector export isn't
+            // meaningful here, so this branch always stays on the PNG composer.
             string fileTitle = route.Split('/').Last(), id = route.Split('/')[0];
 
-            composeResult = composer.Compose(
+            composeResult = pngComposer.Compose(
                 id,
                 Path.Combine(_sketchPenPlot.RootPath, id),
                 new[] { 64 },
@@ -184,6 +188,19 @@ public class CodeController : BaseController
         }
         else
         {
+            var composer = pngComposer;
+
+            if (string.Equals(format, "svg", StringComparison.OrdinalIgnoreCase))
+            {
+                composer = _composers.Where(c => c.Name == "Vector Image").FirstOrDefault();
+                if (composer == null)
+                {
+                    throw new Exception("Sorry, no vector preview composer registered");
+                }
+
+                contentType = "image/svg+xml";
+            }
+
             composeResult = composer.Compose(
                 route.Split("/").First(),
                 Path.Combine(_sketchPenPlot.RootPath, route),
@@ -191,8 +208,8 @@ public class CodeController : BaseController
                 new string[] { globals });
         }
 
-        return base.BinaryResultStream(composeResult.Data ?? Array.Empty<byte>(), 
-                                       "image/png");
+        return base.BinaryResultStream(composeResult.Data ?? Array.Empty<byte>(),
+                                       contentType);
     }
 
     #endregion

@@ -96,7 +96,31 @@ command list) **→ `IPlotContext` implementation** (raster `PlotContext` or vec
 
 ## Command-line tool (`SketchPen.exe`)
 
-Build:
+### Installation
+
+Published as the **`SketchPen.Cli`** .NET global tool — requires the
+[.NET SDK/runtime](https://dotnet.microsoft.com/) (any platform: Windows,
+Linux, macOS):
+
+```bash
+dotnet tool install -g SketchPen.Cli
+```
+
+Installs the command as **`sketchpen`** (lowercase). Update later with:
+
+```bash
+dotnet tool update -g SketchPen.Cli
+```
+
+New versions are published automatically by
+[`.github/workflows/release.yml`](.github/workflows/release.yml) whenever a
+`vX.Y.Z` git tag is pushed — see [docs/RELEASING.md](docs/RELEASING.md) for how
+to test the packaged tool locally and how to cut a release. Everything below
+applies identically whether you installed the tool (`sketchpen ...`) or built
+from source (`SketchPen.exe ...`/`dotnet SketchPen.dll ...`) — only the
+program name differs.
+
+### Build from source
 
 ```bash
 dotnet build src/SketchPen/SketchPen.csproj -c Debug

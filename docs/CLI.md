@@ -23,6 +23,7 @@ For the scripting language itself (`.sp`/`.spt`/`.globals`), see
 
 ## Contents
 
+- [Installation](#installation)
 - [Build](#build)
 - [Usage](#usage)
 - [Arguments](#arguments)
@@ -37,6 +38,28 @@ For the scripting language itself (`.sp`/`.spt`/`.globals`), see
 - [Exit codes and error output](#exit-codes-and-error-output)
 - [Known limitations](#known-limitations)
 
+## Installation
+
+Published as the **`SketchPen.Cli`** .NET global tool (portable/framework-
+dependent — one NuGet package, works on Windows, Linux, and macOS wherever the
+.NET SDK/runtime is installed):
+
+```bash
+dotnet tool install -g SketchPen.Cli    # first install
+dotnet tool update -g SketchPen.Cli     # later, to upgrade
+```
+
+This installs the command as **`sketchpen`** (lowercase). Every example on
+this page uses `SketchPen.exe` (the source-build name on Windows) — after a
+global-tool install, swap that for `sketchpen`; behavior is identical either
+way, only the program name differs (`dotnet SketchPen.dll` is the equivalent
+when running a source build on Linux/macOS instead of `sketchpen`).
+
+New versions are published automatically by
+[`.github/workflows/release.yml`](../.github/workflows/release.yml) on every
+`vX.Y.Z` git tag push — see [docs/RELEASING.md](RELEASING.md) for how to test
+the packaged tool locally and how to cut a release.
+
 ## Build
 
 ```bash
@@ -47,7 +70,9 @@ The resulting executable/DLL is written to
 `src/SketchPen/bin/Release/net10.0/SketchPen.exe` (Windows) resp.
 `SketchPen.dll`, run via `dotnet SketchPen.dll ...` on other platforms. For a
 self-contained single-file executable, use `dotnet publish` with the usual
-`--self-contained` / `-r <runtime-id>` options.
+`--self-contained` / `-r <runtime-id>` options. To build the installable
+global-tool package yourself instead of downloading it, see
+[Installation](#installation) and `dotnet pack src/SketchPen/SketchPen.csproj -c Release`.
 
 ## Usage
 

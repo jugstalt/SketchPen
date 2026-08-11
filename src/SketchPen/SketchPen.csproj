@@ -7,6 +7,34 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <!--
+    Packaged as a portable (framework-dependent) .NET global tool: no
+    RuntimeIdentifiers/ToolPackageRuntimeIdentifiers/SelfContained on purpose,
+    since this project has no AOT/startup-time requirements, and a plain
+    portable tool package already resolves SkiaSharp's per-platform native
+    assets correctly on Windows/Linux/macOS via NuGet's normal
+    runtimes/{rid}/native restore mechanism (the same one that already makes
+    `dotnet run`/plot.sh work on Linux). See docs/CLI.md for install instructions.
+  -->
+  <PropertyGroup>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>sketchpen</ToolCommandName>
+    <PackageId>SketchPen.Cli</PackageId>
+    <!-- CI overrides this via `dotnet pack -p:Version=X.Y.Z` from the pushed git tag; this is only the fallback for ad-hoc local `dotnet pack` runs. -->
+    <Version>0.1.0</Version>
+    <Authors>jugstalt</Authors>
+    <Description>Renders .sp icon scripts to PNG/SVG. Compose any registered export mode (PNG, SVG, ZIP batches, themeable CSS-variable HTML) via the 'compose' subcommand.</Description>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/jugstalt/SketchPen</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jugstalt/SketchPen</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>icon;svg;png;cli;codegen</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.10" />
     <PackageReference Include="System.CommandLine" Version="2.0.10" />

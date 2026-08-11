@@ -34,6 +34,7 @@ For the scripting language itself (`.sp`/`.spt`/`.globals`), see
 - [Examples](#examples)
 - [The `compose` subcommand](#the-compose-subcommand)
 - [Machine-readable output (`--output json`)](#machine-readable-output---output-json)
+- [The `language-info` subcommand](#the-language-info-subcommand)
 - [Convenience scripts (`plot.bat` / `plot.sh`)](#convenience-scripts-plotbat--plotsh)
 - [Exit codes and error output](#exit-codes-and-error-output)
 - [Known limitations](#known-limitations)
@@ -299,6 +300,41 @@ Shape:
 // no <path> given
 {"success": true, "filesWritten": [], "error": null, "message": "Usage: SketchPen.exe path [options]"}
 ```
+
+## The `language-info` subcommand
+
+```bash
+SketchPen.exe language-info [path]
+```
+
+A tooling-only command (e.g. for the [VS Code extension](../vscode-extension))
+that always prints exactly one JSON document — there's no `--output`/text
+mode, since this isn't meant for direct human reading. It exposes the same
+completion grammar and per-project `@@variable` names the web app's editor
+already uses, without needing a running web app:
+
+```jsonc
+{
+  "success": true,
+  "commands": {
+    "code":     { "pen": [{"method":"color","suggestion":"...","snippet":"..."}, ...], "line": [...], ... },
+    "template": { /* same shape, only keywords valid in .spt files */ },
+    "globals":  { /* same shape, only keywords valid in .globals files: pen/brush/gradientbrush/globals */ }
+  },
+  "globalVariables": null  // or e.g. ["penColor","brushColor",...] when [path] was given
+}
+```
+
+- With no `[path]`: `globalVariables` is `null`, `commands` is always present
+  (it's static — the same grammar regardless of any project).
+- With `[path]` (a directory, or a `.sp` file inside one): additionally
+  compiles and executes that directory's `_.globals`, returning its
+  `globals.set`/`tryset` variable names as `globalVariables`. A missing or
+  broken `_.globals` yields `globalVariables: []`, **not** a command failure —
+  matches the web app's own `_.globals`-is-optional behavior.
+- The only failure mode is a `[path]` that doesn't exist: `{"success": false,
+  "commands": null, "globalVariables": null, "error": "Can't find part of the
+  path '...'"}`, exit code `1`.
 
 ## Convenience scripts (`plot.bat` / `plot.sh`)
 

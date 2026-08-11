@@ -23,6 +23,7 @@ builder.Logging.ClearProviders();
 
 builder.Services
     .AddCompilerServices()                                   // SketchPen.Plot — reused as-is
+    .AddEditorLanguagerServices()                             // SketchPen.Plot — reused as-is (powers language-info)
     .AddComposerServices<SketchPen.Plot.Skia.PlotContext>()   // SketchPen.Compose — reused as-is
     .AddSketchPenCliServices();
 
@@ -196,6 +197,32 @@ composeCommand.SetAction(parseResult =>
 });
 
 rootCommand.Subcommands.Add(composeCommand);
+
+// ---- language-info subcommand: machine-readable completion grammar + per-project globals ----
+// SketchPen.exe language-info [path]
+// Always emits one JSON document, no --output option -- this is a tooling-only command (e.g.
+// for the VS Code extension's completion provider), not meant for direct human reading.
+
+var languageInfoPathArgument = new Argument<string?>("path")
+{
+    Description = "Optional: a directory (or a .sp file inside one) to also resolve @@variable names from its _.globals",
+    Arity = ArgumentArity.ZeroOrOne
+};
+
+var languageInfoCommand = new Command("language-info",
+    "Print the completion grammar (and, given a path, that project's @@variable names) as JSON. For tooling, not interactive use.")
+{
+    Arguments = { languageInfoPathArgument }
+};
+
+languageInfoCommand.SetAction(parseResult =>
+{
+    var handler = services.GetRequiredService<LanguageInfoCommandHandler>();
+
+    return handler.Execute(parseResult.GetValue(languageInfoPathArgument));
+});
+
+rootCommand.Subcommands.Add(languageInfoCommand);
 
 return rootCommand.Parse(args).Invoke();
 

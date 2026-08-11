@@ -8,5 +8,6 @@ static public class ServiceCollectionExtensions
     static public IServiceCollection AddSketchPenCliServices(this IServiceCollection services)
         => services
             .AddTransient<RenderCommandHandler>()
-            .AddTransient<ComposeCommandHandler>();
+            .AddTransient<ComposeCommandHandler>()
+            .AddTransient<LanguageInfoCommandHandler>();
 }

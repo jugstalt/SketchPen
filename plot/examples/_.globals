@@ -1,0 +1,22 @@
+// _.globals -- base color/pen theme for plot/examples.
+//
+// Automatically loaded before every .sp file in this directory (see
+// docs/SYNTAX.md > ".globals files and styling"). Uses `tryset` (set only
+// if not already defined) rather than `set`, so a custom style file loaded
+// first -- see _dark.globals, demonstrated in 10-variables-and-globals.sp
+// -- keeps its own values instead of being overwritten by these defaults.
+
+globals.tryset(penColor, "#222222");
+globals.tryset(brushColor, "#4a90d9");
+globals.tryset(outlinePenColor, "#1a1a1a");
+globals.tryset(accentColor, "#e0592a");
+globals.tryset(penWidth, 4);
+
+// Plain numbers, referenced by the arithmetic-expressions example.
+globals.tryset(percent, 65);
+globals.tryset(x, 40);
+
+pen.color(@@penColor);
+pen.width(@@penWidth);
+pen.cap("round");
+brush.color(@@brushColor);

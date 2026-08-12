@@ -1,0 +1,14 @@
+// _dark.globals -- an alternative color style for this folder, demonstrated
+// in 10-variables-and-globals.sp. Uses `set` (always overwrites), and is
+// loaded BEFORE _.globals, so the `tryset` calls in _.globals become no-ops for
+// every name already set here (see docs/SYNTAX.md > ".globals files and
+// styling" for the exact load order).
+//
+// Render any example with this style instead of the default:
+//   sketchpen compose plot/examples --composer png-zip --styles ,dark --sizes 64
+// (legacy CLI syntax: SketchPen.exe plot/examples -custom_globals dark)
+
+globals.set(penColor, "#f2f2f2");
+globals.set(brushColor, "#3a6ea5");
+globals.set(outlinePenColor, "#f2f2f2");
+globals.set(accentColor, "#ffb454");

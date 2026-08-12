@@ -66,6 +66,7 @@ Ready-made example icon sets live under [`plot/`](plot):
 | [`plot/basic`](plot/basic) | ~180 general UI icons (account, arrows, folder, trash can, …) incl. templates and color styles |
 | [`plot/webgis`](plot/webgis) | GIS/map-specific icons (markers, measuring, construction tools, …) |
 | [`plot/gview`](plot/gview) | Axis/coordinate system symbols |
+| [`plot/examples`](plot/examples) | Language syntax showcase — one heavily-commented `.sp` file per feature (existing and newly added), see [docs/SYNTAX.md](docs/SYNTAX.md) |
 | `plot/*-img` | Pre-rendered PNG output of the respective sets (example output of the CLI tool) |
 
 ## Project structure
@@ -223,5 +224,7 @@ Available export composers (`SketchPen.Compose`):
   `transform`, `globals`), variables (`@@name`), `.globals` styling, `#include`.
 - **CLI reference**: [docs/CLI.md](docs/CLI.md) – all `SketchPen.exe` parameters,
   output naming, styling, exit codes, known limitations.
-- **Examples**: [`plot/basic`](plot/basic), [`plot/webgis`](plot/webgis),
-  [`plot/gview`](plot/gview) – real-world `.sp`/`.spt`/`.globals` files to read.
+- **Syntax showcase**: [`plot/examples`](plot/examples) – one commented `.sp`
+  file per language feature, the fastest way to learn the syntax by reading.
+- **Real-world examples**: [`plot/basic`](plot/basic), [`plot/webgis`](plot/webgis),
+  [`plot/gview`](plot/gview) – actual icon sets to read.

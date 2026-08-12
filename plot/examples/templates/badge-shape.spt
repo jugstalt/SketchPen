@@ -1,0 +1,13 @@
+// badge-shape.spt
+// -----------------
+// A reusable template (a rounded rectangular badge outline), included via
+// #include from 13-include-and-templates.sp. Templates are never rendered
+// on their own -- only the .sp file(s) that #include them produce output.
+// @@variables here (@@brushColor, @@outlinePenColor) are resolved from
+// whatever .globals were loaded for the INCLUDING file: #include has no
+// concept of "parameters" or scoped arguments, it is pure text substitution
+// before compilation, so a template always shares the including file
+// global namespace (see docs/SYNTAX.md > "#include").
+
+rect.fill(60, 36, 12, @@brushColor);
+rect.draw(60, 36, 12, @@outlinePenColor);

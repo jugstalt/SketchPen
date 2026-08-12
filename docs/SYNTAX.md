@@ -19,16 +19,16 @@ Reference implementation in code:
 - [Position and point parameters](#position-and-point-parameters)
 - [Colors](#colors)
 - [Command reference](#command-reference)
-  - [`pen`](#pen)
-  - [`brush`](#brush)
-  - [`gradientbrush`](#gradientbrush)
-  - [`line`](#line)
-  - [`rect`](#rect)
-  - [`circle`](#circle)
-  - [`path`](#path)
-  - [`text`](#text)
-  - [`transform`](#transform)
-  - [`globals`](#globals)
+    - [`pen`](#pen)
+    - [`brush`](#brush)
+    - [`gradientbrush`](#gradientbrush)
+    - [`line`](#line)
+    - [`rect`](#rect)
+    - [`circle`](#circle)
+    - [`path`](#path)
+    - [`text`](#text)
+    - [`transform`](#transform)
+    - [`globals`](#globals)
 - [Variables (`@@name`)](#variables-name)
 - [Arithmetic expressions](#arithmetic-expressions)
 - [`.globals` files and styling](#globals-files-and-styling)
@@ -39,11 +39,11 @@ Reference implementation in code:
 
 ## File types
 
-| Extension  | Type                     | Purpose |
-|------------|--------------------------|-------|
-| `.sp`      | **Code file** (icon)    | A finished, independently renderable icon. One `.sp` file per `plot` directory corresponds to exactly one generated PNG. |
-| `.spt`     | **Template**             | A reusable snippet (e.g. a shape) included via `#include` into `.sp` or other `.spt` files. Not rendered directly. |
-| `.globals` | **Globals/style file**  | Defines named variables (colors, pen widths, …) referenced via `@@name`. Controls the "theme"/color style of an icon set. |
+| Extension  | Type                   | Purpose                                                                                                                   |
+| ---------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `.sp`      | **Code file** (icon)   | A finished, independently renderable icon. One `.sp` file per `plot` directory corresponds to exactly one generated PNG.  |
+| `.spt`     | **Template**           | A reusable snippet (e.g. a shape) included via `#include` into `.sp` or other `.spt` files. Not rendered directly.        |
+| `.globals` | **Globals/style file** | Defines named variables (colors, pen widths, …) referenced via `@@name`. Controls the "theme"/color style of an icon set. |
 
 This mapping is represented in code via `EditorFileType` (`Code`, `Template`,
 `Globals`), see [`Enums.cs`](../src/SketchPen.Plot/Enums.cs). The mapping from
@@ -94,7 +94,7 @@ the center, independent of the eventual pixel size of the PNG:
                          ^
                          |
                          |
-                    -50 <-- 0/0 --> +50
+                -50 <-- 0/0 --> +50
                          |
                          |
                          v
@@ -120,11 +120,11 @@ values determines the meaning:
 diameter, `ParameterExtensions.ToRectPos`:
 
 | Number of values | Meaning                                    |
-|--------------|-----------------------------------------------|
-| 1            | `diameter` (width = height, center at 0,0)   |
-| 2            | `diameterX, diameterY` (center at 0,0) |
-| 3            | `diameter, x, y`                            |
-| 4            | `diameterX, diameterY, x, y`             |
+| ---------------- | ------------------------------------------ |
+| 1                | `diameter` (width = height, center at 0,0) |
+| 2                | `diameterX, diameterY` (center at 0,0)     |
+| 3                | `diameter, x, y`                           |
+| 4                | `diameterX, diameterY, x, y`               |
 
 All four variants for a 50-unit circle at the center are equivalent:
 
@@ -170,13 +170,13 @@ Without parameters (e.g. `path.draw()`), the color last set via `pen.color(...)`
 Pen properties for outlines (`*.draw(...)`).
 Valid in `.globals`, `.spt`, `.sp`.
 
-| Method | Signature | Description |
-|---|---|---|
-| `color` | `pen.color(color)` / `pen.color(color, alpha)` / `pen.color(r,g,b[,a])` | Set the pen color. |
-| `width` | `pen.width(width)` | Line width in logical units (scaled along with everything else when rendering). |
-| `minwidth` | `pen.minwidth(minWidth)` | Lower bound for the actually rendered line width (px), prevents invisibly thin lines on small icons. |
-| `maxwidth` | `pen.maxwidth(maxWidth)` | Upper bound for the rendered line width. |
-| `cap` | `pen.cap("round"\|"flat"\|"square")` | Shape of line ends/joins. |
+| Method     | Signature                                                               | Description                                                                                          |
+| ---------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `color`    | `pen.color(color)` / `pen.color(color, alpha)` / `pen.color(r,g,b[,a])` | Set the pen color.                                                                                   |
+| `width`    | `pen.width(width)`                                                      | Line width in logical units (scaled along with everything else when rendering).                      |
+| `minwidth` | `pen.minwidth(minWidth)`                                                | Lower bound for the actually rendered line width (px), prevents invisibly thin lines on small icons. |
+| `maxwidth` | `pen.maxwidth(maxWidth)`                                                | Upper bound for the rendered line width.                                                             |
+| `cap`      | `pen.cap("round"\|"flat"\|"square")`                                    | Shape of line ends/joins.                                                                            |
 
 ```csharp
 pen.color("#000");
@@ -190,8 +190,8 @@ pen.cap("round");
 
 Fill color for `*.fill(...)`. Valid in `.globals`, `.spt`, `.sp`.
 
-| Method | Signature | Description |
-|---|---|---|
+| Method  | Signature            | Description                                              |
+| ------- | -------------------- | -------------------------------------------------------- |
 | `color` | `brush.color(color)` | Set the fill color (same color notation as `pen.color`). |
 
 ### `gradientbrush`
@@ -200,17 +200,17 @@ Second color + gradient axis for a linear gradient that is automatically used
 instead of a plain `brush` fill as soon as a `gradientbrush.color` other than
 transparent is set. Valid in `.globals`, `.spt`, `.sp`.
 
-| Method | Signature | Description |
-|---|---|---|
-| `color` | `gradientbrush.color(color)` | Second gradient color. |
+| Method   | Signature                            | Description                                                                                  |
+| -------- | ------------------------------------ | -------------------------------------------------------------------------------------------- |
+| `color`  | `gradientbrush.color(color)`         | Second gradient color.                                                                       |
 | `points` | `gradientbrush.points(x1,y1, x2,y2)` | Start/end point of the gradient axis (default: from top-left to bottom-right of the canvas). |
 
 ### `line`
 
 A simple straight line. Valid in `.spt`, `.sp`.
 
-| Method | Signature | Description |
-|---|---|---|
+| Method | Signature                                   | Description                                                                |
+| ------ | ------------------------------------------- | -------------------------------------------------------------------------- |
 | `draw` | `line.draw(x1,y1, x2,y2[, color[, width]])` | Draws a line with the current pen or an optionally overridden color/width. |
 
 ```csharp
@@ -222,10 +222,10 @@ line.draw(-45, 0, -10, 0);
 An axis-aligned rectangle, optionally with rounded corners, centered at
 `(0,0)` before any `transform`. Valid in `.spt`, `.sp`.
 
-| Method | Signature | Description |
-|---|---|---|
+| Method | Signature                                           | Description             |
+| ------ | --------------------------------------------------- | ----------------------- |
 | `draw` | `rect.draw(width, height[, cornerRadius[, color]])` | Draw the outline (pen). |
-| `fill` | `rect.fill(width, height[, cornerRadius[, color]])` | Fill the area (brush). |
+| `fill` | `rect.fill(width, height[, cornerRadius[, color]])` | Fill the area (brush).  |
 
 ```csharp
 rect.fill(60, 40);                    // centered, 60x40
@@ -239,12 +239,12 @@ Circle/ellipse, either as a full circle, circular arc (outline only), or pie
 segment (filled). Valid in `.spt`, `.sp`. For position parameters see
 [Position and point parameters](#position-and-point-parameters).
 
-| Method | Signature | Description |
-|---|---|---|
-| `draw` | `circle.draw(pos...[, color[, width]])` | Draw the outline (pen). |
-| `fill` | `circle.fill(pos...[, color[, gradientColor]])` | Fill the area (brush). |
-| `arc` | `circle.arc(startAngle, sweepAngle, pos...[, color[, width]])` | Circular arc (outline only) from `startAngle` over `sweepAngle` degrees. |
-| `pie` | `circle.pie(startAngle, sweepAngle, pos...[, color[, gradientColor]])` | Filled circular segment ("pie slice"). |
+| Method | Signature                                                              | Description                                                              |
+| ------ | ---------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `draw` | `circle.draw(pos...[, color[, width]])`                                | Draw the outline (pen).                                                  |
+| `fill` | `circle.fill(pos...[, color[, gradientColor]])`                        | Fill the area (brush).                                                   |
+| `arc`  | `circle.arc(startAngle, sweepAngle, pos...[, color[, width]])`         | Circular arc (outline only) from `startAngle` over `sweepAngle` degrees. |
+| `pie`  | `circle.pie(startAngle, sweepAngle, pos...[, color[, gradientColor]])` | Filled circular segment ("pie slice").                                   |
 
 `pos...` is 1–4 numbers as described above. For `arc`/`pie`, `startAngle` and
 `sweepAngle` come **before** the position parameters. Angles: `0°` points to the
@@ -267,18 +267,18 @@ A composite line/outline made of straight segments and arcs, either open
 **There is always only one "current" path** – every `path.begin()` discards the
 previous one.
 
-| Method | Signature | Description |
-|---|---|---|
-| `begin` | `path.begin()` | Start a new path (discards any still-open path). Implicitly needed at the start of each `.sp`/`.spt` file, but is also created automatically as soon as the first other `path.*` call occurs. |
-| `start` | `path.start()` | Start a new **subfigure** within the same path, without closing the previous one (e.g. for multiple disconnected segments to be drawn with a single call, see `text.spt`). |
-| `addlines` | `path.addlines(x1,y1, x2,y2, ...)` | Append one or more line segments to the current subfigure. |
-| `addarc` | `path.addarc(startAngle, sweepAngle, diameter)` / `(startAngle, sweepAngle, diameterX, diameterY)` / `(startAngle, sweepAngle, diameter, x, y)` / `(startAngle, sweepAngle, diameterX, diameterY, x, y)` | Append a circular arc to the current subfigure. |
-| `addpoint` | `path.addpoint(x, y)` | Append a single point. |
-| `addcubic` | `path.addcubic(cp1x,cp1y, cp2x,cp2y, x,y)` | Append a cubic Bezier curve from the current point through two control points to `(x,y)`. Requires a current point (from a prior `addpoint`/`addlines`/`addarc`). |
-| `addquad` | `path.addquad(cpx,cpy, x,y)` | Append a quadratic Bezier curve from the current point through one control point to `(x,y)`. Requires a current point. |
-| `close` | `path.close()` | Close the current subfigure (line back to the start point), turning it into a polygon. |
-| `draw` | `path.draw()` / `path.draw(color)` | Stroke the path with the current or the given pen. |
-| `fill` | `path.fill()` / `path.fill(color)` | Fill the path with the current or the given brush. |
+| Method     | Signature                                                                                                                                                                                                | Description                                                                                                                                                                                   |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `begin`    | `path.begin()`                                                                                                                                                                                           | Start a new path (discards any still-open path). Implicitly needed at the start of each `.sp`/`.spt` file, but is also created automatically as soon as the first other `path.*` call occurs. |
+| `start`    | `path.start()`                                                                                                                                                                                           | Start a new **subfigure** within the same path, without closing the previous one (e.g. for multiple disconnected segments to be drawn with a single call, see `text.spt`).                    |
+| `addlines` | `path.addlines(x1,y1, x2,y2, ...)`                                                                                                                                                                       | Append one or more line segments to the current subfigure.                                                                                                                                    |
+| `addarc`   | `path.addarc(startAngle, sweepAngle, diameter)` / `(startAngle, sweepAngle, diameterX, diameterY)` / `(startAngle, sweepAngle, diameter, x, y)` / `(startAngle, sweepAngle, diameterX, diameterY, x, y)` | Append a circular arc to the current subfigure.                                                                                                                                               |
+| `addpoint` | `path.addpoint(x, y)`                                                                                                                                                                                    | Append a single point.                                                                                                                                                                        |
+| `addcubic` | `path.addcubic(cp1x,cp1y, cp2x,cp2y, x,y)`                                                                                                                                                               | Append a cubic Bezier curve from the current point through two control points to `(x,y)`. Requires a current point (from a prior `addpoint`/`addlines`/`addarc`).                             |
+| `addquad`  | `path.addquad(cpx,cpy, x,y)`                                                                                                                                                                             | Append a quadratic Bezier curve from the current point through one control point to `(x,y)`. Requires a current point.                                                                        |
+| `close`    | `path.close()`                                                                                                                                                                                           | Close the current subfigure (line back to the start point), turning it into a polygon.                                                                                                        |
+| `draw`     | `path.draw()` / `path.draw(color)`                                                                                                                                                                       | Stroke the path with the current or the given pen.                                                                                                                                            |
+| `fill`     | `path.fill()` / `path.fill(color)`                                                                                                                                                                       | Fill the path with the current or the given brush.                                                                                                                                            |
 
 ```csharp
 // Closed triangle, filled + outlined
@@ -305,8 +305,8 @@ path.draw();
 
 Draw text at a position. Valid in `.spt`, `.sp`.
 
-| Method | Signature | Description |
-|---|---|---|
+| Method | Signature                              | Description                                                                               |
+| ------ | -------------------------------------- | ----------------------------------------------------------------------------------------- |
 | `draw` | `text.draw(text, size, x, y[, color])` | `text` as a string, `size` as font size in logical units, `(x,y)` as the reference point. |
 
 ```csharp
@@ -319,12 +319,12 @@ Changes the coordinate system for all subsequent drawing commands (translation,
 rotation, and scaling are cumulative until `transform.reset()` is called). Valid in
 `.spt`, `.sp`.
 
-| Method | Signature | Description |
-|---|---|---|
-| `translate` | `transform.translate(x, y)` | Shift the origin. |
-| `rotate` | `transform.rotate(angle)` / `transform.rotate(angle, pivotX, pivotY)` | Rotate by `angle` degrees (clockwise), around the origin or around `(pivotX,pivotY)`. |
-| `scale` | `transform.scale(ratio)` / `transform.scale(ratioX, ratioY)` | Scale uniformly or per axis. |
-| `reset` | `transform.reset()` | Return to the initial state (origin at the center of the canvas, no rotation/scaling). |
+| Method      | Signature                                                             | Description                                                                            |
+| ----------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `translate` | `transform.translate(x, y)`                                           | Shift the origin.                                                                      |
+| `rotate`    | `transform.rotate(angle)` / `transform.rotate(angle, pivotX, pivotY)` | Rotate by `angle` degrees (clockwise), around the origin or around `(pivotX,pivotY)`.  |
+| `scale`     | `transform.scale(ratio)` / `transform.scale(ratioX, ratioY)`          | Scale uniformly or per axis.                                                           |
+| `reset`     | `transform.reset()`                                                   | Return to the initial state (origin at the center of the canvas, no rotation/scaling). |
 
 ```csharp
 transform.reset();
@@ -342,9 +342,9 @@ positions/sizes/rotation angles within a composite icon (see
 
 Defines variables that can be read via `@@name`. Only valid in `.globals` files.
 
-| Method | Signature | Description |
-|---|---|---|
-| `set` | `globals.set(name, value)` | Set a variable (overwrites any existing value). |
+| Method   | Signature                     | Description                                                                                                                                                                   |
+| -------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `set`    | `globals.set(name, value)`    | Set a variable (overwrites any existing value).                                                                                                                               |
 | `tryset` | `globals.tryset(name, value)` | Only set a variable if it does not yet exist – useful in the base `_.globals`, so a style-specific `_<style>.globals` that already set the same name earlier keeps its value. |
 
 `name` is written unquoted as an identifier (no `"..."`), `value` is a number,

@@ -2,13 +2,12 @@
 
 `SketchPen.exe` is the command-line tool for rendering `.sp` icon scripts. It is
 built on [`System.CommandLine`](https://www.nuget.org/packages/System.CommandLine)
-and the .NET Generic Host (dependency injection), and is intended to become the
-primary way to produce icons — it exposes every export mode (PNG, SVG, ZIP
-batches, the CSS-variable HTML page) that the web app's composers provide, via
-the [`compose`](#the-compose-subcommand) subcommand, in addition to its original
-render syntax. It has no interactive UI — use the
-[web application](../README.md#web-application-sketchpencode) if you want a code
-editor with live preview.
+and the .NET Generic Host (dependency injection), and is the primary way to
+produce icons — it exposes every export mode (PNG, SVG, ZIP batches, the
+CSS-variable HTML page), via the [`compose`](#the-compose-subcommand)
+subcommand, in addition to its original render syntax. It has no interactive
+UI of its own — use the [VS Code extension](../README.md#vs-code-extension)
+(which shells out to this CLI) if you want a code editor with live preview.
 
 **The original invocation syntax (documented in [Usage](#usage) below) is
 unchanged and fully supported** — it is the root command's own behavior, not a
@@ -148,8 +147,8 @@ instead — see [Vector (SVG) output](#vector-svg-output).
 Files are written to `<outfolder>/` (or the current directory if `-outfolder`
 is omitted); the folder is created if it doesn't exist yet. All sizes/styles of
 one CLI run are written **flat into the same folder** — there is no
-per-size/per-style subfolder structure (unlike the web app's "Images" ZIP
-composer).
+per-size/per-style subfolder structure (unlike the `png-zip` composer's ZIP
+layout, see [the `compose` subcommand](#the-compose-subcommand)).
 
 ## Vector (SVG) output
 
@@ -179,8 +178,9 @@ Notes:
 
 `-custom_globals <stylename>` selects **one** style for the whole run — see
 [docs/SYNTAX.md](SYNTAX.md#globals-files-and-styling) for how `_.globals` and
-`_<stylename>.globals` are combined. To render several styles, invoke the CLI
-once per style with a different output folder or filename convention, e.g.:
+`_<stylename>.globals` are combined. To render several styles with the root
+command, invoke the CLI once per style with a different output folder or
+filename convention, e.g.:
 
 ```bash
 SketchPen.exe plot/basic -outfolder plot/basic-img
@@ -188,9 +188,9 @@ SketchPen.exe plot/basic -outfolder plot/basic-img-dark -custom_globals bg-dark
 SketchPen.exe plot/basic -outfolder plot/basic-img-e    -custom_globals e
 ```
 
-(The web app's `Package` endpoint, in contrast, accepts a comma-separated list of
-styles and bundles all of them into a single ZIP in one request — see the
-[README](../README.md#web-application-sketchpencode).)
+(The [`compose`](#the-compose-subcommand) subcommand, in contrast, accepts a
+comma-separated `--styles` list and bundles all of them into a single ZIP in
+one run — see the examples there.)
 
 ## Examples
 
@@ -218,10 +218,10 @@ SketchPen.exe plot/webgis -outfolder plot/webgis-img
 SketchPen.exe compose <path> --composer <id> [--sizes 16,32,64] [--styles ,bg-dark] [--resolutions 96,144] [--out <file>]
 ```
 
-Invokes any registered `IComposerService` directly — the same abstraction that
-powers every export mode in the web app's download-package flow — instead of
-the root command's fixed PNG/SVG behavior. Useful whenever you need a ZIP batch,
-a web sprite, or the CSS-variable HTML page from the command line, or want a
+Invokes any registered `IComposerService` directly — the same abstraction the
+VS Code extension's `Export Package…` command uses too — instead of the root
+command's fixed PNG/SVG behavior. Useful whenever you need a ZIP batch, a web
+sprite, or the CSS-variable HTML page from the command line, or want a
 different SVG size than the root command's fixed reference size (see
 [Vector (SVG) output](#vector-svg-output)).
 
@@ -244,12 +244,12 @@ different SVG size than the root command's fixed reference size (see
 | `--resolutions <csv>` | No | Comma-separated DPI values, e.g. `96,144,192`. Only meaningful for `png-zip`/`web-sprite-zip`; ignored by the SVG composers (vector output is resolution-independent). |
 | `--out <file>` | No | Output file path. Default: `<name>.<extension>` in the current directory, where `<name>` is the last path segment of `<path>` and `<extension>` is the composer's own file extension. |
 
-Composer ids (see [README.md](../README.md#web-application-sketchpencode) for
-what each one produces — they are the exact same composers used by the web
-app's `Package` endpoint, just selected by a short id instead of a full CLR type
-name):
+Composer ids (see [README.md](../README.md#export-composers) for the full
+description of each, including the CSS-variable mechanism and its
+inline-SVG requirement — the id is just a short, stable name for the
+underlying `IComposerService`, used in place of a full CLR type name):
 
-| `--composer` id | Web app composer name | Output |
+| `--composer` id | Name | Output |
 |---|---|---|
 | `png` | Image | A single PNG. Requires exactly one size, one style, one `.sp` file. |
 | `png-zip` | Images | ZIP with all icons of a set, split into `style/size/resolution/`. |
@@ -270,7 +270,7 @@ SketchPen.exe compose plot/webgis --composer svg-zip --styles ",bg-dark" --out w
 # Whole set as themeable CSS-variable HTML pages
 SketchPen.exe compose plot/basic --composer svg-vars-zip --out basic-themeable.zip
 
-# Same PNG sprite sheet the web app's "Web Sprites" download produces
+# CSS sprite sheet + generated CSS + a demo HTML page, all in one ZIP
 SketchPen.exe compose plot/basic --composer web-sprite-zip --sizes 16,32,64 --out basic-sprites.zip
 ```
 
@@ -307,11 +307,12 @@ Shape:
 SketchPen.exe language-info [path]
 ```
 
-A tooling-only command (e.g. for the [VS Code extension](../vscode-extension))
-that always prints exactly one JSON document — there's no `--output`/text
-mode, since this isn't meant for direct human reading. It exposes the same
-completion grammar and per-project `@@variable` names the web app's editor
-already uses, without needing a running web app:
+A tooling-only command that always prints exactly one JSON document — there's
+no `--output`/text mode, since this isn't meant for direct human reading. It
+exposes the reflection-driven completion grammar (methods/keywords per file
+type) and, given a project path, that project's compiled `@@variable` names
+— this is what powers the [VS Code extension](../vscode-extension)'s
+completion, without the extension needing to duplicate any compiler logic:
 
 ```jsonc
 {
@@ -331,7 +332,8 @@ already uses, without needing a running web app:
   compiles and executes that directory's `_.globals`, returning its
   `globals.set`/`tryset` variable names as `globalVariables`. A missing or
   broken `_.globals` yields `globalVariables: []`, **not** a command failure —
-  matches the web app's own `_.globals`-is-optional behavior.
+  `_.globals` is optional everywhere else in the language too, so this command
+  never fails just because a project doesn't have one (yet).
 - The only failure mode is a `[path]` that doesn't exist: `{"success": false,
   "commands": null, "globalVariables": null, "error": "Can't find part of the
   path '...'"}`, exit code `1`.

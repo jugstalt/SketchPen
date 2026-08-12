@@ -38,7 +38,7 @@ path.close();
 path.draw(@@outlinePenColor);
 ```
 
-turns into e.g. `csharp_16@1.png`, `csharp_16@2.png`, …, `csharp_128@3.png` – in as
+turns into e.g. `database_16@1.png`, `database_16@2.png`, …, `database_128@3.png` – in as
 many color/style variants as you like, driven by `.globals` files.
 
 ➡️ The full language reference (syntax, coordinate system, all commands, variables,
@@ -46,28 +46,32 @@ many color/style variants as you like, driven by `.globals` files.
 
 ## Ways to create icons
 
-There are three ways to work with SketchPen:
+There are two ways to work with SketchPen:
 
-1. **Write script files by hand** (`.sp` / `.spt` / `.globals`) and render them with
-   the [command-line tool](#command-line-tool-sketchpenexe) or the
-   [web application](#web-application-sketchpencode).
+1. **VS Code extension** – edit `.sp`/`.spt`/`.globals` files with completion,
+   live preview, syntax highlighting, inline diagnostics, and export commands,
+   right in the editor. Not yet published to the VS Code Marketplace — install
+   it from this repo, see [VS Code extension](#vs-code-extension) below.
 2. **`SketchPen` (CLI)** – renders a single script or an entire directory to PNGs in
    several standard sizes and resolutions, or to one resolution-independent SVG per
    icon, suitable for scripting/CI; the `compose` subcommand additionally exposes
-   every composer (batch PNG/SVG, web sprites, themeable CSS-variable HTML).
-3. **`SketchPen.Code` (web app)** – browser-based editor with a file/style tree, live
-   preview, and export as a ZIP package (individual PNG/SVG images, batch PNG/SVG,
-   a web sprite + CSS, or a batch of themeable CSS-variable SVG/HTML pages).
+   every composer (batch PNG/SVG, web sprites, themeable CSS-variable HTML). The
+   extension itself shells out to this CLI for every render.
+
+There used to be a third option, a browser-based editor (`SketchPen.Code`,
+an ASP.NET Core MVC app) — it has been replaced by the VS Code extension and
+is no longer part of the build (its source is still in the repo under
+`src/SketchPen.Code/`, unbuilt, for reference only).
 
 Ready-made example icon sets live under [`plot/`](plot):
 
-| Directory | Content |
-|---|---|
-| [`plot/basic`](plot/basic) | ~180 general UI icons (account, arrows, folder, trash can, …) incl. templates and color styles |
-| [`plot/webgis`](plot/webgis) | GIS/map-specific icons (markers, measuring, construction tools, …) |
-| [`plot/gview`](plot/gview) | Axis/coordinate system symbols |
+| Directory                        | Content                                                                                                                                  |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| [`plot/basic`](plot/basic)       | ~180 general UI icons (account, arrows, folder, trash can, …) incl. templates and color styles                                           |
+| [`plot/webgis`](plot/webgis)     | GIS/map-specific icons (markers, measuring, construction tools, …)                                                                       |
+| [`plot/gview`](plot/gview)       | Axis/coordinate system symbols                                                                                                           |
 | [`plot/examples`](plot/examples) | Language syntax showcase — one heavily-commented `.sp` file per feature (existing and newly added), see [docs/SYNTAX.md](docs/SYNTAX.md) |
-| `plot/*-img` | Pre-rendered PNG output of the respective sets (example output of the CLI tool) |
+| `plot/*-img`                     | Pre-rendered PNG output of the respective sets (example output of the CLI tool)                                                          |
 
 ## Project structure
 
@@ -75,10 +79,13 @@ Ready-made example icon sets live under [`plot/`](plot):
 src/
   SketchPen.Parse         Lexer/tokenizer for the SketchPen language
   SketchPen.Plot           Compiler, commands (pen/brush/path/circle/...), abstractions
-  SketchPen.Plot.Skia       Rendering backend based on SkiaSharp (cross-platform, used by CLI & web app)
+  SketchPen.Plot.Skia       Rendering backend based on SkiaSharp (cross-platform, the only backend)
   SketchPen.Compose         Export/packaging logic (single PNG/SVG, ZIP with sizes/styles, web sprite + CSS)
   SketchPen               Command-line tool (SketchPen.exe)
-  SketchPen.Code           ASP.NET Core web application with a browser-based editor
+  SketchPen.Code           Former ASP.NET Core web app -- no longer built (excluded from
+                           SketchPen.sln), kept in the repo for reference only
+vscode-extension/          VS Code extension (TypeScript, not part of SketchPen.sln) -- see
+                           "VS Code extension" below and vscode-extension/README.md
 plot/                      Example icon sets (scripts, templates, styles, rendered PNGs)
 docs/SYNTAX.md              Language reference for .sp / .spt / .globals
 docs/CLI.md                 SketchPen.exe command-line reference
@@ -92,7 +99,10 @@ command list) **→ `IPlotContext` implementation** (raster `PlotContext` or vec
 ## Requirements
 
 - [.NET SDK 10](https://dotnet.microsoft.com/) (see `TargetFramework net10.0` in the
-  `.csproj` files of the CLI/web app)
+  CLI's `.csproj`) — needed to build/run the CLI, or just install it as a
+  global tool (see below), no SDK required for that.
+- Node.js 20+ and `npm` — only if you want to rebuild the VS Code extension
+  from source; not needed to install the pre-built `.vsix`.
 
 ## Command-line tool (`SketchPen.exe`)
 
@@ -148,10 +158,10 @@ icon. This makes it straightforward to script icon generation or wire it into CI
 tool's root command, not a deprecated compatibility shim.
 
 Built on `System.CommandLine` + the .NET Generic Host (dependency injection),
-the CLI additionally exposes every web-app export mode directly via a `compose`
-subcommand — the same composers behind the web app's download-package flow
-(single/batch PNG, single/batch SVG, web sprites, themeable CSS-variable HTML),
-selected by a short id:
+the CLI additionally exposes every export mode directly via a `compose`
+subcommand — every registered `IComposerService` (single/batch PNG,
+single/batch SVG, web sprites, themeable CSS-variable HTML), selected by a
+short id:
 
 ```bash
 SketchPen.exe compose plot/basic/disk.sp --composer svg --sizes 64 --out disk.svg
@@ -166,45 +176,21 @@ invokes `SketchPen.exe` programmatically.
 shape, output naming, styling, exit codes, and known limitations:
 **[docs/CLI.md](docs/CLI.md)**.
 
-## Web application (`SketchPen.Code`)
+## Export composers
 
-An ASP.NET Core MVC project with a browser-based code editor (Monaco) for
-`.sp`/`.spt`/`.globals` files, a file/style tree, a live image preview per file, and
-export as a downloadable package.
+Every export mode (single PNG/SVG, batch ZIPs, web sprite, themeable HTML) is
+an `IComposerService` implementation in `SketchPen.Compose`, selected by id
+via the CLI's [`compose`](#command-line-tool-sketchpenexe) subcommand or the
+VS Code extension's `Export Package…` command:
 
-Build & run:
-
-```bash
-dotnet run --project src/SketchPen.Code/SketchPen.Code.csproj -- --rootPath="G:\github\jugstalt\SketchPen\plot"
-```
-
-- **`rootPath`** (configuration value resp. `--rootPath=...`) points to the
-  directory containing the icon sets (e.g. the `plot` folder of this repo). Every
-  subdirectory in it (e.g. `basic`, `webgis`) appears as its own set/`id` in the UI.
-- Then in the browser: `https://localhost:<port>/Code/<id>` (e.g. `.../Code/basic`)
-  opens the editor for that set.
-
-Key features (see [`CodeController`](src/SketchPen.Code/Controllers/CodeController.cs)):
-
-| Feature | Endpoint | Description |
-|---|---|---|
-| File tree | `GET /Code/GetFiles/{id}` | All `.sp`/`.spt` files of a set |
-| Edit file | `GET/POST /Code/EditFile` | Read/save content, incl. editor autocomplete per file type |
-| Create/delete file | `GET /Code/CreateFile/{id}`, `GET /Code/DeleteFile/{id}` | Create or remove a new `.sp`/`.globals` file |
-| Style list | `GET /Code/GetGlobals/{id}` | All `_*.globals` styles of a set |
-| Live preview | `GET /Code/Preview?route=...&globals=...&width=...&height=...` | Renders a single file live as a PNG |
-| Package export | `GET /Code/Package?id=...&composer=...&styles=...&sizes=...&resolutions=...` | Builds a ZIP via the chosen composer |
-
-Available export composers (`SketchPen.Compose`):
-
-- **Image** – a single PNG (exactly one size, one style).
-- **Images** – ZIP with all icons of a set, split into `style/size/resolution/`.
-- **Web Sprites** – ZIP with CSS sprite PNGs per style/size, generated CSS
+- **`png`** (Image) – a single PNG (exactly one size, one style).
+- **`png-zip`** (Images) – ZIP with all icons of a set, split into `style/size/resolution/`.
+- **`web-sprite-zip`** (Web Sprites) – ZIP with CSS sprite PNGs per style/size, generated CSS
   (incl. `@media` rules for `@2x`/`@3x`), and a `sketchpen.html` preview page.
-- **Vector Image** – a single SVG (exactly one icon, one style).
-- **Images (SVG)** – ZIP with all icons of a set as individual SVGs, split into
+- **`svg`** (Vector Image) – a single SVG (exactly one icon, one style).
+- **`svg-zip`** (Images (SVG)) – ZIP with all icons of a set as individual SVGs, split into
   `style/` (no size/resolution split — SVG is resolution-independent).
-- **Images (CSS Variables)** – ZIP with all icons of a set, split into `style/`,
+- **`svg-vars-zip`** (Images (CSS Variables)) – ZIP with all icons of a set, split into `style/`,
   each as a self-contained HTML page: the icon as an inline SVG whose colors are
   wired to CSS custom properties (`--sketchpen-<globalsName>`, e.g.
   `--sketchpen-penColor`), a matching `:root` block with the default values, a
@@ -217,13 +203,39 @@ Available export composers (`SketchPen.Compose`):
   `<img src="icon.svg">` or a CSS `background-image` reference puts it in an
   isolated document that can't see the page's `--sketchpen-*` variables.
 
+## VS Code extension
+
+Edit `.sp`/`.spt`/`.globals` files with completion, live preview, syntax
+highlighting, inline diagnostics, and export commands, right in the editor.
+It is a thin client that shells out to the `sketchpen` CLI for every
+render/compile — no logic is duplicated in TypeScript.
+
+**Not yet published to the VS Code Marketplace** — build and install the
+`.vsix` from this repo (it is not committed/pre-built, `git clone` alone is
+not enough):
+
+```bash
+dotnet tool install -g SketchPen.Cli    # the extension needs this on PATH
+cd vscode-extension
+npm install && npm run compile && npx @vscode/vsce package
+code --install-extension sketchpen-0.1.0.vsix
+```
+
+Full feature list, known limitations, and settings:
+**[vscode-extension/README.md](vscode-extension/README.md)**.
+
 ## Further reading
 
 - **Language reference**: [docs/SYNTAX.md](docs/SYNTAX.md) – coordinate system,
-  all commands (`pen`, `brush`, `gradientbrush`, `line`, `circle`, `path`, `text`,
-  `transform`, `globals`), variables (`@@name`), `.globals` styling, `#include`.
+  all commands (`pen`, `brush`, `gradientbrush`, `line`, `rect`, `circle`, `path`,
+  `text`, `transform`, `globals`), variables (`@@name`), arithmetic expressions,
+  `.globals` styling, `#include`, `repeat`.
 - **CLI reference**: [docs/CLI.md](docs/CLI.md) – all `SketchPen.exe` parameters,
   output naming, styling, exit codes, known limitations.
+- **VS Code extension**: [vscode-extension/README.md](vscode-extension/README.md)
+  – features, settings, known limitations.
+- **Releasing**: [docs/RELEASING.md](docs/RELEASING.md) – how to test the
+  packaged CLI locally and how to cut a release.
 - **Syntax showcase**: [`plot/examples`](plot/examples) – one commented `.sp`
   file per language feature, the fastest way to learn the syntax by reading.
 - **Real-world examples**: [`plot/basic`](plot/basic), [`plot/webgis`](plot/webgis),

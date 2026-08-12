@@ -46,8 +46,10 @@ Reference implementation in code:
 | `.globals` | **Globals/style file**  | Defines named variables (colors, pen widths, …) referenced via `@@name`. Controls the "theme"/color style of an icon set. |
 
 This mapping is represented in code via `EditorFileType` (`Code`, `Template`,
-`Globals`), see [`Enums.cs`](../src/SketchPen.Plot/Enums.cs) and
-[`SketchPenCodeService.GetEditorFileType`](../src/SketchPen.Code/Services/SketchPenCodeService.cs).
+`Globals`), see [`Enums.cs`](../src/SketchPen.Plot/Enums.cs). The mapping from
+file extension to `EditorFileType` itself lives in each consumer — the VS Code
+extension derives it from the file extension, see
+[`getFileTypeKey`](../vscode-extension/src/completionProvider.ts).
 Every command "knows" via `[PlotCommandSupportedFileTypes]` in which file types it is
 allowed (e.g. `globals.set(...)` is only valid in `.globals` files, `text.draw(...)`
 only in `.sp`/`.spt`).

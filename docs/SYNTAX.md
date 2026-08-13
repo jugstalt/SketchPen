@@ -345,7 +345,7 @@ Defines variables that can be read via `@@name`. Only valid in `.globals` files.
 | Method   | Signature                     | Description                                                                                                                                                                   |
 | -------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `set`    | `globals.set(name, value)`    | Set a variable (overwrites any existing value).                                                                                                                               |
-| `tryset` | `globals.tryset(name, value)` | Only set a variable if it does not yet exist – useful in the base `_.globals`, so a style-specific `_<style>.globals` that already set the same name earlier keeps its value. |
+| `tryset` | `globals.tryset(name, value)` | Only set a variable if it does not yet exist – useful in the base `default.globals`, so a style-specific `<style>.globals` that already set the same name earlier keeps its value. |
 
 `name` is written unquoted as an identifier (no `"..."`), `value` is a number,
 string, or bool depending on usage.
@@ -397,30 +397,51 @@ transform.rotate(-45, (@@x+@@y)/2, 0);          // parenthesized sub-expression
 ## `.globals` files and styling
 
 `.globals` files make it possible to **render the same icon set in multiple color
-styles** without touching the `.sp`/`.spt` scripts themselves. Convention per icon
-set directory:
+styles** without touching the `.sp`/`.spt` scripts themselves.
 
-- `_.globals` – base/default values, **always** automatically included before every
-  `.sp` file in the same directory (if present). Usually uses `tryset`, so that an
-  additionally loaded custom style takes precedence.
-- `_<stylename>.globals` – a named style, e.g. `_bg-dark.globals` or `_e.globals`.
-  Included **additionally, before** `_.globals`, when the renderer is invoked with
-  this style name (CLI: `-custom_globals <stylename>`, web: query parameter
-  `globals`). Since it comes before `_.globals` and `tryset` in `_.globals` does not
-  overwrite anything, the values from the custom style "win".
+Every icon-set directory has a **styles folder**, where its `.globals` files live:
 
-Order of assembly for a file (see `PreComplier`):
+- `default.globals` – base/default values, **always** automatically included before
+  every `.sp` file in the directory (if present). Usually uses `tryset`, so that an
+  additionally loaded named style takes precedence.
+- `<stylename>.globals` – a named style, e.g. `bg-dark.globals` or `e.globals`.
+  Included **additionally, before** `default.globals`, when the renderer is invoked
+  with this style name (CLI: `-style <stylename>`). Since it comes before
+  `default.globals` and `tryset` in `default.globals` does not overwrite anything,
+  the values from the named style "win".
+
+**Where is the styles folder?** By default, a local `styles/` subfolder next to the
+`.sp` files. An icon-set directory can override this with an optional
+**`.sketchpen.json`** config file, sitting next to the `.sp` files:
+
+```json
+{
+  "stylesPath": "../styles"
+}
+```
+
+`stylesPath` is resolved relative to `.sketchpen.json`'s own directory (the same way
+`#include` resolves relative paths) and can point anywhere — including a single
+location **shared by several icon sets**. This is exactly how
+[`plot/basic`](../plot/basic), [`plot/webgis`](../plot/webgis), and
+[`plot/gview`](../plot/gview) work: each has its own `.sketchpen.json` pointing
+`stylesPath` at one shared [`plot/styles`](../plot/styles), so all three sets stay
+in sync when a style changes, instead of maintaining separate copies. An icon set
+that doesn't need sharing (e.g. [`plot/examples`](../plot/examples)) can skip
+`.sketchpen.json` entirely and just use its own local `styles/` subfolder.
+
+Order of assembly for a file (see `PreComplier`/`StylesFolderResolver`):
 
 ```
-1. _<stylename>.globals   (if given and present)
-2. _.globals               (if present, unless the target file is _.globals itself)
-3. <name>.sp / <name>.spt  (the actual file)
+1. <stylesFolder>/<stylename>.globals   (if given and present)
+2. <stylesFolder>/default.globals       (if present, unless the target file IS default.globals)
+3. <name>.sp / <name>.spt               (the actual file)
 ```
 
-Example from [`plot/basic`](../plot/basic):
+Example, based on [`plot/basic`](../plot/basic)'s `.sketchpen.json` → [`plot/styles`](../plot/styles):
 
 ```csharp
-// _.globals – base values
+// plot/styles/default.globals – base values
 globals.tryset(penColor, "#000");
 globals.tryset(outlinePenColor, "#000");
 globals.tryset(brushColor, "#fff");
@@ -429,22 +450,23 @@ pen.color(@@penColor);
 pen.width(@@penWidth);
 brush.color(@@brushColor);
 
-// _bg-dark.globals – dark-mode style
+// plot/styles/bg-dark.globals – dark-mode style
 globals.set(penColor, "#4cc2ff");
 globals.set(outlinePenColor, "#fefefe");
 globals.set(brushColor, "#444");
 ```
 
-If `admin.sp` is rendered with the `bg-dark` style, the effective result is:
+If `plot/basic/admin.sp` is rendered with the `bg-dark` style (`-style bg-dark`), the
+effective result is:
 
 ```csharp
-// from _bg-dark.globals
+// from plot/styles/bg-dark.globals
 globals.set(penColor, "#4cc2ff");
 globals.set(outlinePenColor, "#fefefe");
 globals.set(brushColor, "#444");
-// ... (further values from _bg-dark.globals)
+// ... (further values from bg-dark.globals)
 
-// from _.globals (tryset has no effect here anymore, values are already set)
+// from plot/styles/default.globals (tryset has no effect here anymore, values are already set)
 globals.tryset(penColor, "#000");     // no-op, penColor is already "#4cc2ff"
 ...
 pen.color(@@penColor);                // -> "#4cc2ff"

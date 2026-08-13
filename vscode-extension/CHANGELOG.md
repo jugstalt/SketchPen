@@ -2,6 +2,18 @@
 
 All notable changes to the SketchPen VS Code extension are documented here.
 
+## Unreleased
+
+- **`.sketchpen.json` styles-folder support** — globals files now live in a
+  styles folder (a local `styles/` subfolder by default, or wherever an
+  optional `.sketchpen.json`'s `stylesPath` points, possibly shared across
+  several icon sets), renamed without a leading underscore (`_.globals` →
+  `default.globals`, `_<name>.globals` → `<name>.globals`). `SketchPen: Init`
+  now scaffolds `styles/default.globals`; Completion and Hover resolve the
+  styles folder the same way the CLI does. Matches the `sketchpen` CLI's
+  `-style` flag (renamed from `-custom_globals`) — update to a current CLI
+  build together with this extension.
+
 ## 0.1.0
 
 Initial release. Requires the [`sketchpen` CLI](../docs/CLI.md#installation)

@@ -18,18 +18,21 @@ on `PATH`, set `sketchpen.cliPath` in your VS Code settings.
 ## Features
 
 - **Init** (Command Palette: `SketchPen: Init`) — scaffolds a new icon-set
-  folder: a working `_.globals`, a `templates/` folder with an example
-  `.spt`, and a starter `icon.sp` that already renders something. Prompts for
-  a target folder (defaults to the workspace root); never overwrites files
-  that already exist, so it's safe to re-run on a partially set up folder.
+  folder: a working `styles/default.globals`, a `templates/` folder with an
+  example `.spt`, and a starter `icon.sp` that already renders something.
+  Prompts for a target folder (defaults to the workspace root); never
+  overwrites files that already exist, so it's safe to re-run on a partially
+  set up folder.
 - **Completion** — keyword/method completion (with parameter snippets) for
   `pen`/`brush`/`gradientbrush`/`line`/`circle`/`path`/`text`/`transform`/`globals`,
   filtered to what's actually valid in the current file type (`.sp`, `.spt`,
   or `.globals`), plus `@@variable` completion sourced from your project's
-  `_.globals`.
+  styles folder `default.globals` (a local `styles/` subfolder by default, or
+  wherever an optional `.sketchpen.json`'s `stylesPath` points).
 - **Hover** — hovering an `@@name` reference shows the value declared for it
-  in the folder's `_.globals` (a best-effort text match against the base
-  file, not a compiled/resolved value — style overrides aren't reflected).
+  in the folder's styles folder `default.globals` (a best-effort text match
+  against the base file, not a compiled/resolved value — style overrides
+  aren't reflected).
 - **Live preview** — renders the active `.sp` file on save (SVG, via
   `sketchpen compose --composer svg`) into a preview panel. Also re-renders
   automatically when a `#include`d `.spt` file it (transitively) depends on

@@ -139,12 +139,12 @@ dotnet build src/SketchPen/SketchPen.csproj -c Debug
 Usage:
 
 ```bash
-SketchPen.exe <directory> [-outfolder <path>] [-custom_globals <stylename>] [-format png|svg] [-sizes <csv>] [-resolutions <csv>]
+SketchPen.exe <directory> [-outfolder <path>] [-style <stylename>] [-format png|svg] [-sizes <csv>] [-resolutions <csv>]
 ```
 
 ```bash
 SketchPen.exe plot/basic -outfolder plot/basic-img
-SketchPen.exe plot/basic -outfolder plot/basic-img -custom_globals bg-dark
+SketchPen.exe plot/basic -outfolder plot/basic-img -style bg-dark
 SketchPen.exe plot/basic -outfolder plot/basic-svg -format svg
 SketchPen.exe plot/basic -outfolder out -sizes 32,64 -resolutions 1,2
 ```

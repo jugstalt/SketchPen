@@ -29,7 +29,7 @@ For the scripting language itself (`.sp`/`.spt`/`.globals`), see
 - [What gets rendered](#what-gets-rendered)
 - [Output naming and location](#output-naming-and-location)
 - [Vector (SVG) output](#vector-svg-output)
-- [Styling (custom globals)](#styling-custom-globals)
+- [Styling](#styling)
 - [Examples](#examples)
 - [The `compose` subcommand](#the-compose-subcommand)
 - [Machine-readable output (`--output json`)](#machine-readable-output---output-json)
@@ -77,7 +77,7 @@ global-tool package yourself instead of downloading it, see
 ## Usage
 
 ```bash
-SketchPen.exe <path> [-outfolder <folder>] [-custom_globals <stylename>] [-format png|svg] [-sizes <csv>] [-resolutions <csv>] [--output text|json]
+SketchPen.exe <path> [-outfolder <folder>] [-style <stylename>] [-format png|svg] [-sizes <csv>] [-resolutions <csv>] [--output text|json]
 ```
 
 Running the tool with no arguments prints a short usage line and exits
@@ -93,15 +93,15 @@ Usage: SketchPen.exe path [options]
 |---|---|---|
 | `<path>` (first, positional) | Yes | Either a single `.sp` file, or a directory containing `.sp` files. See [What gets rendered](#what-gets-rendered). |
 | `-outfolder <folder>` | No | Directory the generated PNGs are written to. Created automatically if it doesn't exist. Default: current working directory. |
-| `-custom_globals <stylename>` | No | Name of a style, without leading underscore and without the `.globals` extension. Loads `_<stylename>.globals` from the same directory as the input file(s) in addition to the default `_.globals`. See [Styling](#styling-custom-globals) and [docs/SYNTAX.md](SYNTAX.md#globals-files-and-styling). Default: no custom style (only `_.globals`, if present). |
+| `-style <stylename>` | No | Name of a style, without the `.globals` extension. Loads `<stylename>.globals` from the input files' styles folder (a local `styles/` subfolder by default, or wherever `.sketchpen.json`'s `stylesPath` points — see [docs/SYNTAX.md](SYNTAX.md#globals-files-and-styling)) in addition to the default `default.globals`. See [Styling](#styling) below. Default: no named style (only `default.globals`, if present). |
 | `-format png\|svg` | No | Output format. `png` (default) renders the raster size/resolution matrix described below. `svg` renders one resolution-independent vector file per icon instead — see [Vector (SVG) output](#vector-svg-output). Default: `png`. |
 | `-sizes <csv>` | No | **PNG only.** Comma-separated list of positive integer sizes (logical/CSS pixels), e.g. `16,32,64`, replacing the default `16,26,32,64,128`. Ignored by `-format svg` (see [Vector (SVG) output](#vector-svg-output)). |
 | `-resolutions <csv>` | No | **PNG only.** Comma-separated list of positive integer `@<ratio>` pixel multipliers, e.g. `1,2,3`, replacing the default `1,2,3`. Ignored by `-format svg`. **Not DPI** — unlike `compose`'s `--resolutions` (see [The `compose` subcommand](#the-compose-subcommand)), these are plain multipliers matching the `@<ratio>` in the output filename, i.e. actual pixels = `size × ratio`. |
 | `--output text\|json` | No | Console output mode — see [Machine-readable output](#machine-readable-output---output-json). Default: `text` (today's exact console output). |
 
 Every option accepts both its original single-dash spelling (`-outfolder`,
-`-custom_globals`, `-format`, `-sizes`, `-resolutions`) and a newer
-double-dash kebab-case alias (`--outfolder`, `--custom-globals`, `--format`,
+`-style`, `-format`, `-sizes`, `-resolutions`) and a newer
+double-dash kebab-case alias (`--outfolder`, `--style`, `--format`,
 `--sizes`, `--resolutions`) — both work identically, use whichever you
 prefer. Options take exactly one value and can be given in any order.
 `-sizes`/`-resolutions` are validated as comma-separated positive integers;
@@ -176,21 +176,21 @@ Notes:
   rendering depends on the viewer having that font installed, so appearance may
   differ slightly from the PNG rendition (which bakes in whatever font Skia
   resolved at generation time). There is no text-to-path outlining.
-- Combining `-format svg` with `-custom_globals <stylename>` works exactly like
-  the PNG path (see [Styling](#styling-custom-globals)) — one style per run.
+- Combining `-format svg` with `-style <stylename>` works exactly like
+  the PNG path (see [Styling](#styling)) — one style per run.
 
-## Styling (custom globals)
+## Styling
 
-`-custom_globals <stylename>` selects **one** style for the whole run — see
-[docs/SYNTAX.md](SYNTAX.md#globals-files-and-styling) for how `_.globals` and
-`_<stylename>.globals` are combined. To render several styles with the root
-command, invoke the CLI once per style with a different output folder or
-filename convention, e.g.:
+`-style <stylename>` selects **one** style for the whole run — see
+[docs/SYNTAX.md](SYNTAX.md#globals-files-and-styling) for how `default.globals` and
+`<stylename>.globals` are combined, and where the styles folder they live in comes
+from. To render several styles with the root command, invoke the CLI once per style
+with a different output folder or filename convention, e.g.:
 
 ```bash
 SketchPen.exe plot/basic -outfolder plot/basic-img
-SketchPen.exe plot/basic -outfolder plot/basic-img-dark -custom_globals bg-dark
-SketchPen.exe plot/basic -outfolder plot/basic-img-e    -custom_globals e
+SketchPen.exe plot/basic -outfolder plot/basic-img-dark -style bg-dark
+SketchPen.exe plot/basic -outfolder plot/basic-img-e    -style e
 ```
 
 (The [`compose`](#the-compose-subcommand) subcommand, in contrast, accepts a
@@ -205,10 +205,10 @@ Render every icon in `plot/basic` into `plot/basic-img` with the default style:
 SketchPen.exe plot/basic -outfolder plot/basic-img
 ```
 
-Same, but with the `bg-dark` color style (`plot/basic/_bg-dark.globals`):
+Same, but with the `bg-dark` color style (`plot/styles/bg-dark.globals`):
 
 ```bash
-SketchPen.exe plot/basic -outfolder plot/basic-img -custom_globals bg-dark
+SketchPen.exe plot/basic -outfolder plot/basic-img -style bg-dark
 ```
 
 Render the `webgis` set:
@@ -341,11 +341,13 @@ completion, without the extension needing to duplicate any compiler logic:
 - With no `[path]`: `globalVariables` is `null`, `commands` is always present
   (it's static — the same grammar regardless of any project).
 - With `[path]` (a directory, or a `.sp` file inside one): additionally
-  compiles and executes that directory's `_.globals`, returning its
-  `globals.set`/`tryset` variable names as `globalVariables`. A missing or
-  broken `_.globals` yields `globalVariables: []`, **not** a command failure —
-  `_.globals` is optional everywhere else in the language too, so this command
-  never fails just because a project doesn't have one (yet).
+  compiles and executes that directory's `default.globals` (resolved via its
+  styles folder, see [docs/SYNTAX.md](SYNTAX.md#globals-files-and-styling)),
+  returning its `globals.set`/`tryset` variable names as `globalVariables`. A
+  missing or broken `default.globals` yields `globalVariables: []`, **not** a
+  command failure — `default.globals` is optional everywhere else in the
+  language too, so this command never fails just because a project doesn't
+  have one (yet).
 - The only failure mode is a `[path]` that doesn't exist: `{"success": false,
   "commands": null, "globalVariables": null, "error": "Can't find part of the
   path '...'"}`, exit code `1`.
@@ -365,7 +367,7 @@ plot.bat basic bg-dark
 ```
 
 which is equivalent to `SketchPen.exe plot/basic -outfolder plot/basic-img
--custom_globals bg-dark`. Both scripts currently hard-code an absolute path to
+-style bg-dark`. Both scripts currently hard-code an absolute path to
 the built executable/DLL (a leftover `net6.0` path in `plot.sh`) — adjust it to
 match your local build output (`net10.0`) and machine before using them as-is.
 
@@ -398,7 +400,7 @@ For any other exception, the message is printed (`Exception: <message>`); in a
   resolution-independent reference size; use [`compose`](#the-compose-subcommand)
   (`--composer svg` with `--sizes`) for a different reference size.
 - **The root command only supports one style per invocation** — see
-  [Styling](#styling-custom-globals). `compose --styles a,b,c` supports multiple
+  [Styling](#styling). `compose --styles a,b,c` supports multiple
   styles in one call for the batch composers.
 - No `DrawImage`/embedded-raster support in SVG output, no text-to-path
   outlining — see [Vector (SVG) output](#vector-svg-output). Applies to both the

@@ -1,4 +1,4 @@
-Scaffold a new icon set: a working `_.globals`, a `templates/` folder with an example `.spt`, and a starter `icon.sp` that already renders something.
+Scaffold a new icon set: a working `styles/default.globals`, a `templates/` folder with an example `.spt`, and a starter `icon.sp` that already renders something.
 
 [Run SketchPen: Init](command:sketchpen.init)
 

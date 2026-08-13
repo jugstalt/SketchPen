@@ -28,9 +28,9 @@ public class Compiler
         return commands;
     }
 
-    public string PreCompile(string fileName, string customGlobalsName = "")
+    public string PreCompile(string fileName, string customGlobalsName = "", bool appendGlobals = true)
     {
-        var preCompiler = new PreComplier(fileName, customGlobalsName, true);
+        var preCompiler = new PreComplier(fileName, customGlobalsName, appendGlobals);
         string code = preCompiler.Compile(fileName);
 
         return code;

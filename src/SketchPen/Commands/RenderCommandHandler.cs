@@ -11,7 +11,7 @@ namespace SketchPen.Commands;
 
 /// <summary>
 /// The original, legacy CLI behavior — <c>SketchPen.exe &lt;path&gt; [-outfolder ...]
-/// [-custom_globals ...] [-format png|svg]</c> — moved unchanged into a DI-constructed class so
+/// [-style ...] [-format png|svg]</c> — moved unchanged into a DI-constructed class so
 /// it can be invoked as the <see cref="System.CommandLine.RootCommand"/>'s own action. This is a
 /// structural move only: file collection, the (now optionally overridable, default
 /// <c>16,26,32,64,128 × @1,2,3</c>) PNG loop, the single-SVG-per-icon branch, and error handling
@@ -33,7 +33,7 @@ public class RenderCommandHandler
         _commandTypes = commandTypes;
     }
 
-    public int Execute(string? path, string outFolder, string customGlobalsName, string format,
+    public int Execute(string? path, string outFolder, string styleName, string format,
                        string? sizes, string? resolutions, IConsoleReporter reporter)
     {
         try
@@ -89,7 +89,7 @@ public class RenderCommandHandler
                 reporter.PlotStart(fileInfo.Name);
 
                 var plotter = new Plotter(_commandTypes, plotContextType);
-                plotter.Init(fileName, customGlobalsName);
+                plotter.Init(fileName, styleName);
 
                 if (format == "svg")
                 {

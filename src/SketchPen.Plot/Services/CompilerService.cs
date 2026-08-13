@@ -18,6 +18,7 @@ public class CompilerService
     public IEnumerable<IPlotCommand> Compile(string code,
                                              string customGlobalsName = "") => _compiler.Compile(code, customGlobalsName);
 
-    public string PreCompile(string fileName, 
-                             string customGlobalsName = "") => _compiler.PreCompile(fileName, customGlobalsName);
+    public string PreCompile(string fileName,
+                             string customGlobalsName = "",
+                             bool appendGlobals = true) => _compiler.PreCompile(fileName, customGlobalsName, appendGlobals);
 }

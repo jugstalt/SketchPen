@@ -1,4 +1,5 @@
 using SketchPen.Plot;
+using SketchPen.Plot.Compile;
 using SketchPen.Plot.Debugging;
 using SketchPen.Plot.Models;
 using SketchPen.Plot.Services;
@@ -19,7 +20,7 @@ namespace SketchPen.Commands;
 /// zero new grammar knowledge) and mirrors
 /// <c>SketchPenCodeService.TryGetGlobalVariableNames</c>'s exact behavior for the dynamic part
 /// (including silently returning an empty list, never failing the command, on a broken
-/// <c>_.globals</c>).
+/// <c>default.globals</c>).
 /// </summary>
 public class LanguageInfoCommandHandler
 {
@@ -66,16 +67,21 @@ public class LanguageInfoCommandHandler
     }
 
     // Mirrors SketchPenCodeService.TryGetGlobalVariableNames (src/SketchPen.Code/Services/SketchPenCodeService.cs)
-    // exactly: compiles and executes _.globals against a DebugPlotContext and reads back the
-    // resulting Globals dictionary's keys. Any failure (missing/broken _.globals) yields an
-    // empty list, never an error for this command.
+    // exactly: compiles and executes default.globals against a DebugPlotContext and reads back
+    // the resulting Globals dictionary's keys. Any failure (missing/broken default.globals, or no
+    // styles folder at all) yields an empty list, never an error for this command. The styles
+    // folder is resolved the same way PreComplier resolves it for any .sp file in this directory
+    // (StylesFolderResolver: this directory's .sketchpen.json if present, else "./styles").
+    // appendGlobals: false because we're compiling the globals file itself, not a script that
+    // needs it prepended.
     private IEnumerable<string> TryGetGlobalVariableNames(string path)
     {
         string directory = new DirectoryInfo(path).Exists
             ? path
             : new FileInfo(path).DirectoryName ?? path;
 
-        string globalsFile = Path.Combine(directory, "_.globals");
+        string stylesFolder = StylesFolderResolver.Resolve(directory);
+        string globalsFile = Path.Combine(stylesFolder, "default.globals");
         if (!File.Exists(globalsFile))
         {
             return Array.Empty<string>();
@@ -83,7 +89,7 @@ public class LanguageInfoCommandHandler
 
         try
         {
-            var code = _compiler.PreCompile(globalsFile);
+            var code = _compiler.PreCompile(globalsFile, appendGlobals: false);
             var commands = _compiler.Compile(code);
 
             using (var plotContext = new DebugPlotContext())

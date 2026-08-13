@@ -25,12 +25,11 @@ class PreComplier
         FileInfo fi = new FileInfo(fileName);
         DirectoryInfo di = fi.Directory;
 
-        string globalsFile = new FileInfo($"{di.FullName}/_.globals").FullName;
-        appendGlobals = appendGlobals && globalsFile != fi.FullName;
+        string stylesFolder = StylesFolderResolver.Resolve(di.FullName);
 
         if (!String.IsNullOrEmpty(customGlobalsName))
         {
-            var customGlobalsFi = new FileInfo($"{di.FullName}/_{customGlobalsName}.globals");
+            var customGlobalsFi = new FileInfo(Path.Combine(stylesFolder, $"{customGlobalsName}.globals"));
             if (customGlobalsFi.Exists)
             {
                 code.AppendCodefileComment(customGlobalsFi.FullName);
@@ -41,7 +40,7 @@ class PreComplier
 
         if (appendGlobals)
         {
-            var globalsFi = new FileInfo($"{di.FullName}/_.globals");
+            var globalsFi = new FileInfo(Path.Combine(stylesFolder, "default.globals"));
             if (globalsFi.Exists)
             {
                 code.AppendCodefileComment(globalsFi.FullName);

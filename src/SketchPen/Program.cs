@@ -40,7 +40,7 @@ var outputOption = new Option<string>("--output")
 };
 
 // ---- root command: the original, legacy invocation, unchanged ----
-// SketchPen.exe <path> [-outfolder|--outfolder <path>] [-custom_globals|--custom-globals <name>] [-format|--format png|svg]
+// SketchPen.exe <path> [-outfolder|--outfolder <path>] [-style|--style <name>] [-format|--format png|svg]
 
 var pathArgument = new Argument<string?>("path")
 {
@@ -54,9 +54,9 @@ var outFolderOption = new Option<string>("--outfolder", "-outfolder")
     DefaultValueFactory = _ => string.Empty
 };
 
-var customGlobalsOption = new Option<string>("--custom-globals", "-custom_globals")
+var styleOption = new Option<string>("--style", "-style")
 {
-    Description = "Style name — loads _<stylename>.globals in addition to _.globals",
+    Description = "Style name — loads <name>.globals from the styles folder in addition to default.globals",
     DefaultValueFactory = _ => string.Empty
 };
 
@@ -81,12 +81,12 @@ var rootDescription = """
     SketchPen — renders .sp icon scripts to PNG or SVG.
 
     Usage:
-      SketchPen.exe <path> [-outfolder <dir>] [-custom_globals <style>] [-format png|svg]
+      SketchPen.exe <path> [-outfolder <dir>] [-style <name>] [-format png|svg]
                     [-sizes <csv>] [-resolutions <csv>]
 
     Examples:
       SketchPen.exe plot/basic/disk.sp -outfolder out
-      SketchPen.exe plot/basic -outfolder out -custom_globals bg-dark
+      SketchPen.exe plot/basic -outfolder out -style bg-dark
       SketchPen.exe plot/basic/disk.sp -outfolder out -format svg
       SketchPen.exe plot/basic -outfolder out --output json
       SketchPen.exe plot/basic/disk.sp -outfolder out -sizes 32,64 -resolutions 1,2
@@ -102,7 +102,7 @@ var rootDescription = """
 var rootCommand = new RootCommand(rootDescription)
 {
     Arguments = { pathArgument },
-    Options = { outFolderOption, customGlobalsOption, formatOption, rootSizesOption, rootResolutionsOption, outputOption }
+    Options = { outFolderOption, styleOption, formatOption, rootSizesOption, rootResolutionsOption, outputOption }
 };
 
 rootCommand.SetAction(parseResult =>
@@ -113,7 +113,7 @@ rootCommand.SetAction(parseResult =>
     return handler.Execute(
         parseResult.GetValue(pathArgument),
         parseResult.GetValue(outFolderOption) ?? string.Empty,
-        parseResult.GetValue(customGlobalsOption) ?? string.Empty,
+        parseResult.GetValue(styleOption) ?? string.Empty,
         parseResult.GetValue(formatOption) ?? "png",
         parseResult.GetValue(rootSizesOption),
         parseResult.GetValue(rootResolutionsOption),
@@ -224,7 +224,7 @@ rootCommand.Subcommands.Add(composeCommand);
 
 var languageInfoPathArgument = new Argument<string?>("path")
 {
-    Description = "Optional: a directory (or a .sp file inside one) to also resolve @@variable names from its _.globals",
+    Description = "Optional: a directory (or a .sp file inside one) to also resolve @@variable names from its default.globals",
     Arity = ArgumentArity.ZeroOrOne
 };
 

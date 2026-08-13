@@ -10,7 +10,7 @@
 // linear gradient, automatically, as soon as its color is set to something
 // other than transparent -- no separate "use gradient" flag needed.
 //
-// This folder default pen/brush color already comes from _.globals
+// This folder default pen/brush color already comes from styles/default.globals
 // (auto-included before every .sp file here, see 10-variables-and-globals.sp)
 // -- this file overrides them locally to show each method explicitly.
 

@@ -2,26 +2,31 @@
 // ---------------------------------------------------
 // Anywhere a number/string parameter is expected, @@name can reference a
 // value previously set via globals.set/globals.tryset in a loaded .globals
-// file. This whole plot/examples/ folder auto-loads _.globals before every
-// .sp file in it (see that file) -- that is where @@brushColor,
-// @@outlinePenColor and @@accentColor below come from; @@name is replaced
-// by the currently effective value at compile time, and compilation fails
-// with "Unknown variable: name" if it was never set.
+// file. Every icon-set folder has a *styles folder* -- by default a local
+// styles/ subfolder, or wherever an optional .sketchpen.json names via
+// "stylesPath" (see docs/SYNTAX.md > ".globals files and styling"; can even
+// be a location shared across several icon sets). This folder has no
+// .sketchpen.json, so it uses styles/ -- default.globals there is
+// auto-loaded before every .sp file in this directory (see that file) --
+// that is where @@brushColor, @@outlinePenColor and @@accentColor below
+// come from; @@name is replaced by the currently effective value at compile
+// time, and compilation fails with "Unknown variable: name" if it was never
+// set.
 //
-// _.globals (excerpt):
+// styles/default.globals (excerpt):
 //   globals.tryset(brushColor, "#4a90d9");
 //   globals.tryset(outlinePenColor, "#1a1a1a");
 //   pen.color(@@penColor);
 //   brush.color(@@brushColor);
 //
-// A second file, _dark.globals, defines the SAME names via `globals.set`
-// (always overwrites) instead of `tryset` (only sets if not already
-// present) -- since it is loaded BEFORE _.globals, its values "win" and
-// _.globals tryset calls silently become no-ops. Rendering this whole
-// folder with that style swaps every icon color without touching a
-// single .sp file:
+// A second file, styles/dark.globals, defines the SAME names via
+// `globals.set` (always overwrites) instead of `tryset` (only sets if not
+// already present) -- since it is loaded BEFORE default.globals, its values
+// "win" and the tryset calls in default.globals silently become no-ops.
+// Rendering this whole folder with that style swaps every icon color
+// without touching a single .sp file:
 //   sketchpen compose plot/examples --composer png-zip --styles ,dark --sizes 64
-// (legacy CLI syntax: SketchPen.exe plot/examples -custom_globals dark)
+// (classic CLI syntax: SketchPen.exe plot/examples -style dark)
 
 transform.reset();
 transform.translate(-18, 0);

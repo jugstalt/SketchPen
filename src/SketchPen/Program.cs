@@ -66,17 +66,34 @@ var formatOption = new Option<string>("--format", "-format")
     DefaultValueFactory = _ => "png"
 };
 
+var rootSizesOption = new Option<string?>("--sizes", "-sizes")
+{
+    Description = "PNG only. Comma-separated sizes, e.g. 16,32,64 (default: 16,26,32,64,128)"
+};
+
+var rootResolutionsOption = new Option<string?>("--resolutions", "-resolutions")
+{
+    Description = "PNG only. Comma-separated @<ratio> pixel multipliers, e.g. 1,2,3 (default: 1,2,3) — " +
+                   "NOT DPI (unlike compose's --resolutions)"
+};
+
 var rootDescription = """
     SketchPen — renders .sp icon scripts to PNG or SVG.
 
     Usage:
       SketchPen.exe <path> [-outfolder <dir>] [-custom_globals <style>] [-format png|svg]
+                    [-sizes <csv>] [-resolutions <csv>]
 
     Examples:
       SketchPen.exe plot/basic/disk.sp -outfolder out
       SketchPen.exe plot/basic -outfolder out -custom_globals bg-dark
       SketchPen.exe plot/basic/disk.sp -outfolder out -format svg
       SketchPen.exe plot/basic -outfolder out --output json
+      SketchPen.exe plot/basic/disk.sp -outfolder out -sizes 32,64 -resolutions 1,2
+
+    -sizes/-resolutions only apply to -format png (default 16,26,32,64,128 x
+    @1/@2/@3, unchanged if omitted); -format svg always renders one
+    resolution-independent file per icon regardless.
 
     For batch ZIPs, web sprites, or the themeable CSS-variable HTML export, use
     the 'compose' subcommand instead — run 'SketchPen.exe compose --help'.
@@ -85,7 +102,7 @@ var rootDescription = """
 var rootCommand = new RootCommand(rootDescription)
 {
     Arguments = { pathArgument },
-    Options = { outFolderOption, customGlobalsOption, formatOption, outputOption }
+    Options = { outFolderOption, customGlobalsOption, formatOption, rootSizesOption, rootResolutionsOption, outputOption }
 };
 
 rootCommand.SetAction(parseResult =>
@@ -98,6 +115,8 @@ rootCommand.SetAction(parseResult =>
         parseResult.GetValue(outFolderOption) ?? string.Empty,
         parseResult.GetValue(customGlobalsOption) ?? string.Empty,
         parseResult.GetValue(formatOption) ?? "png",
+        parseResult.GetValue(rootSizesOption),
+        parseResult.GetValue(rootResolutionsOption),
         reporter);
 });
 

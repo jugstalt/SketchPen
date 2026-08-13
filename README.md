@@ -139,21 +139,23 @@ dotnet build src/SketchPen/SketchPen.csproj -c Debug
 Usage:
 
 ```bash
-SketchPen.exe <directory> [-outfolder <path>] [-custom_globals <stylename>] [-format png|svg]
+SketchPen.exe <directory> [-outfolder <path>] [-custom_globals <stylename>] [-format png|svg] [-sizes <csv>] [-resolutions <csv>]
 ```
 
 ```bash
 SketchPen.exe plot/basic -outfolder plot/basic-img
 SketchPen.exe plot/basic -outfolder plot/basic-img -custom_globals bg-dark
 SketchPen.exe plot/basic -outfolder plot/basic-svg -format svg
+SketchPen.exe plot/basic -outfolder out -sizes 32,64 -resolutions 1,2
 ```
 
-By default, renders every `*.sp` file in `<directory>` to PNGs in a fixed set of
+By default, renders every `*.sp` file in `<directory>` to PNGs in the default
 sizes (`16, 26, 32, 64, 128` px) and resolutions (`@1`/`@2`/`@3`), named
 `<iconname>_<size>@<resolution>.png` — exactly the scheme that produces
-[`plot/basic-img`](plot/basic-img) from [`plot/basic`](plot/basic). With
-`-format svg`, it instead renders one resolution-independent `<iconname>.svg` per
-icon. This makes it straightforward to script icon generation or wire it into CI.
+[`plot/basic-img`](plot/basic-img) from [`plot/basic`](plot/basic). Both lists
+are overridable via `-sizes`/`-resolutions` (PNG only). With `-format svg`, it
+instead renders one resolution-independent `<iconname>.svg` per icon. This
+makes it straightforward to script icon generation or wire it into CI.
 **This original syntax is fully preserved** — it's the built-in behavior of the
 tool's root command, not a deprecated compatibility shim.
 

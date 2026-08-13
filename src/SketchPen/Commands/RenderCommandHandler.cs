@@ -13,15 +13,18 @@ namespace SketchPen.Commands;
 /// The original, legacy CLI behavior — <c>SketchPen.exe &lt;path&gt; [-outfolder ...]
 /// [-custom_globals ...] [-format png|svg]</c> — moved unchanged into a DI-constructed class so
 /// it can be invoked as the <see cref="System.CommandLine.RootCommand"/>'s own action. This is a
-/// structural move only: file collection, the fixed <c>16,26,32,64,128 × @1,2,3</c> PNG loop, the
-/// single-SVG-per-icon branch, and error handling are an exact behavioral port of the original
-/// <c>Program.cs</c>/<c>Main</c> body — output files, console text, and exit codes are unchanged.
+/// structural move only: file collection, the (now optionally overridable, default
+/// <c>16,26,32,64,128 × @1,2,3</c>) PNG loop, the single-SVG-per-icon branch, and error handling
+/// are an exact behavioral port of the original <c>Program.cs</c>/<c>Main</c> body — output
+/// files, console text, and exit codes are unchanged when <c>-sizes</c>/<c>-resolutions</c> are
+/// left at their defaults.
 /// </summary>
 public class RenderCommandHandler
 {
     private const int SvgReferenceSize = 128;
 
-    private static readonly int[] Sizes = { 16, 26, 32, 64, 128 };
+    private static readonly int[] DefaultSizes = { 16, 26, 32, 64, 128 };
+    private static readonly int[] DefaultResolutions = { 1, 2, 3 };
 
     private readonly CommandTypesService _commandTypes;
 
@@ -30,7 +33,8 @@ public class RenderCommandHandler
         _commandTypes = commandTypes;
     }
 
-    public int Execute(string? path, string outFolder, string customGlobalsName, string format, IConsoleReporter reporter)
+    public int Execute(string? path, string outFolder, string customGlobalsName, string format,
+                       string? sizes, string? resolutions, IConsoleReporter reporter)
     {
         try
         {
@@ -47,6 +51,9 @@ public class RenderCommandHandler
                 reporter.Complete(true);
                 return 0;
             }
+
+            var sizeList = ParsePositiveInts(sizes, "-sizes") ?? DefaultSizes;
+            var resolutionList = ParsePositiveInts(resolutions, "-resolutions") ?? DefaultResolutions;
 
             #region Collect filenames
 
@@ -101,9 +108,9 @@ public class RenderCommandHandler
                 }
                 else
                 {
-                    foreach (var size in Sizes)
+                    foreach (var size in sizeList)
                     {
-                        for (int ratio = 1; ratio <= 3; ratio++)
+                        foreach (var ratio in resolutionList)
                         {
                             string targetFile = $"{baseName}_{size}@{ratio}.png";
                             reporter.PlotProgress($"{size}@{ratio}");
@@ -140,5 +147,26 @@ public class RenderCommandHandler
             reporter.Complete(false);
             return 1;
         }
+    }
+
+    // Missing/empty -sizes/-resolutions returns null so the caller can fall back to the classic
+    // fixed defaults -- an explicit, deliberately-chosen list of positive integers, or nothing.
+    private static int[]? ParsePositiveInts(string? csv, string optionName)
+    {
+        if (string.IsNullOrEmpty(csv))
+        {
+            return null;
+        }
+
+        var values = csv.Split(',').Select(s => s.Trim()).Select(s =>
+        {
+            if (!int.TryParse(s, out int value) || value <= 0)
+            {
+                throw new Exception($"Invalid {optionName} value '{s}' — expected a comma-separated list of positive integers, e.g. \"16,32,64\".");
+            }
+            return value;
+        }).ToArray();
+
+        return values;
     }
 }

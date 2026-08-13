@@ -77,7 +77,7 @@ global-tool package yourself instead of downloading it, see
 ## Usage
 
 ```bash
-SketchPen.exe <path> [-outfolder <folder>] [-custom_globals <stylename>] [-format png|svg] [--output text|json]
+SketchPen.exe <path> [-outfolder <folder>] [-custom_globals <stylename>] [-format png|svg] [-sizes <csv>] [-resolutions <csv>] [--output text|json]
 ```
 
 Running the tool with no arguments prints a short usage line and exits
@@ -94,16 +94,19 @@ Usage: SketchPen.exe path [options]
 | `<path>` (first, positional) | Yes | Either a single `.sp` file, or a directory containing `.sp` files. See [What gets rendered](#what-gets-rendered). |
 | `-outfolder <folder>` | No | Directory the generated PNGs are written to. Created automatically if it doesn't exist. Default: current working directory. |
 | `-custom_globals <stylename>` | No | Name of a style, without leading underscore and without the `.globals` extension. Loads `_<stylename>.globals` from the same directory as the input file(s) in addition to the default `_.globals`. See [Styling](#styling-custom-globals) and [docs/SYNTAX.md](SYNTAX.md#globals-files-and-styling). Default: no custom style (only `_.globals`, if present). |
-| `-format png\|svg` | No | Output format. `png` (default) renders the fixed raster size/resolution matrix described below. `svg` renders one resolution-independent vector file per icon instead — see [Vector (SVG) output](#vector-svg-output). Default: `png`. |
+| `-format png\|svg` | No | Output format. `png` (default) renders the raster size/resolution matrix described below. `svg` renders one resolution-independent vector file per icon instead — see [Vector (SVG) output](#vector-svg-output). Default: `png`. |
+| `-sizes <csv>` | No | **PNG only.** Comma-separated list of positive integer sizes (logical/CSS pixels), e.g. `16,32,64`, replacing the default `16,26,32,64,128`. Ignored by `-format svg` (see [Vector (SVG) output](#vector-svg-output)). |
+| `-resolutions <csv>` | No | **PNG only.** Comma-separated list of positive integer `@<ratio>` pixel multipliers, e.g. `1,2,3`, replacing the default `1,2,3`. Ignored by `-format svg`. **Not DPI** — unlike `compose`'s `--resolutions` (see [The `compose` subcommand](#the-compose-subcommand)), these are plain multipliers matching the `@<ratio>` in the output filename, i.e. actual pixels = `size × ratio`. |
 | `--output text\|json` | No | Console output mode — see [Machine-readable output](#machine-readable-output---output-json). Default: `text` (today's exact console output). |
 
 Every option accepts both its original single-dash spelling (`-outfolder`,
-`-custom_globals`, `-format`) and a newer double-dash kebab-case alias
-(`--outfolder`, `--custom-globals`, `--format`) — both work identically, use
-whichever you prefer. Options take exactly one value and can be given in any
-order. There is currently no option to change the rendered PNG sizes/resolutions
-on the root command — see [Known limitations](#known-limitations) and
-[The `compose` subcommand](#the-compose-subcommand) for a way to do that today.
+`-custom_globals`, `-format`, `-sizes`, `-resolutions`) and a newer
+double-dash kebab-case alias (`--outfolder`, `--custom-globals`, `--format`,
+`--sizes`, `--resolutions`) — both work identically, use whichever you
+prefer. Options take exactly one value and can be given in any order.
+`-sizes`/`-resolutions` are validated as comma-separated positive integers;
+an invalid value (non-numeric, zero, or negative) fails with a clear error
+and exit code `1` before anything is rendered.
 
 ## What gets rendered
 
@@ -117,10 +120,12 @@ on the root command — see [Known limitations](#known-limitations) and
 
 ## Output naming and location
 
-For every rendered `.sp` file, `-format png` (the default) always generates **5
-sizes × 3 resolutions = 15 PNGs**, with fixed sizes `16, 26, 32, 64, 128`
-(logical/CSS pixels) and resolution multipliers `@1`, `@2`, `@3` (i.e. actual
-bitmap pixels = `size × ratio`):
+For every rendered `.sp` file, `-format png` (the default) generates one PNG
+per size/resolution combination — by default **5 sizes × 3 resolutions = 15
+PNGs**, with sizes `16, 26, 32, 64, 128` (logical/CSS pixels) and resolution
+multipliers `@1`, `@2`, `@3` (i.e. actual bitmap pixels = `size × ratio`).
+Override either list with `-sizes`/`-resolutions` (e.g. `-sizes 32,64
+-resolutions 1,2` renders just 4 PNGs); omit either to keep its default:
 
 ```
 <iconname>_<size>@<ratio>.png
@@ -212,6 +217,13 @@ Render the `webgis` set:
 SketchPen.exe plot/webgis -outfolder plot/webgis-img
 ```
 
+Only the sizes/resolutions you actually need, e.g. for a web app that only
+ever uses 32px and 64px icons at `@1x`/`@2x`:
+
+```bash
+SketchPen.exe plot/basic -outfolder out -sizes 32,64 -resolutions 1,2
+```
+
 ## The `compose` subcommand
 
 ```bash
@@ -220,10 +232,10 @@ SketchPen.exe compose <path> --composer <id> [--sizes 16,32,64] [--styles ,bg-da
 
 Invokes any registered `IComposerService` directly — the same abstraction the
 VS Code extension's `Export Package…` command uses too — instead of the root
-command's fixed PNG/SVG behavior. Useful whenever you need a ZIP batch, a web
-sprite, or the CSS-variable HTML page from the command line, or want a
-different SVG size than the root command's fixed reference size (see
-[Vector (SVG) output](#vector-svg-output)).
+command's flat-folder PNG/SVG behavior. Useful whenever you need a ZIP batch,
+multiple styles in one run, a web sprite, or the CSS-variable HTML page from
+the command line, or want a different SVG size than the root command's fixed
+reference size (see [Vector (SVG) output](#vector-svg-output)).
 
 > **Common mistake:** `<path>` must come right **after** `compose`, not before
 > it — `SketchPen.exe compose plot/webgis --composer svg-zip` is correct,
@@ -380,11 +392,11 @@ For any other exception, the message is printed (`Exception: <message>`); in a
 
 ## Known limitations
 
-- **The root command's rendered PNG sizes/resolutions are fixed** (`16, 26, 32,
-  64, 128` × `@1/@2/@3`), and its SVG output uses one fixed reference size
-  (`128`) — this preserves the original tool's exact, unconfigurable behavior.
-  Use [`compose`](#the-compose-subcommand) (`--composer png-zip`/`svg`/`svg-zip`
-  with `--sizes`/`--resolutions`) for configurable sizes/resolutions/batches.
+- **The root command's SVG output uses one fixed reference size** (`128`) —
+  PNG sizes/resolutions are configurable via `-sizes`/`-resolutions` (see
+  [Arguments](#arguments)), but SVG is always rendered once, at one
+  resolution-independent reference size; use [`compose`](#the-compose-subcommand)
+  (`--composer svg` with `--sizes`) for a different reference size.
 - **The root command only supports one style per invocation** — see
   [Styling](#styling-custom-globals). `compose --styles a,b,c` supports multiple
   styles in one call for the batch composers.

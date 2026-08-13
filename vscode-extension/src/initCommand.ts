@@ -143,6 +143,43 @@ loading \`styles/<name>.globals\` first (its \`set\` calls win over
 \`.globals\` files in \`styles/\` (or wherever \`.sketchpen.json\`'s
 \`stylesPath\` points, if present).
 
+## Creating a new icon-set folder
+
+When asked to create a **new** icon-set folder (e.g. a fresh \`Music/\` folder
+of instrument icons in a project that may already have other icon sets),
+**always give it a \`.sketchpen.json\`** -- do not just rely on the implicit
+\`./styles\` fallback and skip writing the file.
+
+1. First check whether the project already has other icon-set folders with
+   their own styles (a \`styles/\` subfolder, or an existing
+   \`.sketchpen.json\`). If so, point the new folder's \`.sketchpen.json\` at
+   that same shared location instead of creating a separate copy, so the
+   whole project stays visually consistent and a style change updates every
+   icon set at once:
+
+   \`\`\`json
+   {
+     "stylesPath": "../shared-styles-folder-name"
+   }
+   \`\`\`
+
+   (\`stylesPath\` is resolved relative to this \`.sketchpen.json\`'s own
+   directory -- adjust the \`../...\` to wherever the shared folder actually
+   is.)
+2. If this is the first icon-set folder in the project, still create a
+   \`.sketchpen.json\` -- just point it at a local \`styles/\` subfolder next
+   to the new \`.sp\` files:
+
+   \`\`\`json
+   {
+     "stylesPath": "./styles"
+   }
+   \`\`\`
+
+   This makes the styles location explicit and discoverable up front, so
+   any icon-set folder created later in the project can point straight at
+   it instead of duplicating \`default.globals\`.
+
 ## Minimal worked example
 
 \`\`\`csharp

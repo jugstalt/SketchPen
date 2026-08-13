@@ -260,6 +260,16 @@ circle.pie(0, -180, 90, 90, 0, 0);         // filled segment
 `circle-pie-*.sp` in [`plot/basic`](../plot/basic) demonstrates quarter/half/full
 circle fill levels via `path.addarc` + `path.fill` as an alternative to `circle.pie`.
 
+**Known limitation — numeric R,G,B(,A) trailing colors are ambiguous with a
+short `pos`.** A hex-string color (`"#..."`) unambiguously ends the position
+block (a string can never be mistaken for a position number), but a numeric
+R,G,B(,A) color cannot — the parser can't tell where `pos` stops and the color
+starts when both are plain numbers, and the result is silently wrong (dropped
+color, and/or a garbage position) whenever `pos` uses fewer than its maximum
+4 values. Prefer a hex string for inline color overrides on `circle`; for a
+numeric R,G,B(,A) color, set it via `brush.color(...)`/`pen.color(...)`
+**before** the `circle.*` call instead of passing it inline.
+
 ### `path`
 
 A composite line/outline made of straight segments and arcs, either open

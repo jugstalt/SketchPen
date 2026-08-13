@@ -38,34 +38,44 @@ class CircleCommand : GeneralPlotCommand
     protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
     {
         CanvasRectangle pos;
+        int posParamCount;
 
+        // pos... is 1-4 numbers (see ToRectPos) -- the trailing pen/brush override (color[, width])
+        // starts right after however many of those were actually given, NOT at a fixed offset.
+        // A hardcoded Skip(4)/Skip(6) here would silently drop an inline color whenever pos used
+        // fewer than its maximum length, e.g. circle.fill(50, "#4a90d9") (pos = 1 value).
         switch (Method?.ToLower())
         {
             case "arc":
             case "pie":
-                pos = parameters.Skip(2).ToRectPos();
+                var arcPosParams = parameters.Skip(2);
+                posParamCount = 2 + arcPosParams.TakeFirstTypedParameterBlock<float>().Length;
+                pos = arcPosParams.ToRectPos();
                 break;
             default:
+                posParamCount = parameters.TakeFirstTypedParameterBlock<float>().Length;
                 pos = parameters.ToRectPos();
                 break;
         }
 
+        var tail = parameters.Skip(posParamCount);
+
         switch (Method?.ToLower())
         {
             case "draw":
-                using (var pen = context.CreatePen(parameters.Skip(4)))
+                using (var pen = context.CreatePen(tail))
                 {
                     context.Canvas.DrawEllipse(pen, context.Project(pos));
                 }
                 break;
             case "fill":
-                using (var brush = context.CreateBrush(parameters.Skip(4)))
+                using (var brush = context.CreateBrush(tail))
                 {
                     context.Canvas.FillEllipse(brush, context.Project(pos));
                 }
                 break;
             case "arc":
-                using (var pen = context.CreatePen(parameters.Skip(6)))
+                using (var pen = context.CreatePen(tail))
                 {
                     context.Canvas.DrawArc(pen,
                                            context.Project(pos),
@@ -74,7 +84,7 @@ class CircleCommand : GeneralPlotCommand
                 }
                 break;
             case "pie":
-                using (var brush = context.CreateBrush(parameters.Skip(6)))
+                using (var brush = context.CreateBrush(tail))
                 {
                     context.Canvas.FillPie(brush,
                                            context.Project(pos),

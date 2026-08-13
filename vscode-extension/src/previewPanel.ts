@@ -47,12 +47,23 @@ function buildGridOverlay(width: number, height: number): string {
 
     const cx = width / 2;
     const cy = height / 2;
+
+    // Proportional to the icon's own size (a fixed pixel offset, e.g. "22", only looked right at
+    // whatever size it was tuned against -- previewSize is user-configurable, and export sizes
+    // vary a lot more than that. text-anchor does the actual left/right/center alignment; these
+    // margins just keep the label off the very edge/axis line, so they only need to be "small",
+    // not exact.
+    const margin = Math.min(width, height) * 0.02;
+    const fontSize = Math.min(width, height) * 0.035;
+
     const labels = [
-        { x: 4, y: cy - 4, text: '-50' },
-        { x: width - 22, y: cy - 4, text: '+50' },
-        { x: cx + 4, y: 12, text: '-50' },
-        { x: cx + 4, y: height - 4, text: '+50' },
-        { x: cx + 4, y: cy - 4, text: '0' }
+        // x-axis labels, sitting just above the horizontal center line.
+        { x: margin, y: cy - margin, anchor: 'start', text: '-50' },
+        { x: width - margin, y: cy - margin, anchor: 'end', text: '+50' },
+        // y-axis labels, sitting just right of the vertical center line.
+        { x: cx + margin, y: margin + fontSize, anchor: 'start', text: '-50' },
+        { x: cx + margin, y: height - margin, anchor: 'start', text: '+50' },
+        { x: cx + margin, y: cy - margin, anchor: 'start', text: '0' }
     ];
 
     return `
@@ -60,7 +71,12 @@ function buildGridOverlay(width: number, height: number): string {
   ${lines.join('\n  ')}
   <line x1="${cx}" y1="0" x2="${cx}" y2="${height}" class="grid-axis" />
   <line x1="0" y1="${cy}" x2="${width}" y2="${cy}" class="grid-axis" />
-  ${labels.map((l) => `<text x="${l.x}" y="${l.y}" class="grid-label">${l.text}</text>`).join('\n  ')}
+  ${labels
+      .map(
+          (l) =>
+              `<text x="${l.x}" y="${l.y}" text-anchor="${l.anchor}" font-size="${fontSize}" class="grid-label">${l.text}</text>`
+      )
+      .join('\n  ')}
 </svg>`;
 }
 
@@ -243,8 +259,9 @@ export class PreviewPanelManager {
     opacity: 0.6;
   }
   .grid-label {
+    /* font-size set per-element (proportional to the icon's own size, see buildGridOverlay) --
+       not fixed here. */
     fill: var(--vscode-editorLineNumber-foreground, #888);
-    font-size: 4px;
     font-family: var(--vscode-font-family);
     opacity: 0.7;
   }

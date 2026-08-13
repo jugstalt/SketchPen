@@ -3,8 +3,9 @@ import * as crypto from 'crypto';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 import { compose, ComposeJsonResult } from './cliClient';
-import { PreviewPanelManager } from './previewPanel';
+import { PreviewPanelManager, PreviewWebviewMessage } from './previewPanel';
 import { SketchPenCompletionProvider } from './completionProvider';
+import { listAvailableStyles } from './stylesFolder';
 
 // SyntaxErrorException.Statement is formatted "<lineNumber>: <tokens>" -- there is no
 // column/character-offset anywhere in the compiler, so diagnostics are whole-line only. See
@@ -36,12 +37,33 @@ export class DiagnosticsManager {
     /** Absolute include-file path -> set of absolute .sp paths that transitively include it. */
     private readonly includedBy = new Map<string, Set<string>>();
 
+    /** Absolute .sp path -> style name the preview panel is currently switched to (''
+     * = default, no --styles). Populated by the preview panel's style switcher (see
+     * previewPanel.ts/handleWebviewMessage below); read back by renderAndDiagnose. */
+    private readonly selectedStyles = new Map<string, string>();
+
     constructor(
         private readonly context: vscode.ExtensionContext,
         private readonly previewPanel: PreviewPanelManager,
         private readonly completionProvider: SketchPenCompletionProvider
     ) {
         context.subscriptions.push(this.diagnostics);
+        previewPanel.setMessageHandler((sourceFile, message) => this.handleWebviewMessage(sourceFile, message));
+    }
+
+    /** Handles messages posted back from a preview panel -- currently just the style switcher. */
+    private handleWebviewMessage(sourceFile: string, message: PreviewWebviewMessage): void {
+        if (message.type !== 'styleChanged') {
+            return;
+        }
+
+        this.selectedStyles.set(sourceFile, message.style);
+        void vscode.workspace.openTextDocument(sourceFile).then(
+            (document) => this.renderAndDiagnose(document),
+            () => {
+                // The .sp file no longer exists -- nothing to re-render.
+            }
+        );
     }
 
     register(): void {
@@ -136,15 +158,18 @@ export class DiagnosticsManager {
     async renderAndDiagnose(document: vscode.TextDocument): Promise<void> {
         void this.trackIncludes(document);
 
-        const outPath = await this.getPreviewOutputPath(document.uri.fsPath);
+        const sourceFile = document.uri.fsPath;
+        const outPath = await this.getPreviewOutputPath(sourceFile);
         const previewSize = vscode.workspace.getConfiguration('sketchpen').get<number>('previewSize', 128);
+        const selectedStyle = this.selectedStyles.get(sourceFile) ?? '';
 
         let result: ComposeJsonResult;
         try {
             result = await compose({
-                path: document.uri.fsPath,
+                path: sourceFile,
                 composer: 'svg',
                 sizes: String(previewSize),
+                styles: selectedStyle || undefined,
                 out: outPath
             });
         } catch {
@@ -154,7 +179,8 @@ export class DiagnosticsManager {
 
         if (result.success) {
             this.diagnostics.delete(document.uri);
-            await this.previewPanel.showPreview(document.uri.fsPath, outPath);
+            const availableStyles = await listAvailableStyles(path.dirname(sourceFile));
+            await this.previewPanel.showPreview(sourceFile, outPath, availableStyles, selectedStyle);
             return;
         }
 

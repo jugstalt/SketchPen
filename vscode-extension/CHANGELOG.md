@@ -13,6 +13,12 @@ All notable changes to the SketchPen VS Code extension are documented here.
   styles folder the same way the CLI does. Matches the `sketchpen` CLI's
   `-style` flag (renamed from `-custom_globals`) — update to a current CLI
   build together with this extension.
+- **Bigger, scalable preview** — the rendered SVG now fills most of the
+  panel (previously capped at its native pixel size); a coordinate-grid
+  overlay (toggle in the panel toolbar) shows the `-50..+50` logical square
+  from [docs/SYNTAX.md](../docs/SYNTAX.md#coordinate-system) for alignment;
+  a style dropdown re-renders the preview with any named style from the
+  icon's styles folder, not just the default.
 
 ## 0.1.0
 

@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 import { CompletionTable, LanguageInfoResult, getLanguageInfo } from './cliClient';
+import { resolveStylesFolder } from './stylesFolder';
 
 type FileTypeKey = 'code' | 'template' | 'globals';
 
@@ -25,30 +26,6 @@ const KEYWORD_BEFORE_DOT = /([a-zA-Z_][a-zA-Z0-9_]*)\.\s*$/;
 // (hoverProvider.ts) -- not a substitute for actually compiling default.globals, which is what
 // `sketchpen language-info` does for the variable *names*.
 const GLOBALS_DECLARATION = /globals\.(?:set|tryset)\s*\(\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*,\s*([^)]+?)\s*\)/g;
-
-const SKETCHPEN_CONFIG_FILE = '.sketchpen.json';
-const DEFAULT_STYLES_SUBFOLDER = 'styles';
-
-/**
- * Light TypeScript-side mirror of SketchPen.Plot.Compile.StylesFolderResolver (see
- * src/SketchPen.Plot/Compile/StylesFolderResolver.cs): resolves the folder a `.sp` folder's
- * styles/globals live in. Checks `<folder>/.sketchpen.json` for a "stylesPath" key (resolved
- * relative to `folder`); falls back to `<folder>/styles` if the config file is absent, unreadable,
- * or missing that key. Never throws -- a missing/malformed config is just treated as "use the
- * default", same as the CLI-side resolver.
- */
-async function resolveStylesFolder(folder: string): Promise<string> {
-    try {
-        const configText = await fs.readFile(path.join(folder, SKETCHPEN_CONFIG_FILE), 'utf8');
-        const config = JSON.parse(configText) as { stylesPath?: string };
-        if (config.stylesPath && config.stylesPath.trim().length > 0) {
-            return path.resolve(folder, config.stylesPath);
-        }
-    } catch {
-        // No/unreadable/malformed .sketchpen.json -- fall through to the default below.
-    }
-    return path.join(folder, DEFAULT_STYLES_SUBFOLDER);
-}
 
 /**
  * Completion for .sp/.spt/.globals files. Mirrors the existing Monaco provider
@@ -87,8 +64,8 @@ export class SketchPenCompletionProvider implements vscode.CompletionItemProvide
      * Best-effort declared value for `@@name` (used by hoverProvider.ts), read directly from the
      * folder's base `default.globals` (resolved via resolveStylesFolder, the same
      * .sketchpen.json/"stylesPath" convention the CLI uses) -- a textual regex match, not a
-     * compile. Reflects the base declaration only; a `<style>.globals` override for the currently
-     * selected style isn't accounted for, since preview always renders with the default style.
+     * compile. Reflects the base declaration only; a `<style>.globals` override for whatever style
+     * the preview panel is currently switched to (see previewPanel.ts) isn't accounted for here.
      */
     getGlobalValue(folder: string, name: string): string | undefined {
         return this.globalValuesByFolder.get(folder)?.get(name);

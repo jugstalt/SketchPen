@@ -39,9 +39,10 @@ on `PATH`, set `sketchpen.cliPath` in your VS Code settings.
   file it (transitively) depends on is saved, as long as that icon's preview
   panel is open. The panel toolbar has a **Grid** toggle (the `-50..+50`
   logical coordinate square from
-  [docs/SYNTAX.md](../docs/SYNTAX.md#coordinate-system), for alignment) and a
-  **Style** dropdown to preview any named style from the icon's styles
-  folder, not just the default.
+  [docs/SYNTAX.md](../docs/SYNTAX.md#coordinate-system), for alignment), a
+  **Coordinates** toggle for a small `x,y` label at every grid intersection,
+  and a **Style** dropdown to preview any named style from the icon's
+  styles folder, not just the default.
 - **Diagnostics** — compile errors surface as editor warnings, including
   inside `#include`d `.spt` files. Line-accurate; not column-accurate — see
   [docs/CLI.md](../docs/CLI.md#the-language-info-subcommand) for why.

@@ -31,9 +31,10 @@ function ensureViewBox(svg: string): string {
 }
 
 /** Builds the grid/coordinate overlay -- lines every 10 logical units across the icon's -50..+50
- * coordinate square (see docs/SYNTAX.md#coordinate-system), plus a highlighted origin crosshair
- * and axis-end labels. Purely a display aid layered on top of the rendered icon; never sent to
- * the CLI or saved anywhere. Uses the icon's own viewBox dimensions so lines line up exactly. */
+ * coordinate square (see docs/SYNTAX.md#coordinate-system), a highlighted origin crosshair,
+ * axis-end labels, and (toggled separately, nested in #coord-labels) a small "x,y" label at every
+ * grid intersection. Purely a display aid layered on top of the rendered icon; never sent to the
+ * CLI or saved anywhere. Uses the icon's own viewBox dimensions so lines/labels line up exactly. */
 function buildGridOverlay(width: number, height: number): string {
     const steps = 10; // 10 logical units per grid line, -50..+50 -> 10 divisions
     const stepX = width / steps;
@@ -47,14 +48,15 @@ function buildGridOverlay(width: number, height: number): string {
 
     const cx = width / 2;
     const cy = height / 2;
+    const minDim = Math.min(width, height);
 
     // Proportional to the icon's own size (a fixed pixel offset, e.g. "22", only looked right at
     // whatever size it was tuned against -- previewSize is user-configurable, and export sizes
     // vary a lot more than that. text-anchor does the actual left/right/center alignment; these
     // margins just keep the label off the very edge/axis line, so they only need to be "small",
     // not exact.
-    const margin = Math.min(width, height) * 0.02;
-    const fontSize = Math.min(width, height) * 0.035;
+    const margin = minDim * 0.02;
+    const fontSize = minDim * 0.035;
 
     const labels = [
         // x-axis labels, sitting just above the horizontal center line.
@@ -65,6 +67,27 @@ function buildGridOverlay(width: number, height: number): string {
         { x: cx + margin, y: height - margin, anchor: 'start', text: '+50' },
         { x: cx + margin, y: cy - margin, anchor: 'start', text: '0' }
     ];
+
+    // One small "x,y" label per grid-line intersection (11x11, including the -50/+50 edges and
+    // the origin) -- much smaller than the axis-end labels above, positioned exactly at each
+    // crossing. text-anchor keeps the leftmost/rightmost columns from clipping past the edge; a
+    // small vertical offset lifts each label just above its point (flipped to just below for the
+    // top row, which has no room above it).
+    const coordFontSize = minDim * 0.02;
+    const coordLabels: string[] = [];
+    for (let i = 0; i <= steps; i++) {
+        for (let j = 0; j <= steps; j++) {
+            const logicalX = (i - steps / 2) * 10;
+            const logicalY = (j - steps / 2) * 10;
+            const px = i * stepX;
+            const py = j * stepY;
+            const anchor = i === 0 ? 'start' : i === steps ? 'end' : 'middle';
+            const dy = j === 0 ? coordFontSize * 1.1 : -coordFontSize * 0.4;
+            coordLabels.push(
+                `<text x="${px}" y="${py + dy}" text-anchor="${anchor}" font-size="${coordFontSize}" class="coord-label">${logicalX},${logicalY}</text>`
+            );
+        }
+    }
 
     return `
 <svg id="grid-overlay" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
@@ -77,6 +100,9 @@ function buildGridOverlay(width: number, height: number): string {
               `<text x="${l.x}" y="${l.y}" text-anchor="${l.anchor}" font-size="${fontSize}" class="grid-label">${l.text}</text>`
       )
       .join('\n  ')}
+  <g id="coord-labels">
+    ${coordLabels.join('\n    ')}
+  </g>
 </svg>`;
 }
 
@@ -265,11 +291,25 @@ export class PreviewPanelManager {
     font-family: var(--vscode-font-family);
     opacity: 0.7;
   }
+  #coord-labels {
+    display: none;
+  }
+  #coord-labels.visible {
+    display: block;
+  }
+  .coord-label {
+    /* font-size set per-element (proportional to the icon's own size, see buildGridOverlay) --
+       not fixed here. */
+    fill: var(--vscode-editorLineNumber-foreground, #888);
+    font-family: var(--vscode-font-family);
+    opacity: 0.55;
+  }
 </style>
 </head>
 <body>
 <div id="toolbar">
   <label><input type="checkbox" id="grid-toggle"> Grid</label>
+  <label><input type="checkbox" id="coords-toggle"> Coordinates</label>
   <label>Style: <select id="style-select">${styleOptions}</select></label>
 </div>
 <div id="error-banner"></div>
@@ -291,12 +331,20 @@ ${gridOverlay}
 
   const gridToggle = document.getElementById('grid-toggle');
   const gridOverlay = document.getElementById('grid-overlay');
-  const state = vscode.getState() || { grid: false };
+  const coordsToggle = document.getElementById('coords-toggle');
+  const coordLabels = document.getElementById('coord-labels');
+  const state = vscode.getState() || { grid: false, coords: false };
   gridToggle.checked = state.grid;
   gridOverlay.classList.toggle('visible', state.grid);
+  coordsToggle.checked = state.coords;
+  coordLabels.classList.toggle('visible', state.coords);
   gridToggle.addEventListener('change', () => {
     gridOverlay.classList.toggle('visible', gridToggle.checked);
     vscode.setState({ ...vscode.getState(), grid: gridToggle.checked });
+  });
+  coordsToggle.addEventListener('change', () => {
+    coordLabels.classList.toggle('visible', coordsToggle.checked);
+    vscode.setState({ ...vscode.getState(), coords: coordsToggle.checked });
   });
 
   const styleSelect = document.getElementById('style-select');

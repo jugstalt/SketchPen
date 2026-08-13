@@ -16,9 +16,10 @@ All notable changes to the SketchPen VS Code extension are documented here.
 - **Bigger, scalable preview** — the rendered SVG now fills most of the
   panel (previously capped at its native pixel size); a coordinate-grid
   overlay (toggle in the panel toolbar) shows the `-50..+50` logical square
-  from [docs/SYNTAX.md](../docs/SYNTAX.md#coordinate-system) for alignment;
-  a style dropdown re-renders the preview with any named style from the
-  icon's styles folder, not just the default.
+  from [docs/SYNTAX.md](../docs/SYNTAX.md#coordinate-system) for alignment,
+  with a second **Coordinates** toggle for a small `x,y` label at every
+  grid intersection; a style dropdown re-renders the preview with any named
+  style from the icon's styles folder, not just the default.
 
 ## 0.1.0
 

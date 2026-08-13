@@ -4,6 +4,15 @@ All notable changes to the SketchPen VS Code extension are documented here.
 
 ## Unreleased
 
+- **`AGENTS.md` scaffolding** — `SketchPen: Init` now also creates an
+  `AGENTS.md` in the target folder: a self-contained syntax cheat sheet and
+  workflow guide for AI coding agents (Claude Code, Copilot, Cursor, ...),
+  including the crucial "render the icon, then look at it" loop and a couple
+  of gotchas (the apostrophe-in-comment lexer limitation; numeric R,G,B
+  colors being ambiguous with a short `circle` position). Lets you ask an
+  agent to draw an icon by describing it in plain language and have it
+  actually verify its own output.
+
 - **`.sketchpen.json` styles-folder support** — globals files now live in a
   styles folder (a local `styles/` subfolder by default, or wherever an
   optional `.sketchpen.json`'s `stylesPath` points, possibly shared across

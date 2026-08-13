@@ -19,7 +19,10 @@ on `PATH`, set `sketchpen.cliPath` in your VS Code settings.
 
 - **Init** (Command Palette: `SketchPen: Init`) — scaffolds a new icon-set
   folder: a working `styles/default.globals`, a `templates/` folder with an
-  example `.spt`, and a starter `icon.sp` that already renders something.
+  example `.spt`, a starter `icon.sp` that already renders something, and an
+  `AGENTS.md` — a syntax cheat sheet and workflow guide for AI coding agents
+  (Claude Code, Copilot, Cursor, ...), so you can ask one to draw an icon in
+  plain language and have it render + look at its own output to verify.
   Prompts for a target folder (defaults to the workspace root); never
   overwrites files that already exist, so it's safe to re-run on a partially
   set up folder.

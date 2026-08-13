@@ -221,11 +221,15 @@ export class PreviewPanelManager {
     height: 100%;
     display: block;
   }
-  #grid-overlay {
+  /* Qualified with the "#preview-container > svg" prefix (matching the generic icon-sizing rule
+     above) so this wins the specificity comparison -- "#preview-container > svg" alone (one ID +
+     one type selector) would otherwise always beat a bare "#grid-overlay" (one ID), leaving the
+     overlay permanently visible regardless of the "visible" class. */
+  #preview-container > svg#grid-overlay {
     pointer-events: none;
     display: none;
   }
-  #grid-overlay.visible {
+  #preview-container > svg#grid-overlay.visible {
     display: block;
   }
   .grid-line {

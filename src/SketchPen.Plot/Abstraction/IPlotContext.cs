@@ -34,6 +34,16 @@ public interface IPlotContext : IDisposable
 
     IPlotPath CreatePlotPath();
 
+    /// <summary>
+    /// The path currently being built by <c>path.*</c> commands (see PathCommand), if any.
+    /// Lives here -- scoped to one <see cref="IPlotContext"/>, i.e. one render/Plot() call --
+    /// rather than as a field on PathCommand itself, since a single compiled command list is
+    /// reused across multiple Plot() calls (e.g. once per output size); a static field there
+    /// would leak an already-projected (pixel-scale-specific) path from one render's canvas
+    /// size into the next.
+    /// </summary>
+    IPlotPath? CurrentPath { get; set; }
+
     float Project(float number);
 
     void ResetTransform();

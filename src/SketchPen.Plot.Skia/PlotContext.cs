@@ -54,6 +54,11 @@ public class PlotContext : IPlotContext
 
     public void Dispose()
     {
+        if (this.CurrentPath != null)
+        {
+            this.CurrentPath.Dispose();
+            this.CurrentPath = null;
+        }
         if (this.Canvas != null)
         {
             this.Canvas.Dispose();
@@ -67,6 +72,8 @@ public class PlotContext : IPlotContext
     }
 
     public ICanvas Canvas { get; private set; }
+
+    public IPlotPath CurrentPath { get; set; }
 
     internal SKBitmap Bitmap => _bitmap;
 

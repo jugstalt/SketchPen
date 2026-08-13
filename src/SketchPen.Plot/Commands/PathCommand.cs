@@ -1,4 +1,3 @@
-﻿using SketchPen.Parse.Lexer;
 using SketchPen.Plot.Abstraction;
 using SketchPen.Plot.Extensions;
 using SketchPen.Plot.Reflection;
@@ -35,55 +34,56 @@ namespace SketchPen.Plot.Commands;
 
 class PathCommand : GeneralPlotCommand
 {
-    static private IPlotPath? _path = null;
-
+    // The "current" path lives on IPlotContext (context.CurrentPath), not as a field here.
+    // A single compiled command list is reused across multiple Plot() calls (e.g. once per
+    // output size, see Plotter.Plot()), but a fresh IPlotContext is created for each one --
+    // storing it on the context is what makes "path.begin() is optional at the very start of a
+    // render" actually safe, instead of leaking an already-projected (pixel-scale-specific)
+    // path from one render's canvas size into the next.
     protected override void ExecuteCommand(IPlotContext context, IEnumerable<object> parameters)
     {
-        if (_path == null && Method?.ToLower() != "begin")
+        if (context.CurrentPath == null && Method?.ToLower() != "begin")
         {
-            _path = context.CreatePlotPath();
-            _path.Start();
+            context.CurrentPath = context.CreatePlotPath();
+            context.CurrentPath.Start();
         }
 
         switch (Method?.ToLower())
         {
             case "begin":
-                if (_path != null)
-                {
-                    _path.Dispose();
-                }
-                _path = context.CreatePlotPath();
-                _path.Start();
+                context.CurrentPath?.Dispose();
+                context.CurrentPath = context.CreatePlotPath();
+                context.CurrentPath.Start();
                 break;
             case "start":
-                _path?.Start();
+                context.CurrentPath?.Start();
                 break;
             case "addlines":
-                _path?.AddLines(parameters.ToPoints().Select(p => context.Project(p)).ToArray());
+                context.CurrentPath?.AddLines(parameters.ToPoints().Select(p => context.Project(p)).ToArray());
                 break;
             case "addarc":
                 var pos = parameters.Skip(2).ToRectPos();
-                _path?.AddArc(context.Project(pos),
+                context.CurrentPath?.AddArc(context.Project(pos),
                              parameters.Get<float>(0),
                              parameters.Get<float>(1));
                 break;
             case "addpoint":
-                _path?.AddPoint(
+                context.CurrentPath?.AddPoint(
                     parameters.ToPoints().Select(p => context.Project(p)).First());
                 break;
             case "addcubic":
                 var cubic = parameters.ToPoints().Select(p => context.Project(p)).ToArray();
-                _path?.AddCubic(cubic[0], cubic[1], cubic[2]);
+                context.CurrentPath?.AddCubic(cubic[0], cubic[1], cubic[2]);
                 break;
             case "addquad":
                 var quad = parameters.ToPoints().Select(p => context.Project(p)).ToArray();
-                _path?.AddQuad(quad[0], quad[1]);
+                context.CurrentPath?.AddQuad(quad[0], quad[1]);
                 break;
             case "close":
-                _path?.Close();
+                context.CurrentPath?.Close();
                 break;
             case "draw":
-                if (_path != null)
+                if (context.CurrentPath != null)
                 {
                     using (var pen = context.CreatePen(parameters))
                     {
@@ -93,45 +93,23 @@ class PathCommand : GeneralPlotCommand
                         //pen.CustomStartCap = cap;
                         //pen.CustomEndCap = cap;
 
-                        context.Canvas.DrawPath(pen, _path);
+                        context.Canvas.DrawPath(pen, context.CurrentPath);
                     }
                 }
 
                 break;
             case "fill":
-                if (_path != null)
+                if (context.CurrentPath != null)
                 {
                     using (var brush = context.CreateBrush(parameters))
                     {
-                        context.Canvas.FillPath(brush, _path);
+                        context.Canvas.FillPath(brush, context.CurrentPath);
                     }
                 }
 
                 break;
             default:
                 throw new Exception($"Unknown method: {Method}");
-        }
-    }
-
-    public override void Init(IEnumerable<Token> statement)
-    {
-        base.Init(statement);
-
-        if (_path != null)
-        {
-            _path.Dispose();
-            _path = null;
-        }
-    }
-
-    public override void Dispose()
-    {
-        base.Dispose();
-
-        if (_path != null)
-        {
-            _path.Dispose();
-            _path = null;
         }
     }
 }

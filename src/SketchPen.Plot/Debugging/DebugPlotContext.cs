@@ -9,6 +9,7 @@ public class DebugPlotContext : IPlotContext
     private readonly IDictionary<string, object> _globals;
     private readonly IPlotContext? _context;
     private ICanvas _canvas;
+    private IPlotPath? _currentPath;
 
     public DebugPlotContext()
     {
@@ -141,6 +142,22 @@ public class DebugPlotContext : IPlotContext
 
     public IPlotPath CreatePlotPath()
         => _context?.CreatePlotPath() ?? new DebugPlotPath();
+
+    public IPlotPath? CurrentPath
+    {
+        get => _context != null ? _context.CurrentPath : _currentPath;
+        set
+        {
+            if (_context != null)
+            {
+                _context.CurrentPath = value;
+            }
+            else
+            {
+                _currentPath = value;
+            }
+        }
+    }
 
 
     public void Dispose()

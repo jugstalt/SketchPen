@@ -61,6 +61,11 @@ public class SvgPlotContext : IPlotContext
 
     public void Dispose()
     {
+        if (this.CurrentPath != null)
+        {
+            this.CurrentPath.Dispose();
+            this.CurrentPath = null;
+        }
         if (this.Canvas != null)
         {
             this.Canvas.Dispose();
@@ -74,6 +79,8 @@ public class SvgPlotContext : IPlotContext
     }
 
     public ICanvas Canvas { get; private set; }
+
+    public IPlotPath CurrentPath { get; set; }
 
     public PlotColor PenColor { private get; set; }
     public float PenWidth { private get; set; }

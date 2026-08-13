@@ -73,7 +73,16 @@ export class DiagnosticsManager {
         }
 
         if (document.fileName.endsWith('.globals')) {
-            void this.completionProvider.refreshGlobalVariables(path.dirname(document.uri.fsPath));
+            // A saved .globals file's own directory is its *styles folder*, not necessarily the
+            // icon-set folder(s) that use it -- styles can live anywhere (see
+            // .sketchpen.json/"stylesPath" in completionProvider.ts's resolveStylesFolder) and
+            // one styles folder can be shared by several icon sets. Rather than reverse-resolving
+            // which icon-set folders reference this particular styles folder, just refresh every
+            // folder we already know about (populated by handleOpen as documents are opened) --
+            // correctness over precision, and each refresh is one cheap `language-info` call.
+            for (const folder of this.refreshedFolders) {
+                void this.completionProvider.refreshGlobalVariables(folder);
+            }
             return;
         }
 

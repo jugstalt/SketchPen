@@ -137,7 +137,7 @@ export async function ensureCliAvailable(): Promise<boolean> {
 
 /**
  * `sketchpen language-info [path]` — static completion grammar, plus (when `path` is given)
- * that project's `@@variable` names from `_.globals`. See docs/CLI.md#the-language-info-subcommand.
+ * that project's `@@variable` names from `default.globals`. See docs/CLI.md#the-language-info-subcommand.
  */
 export async function getLanguageInfo(path?: string): Promise<LanguageInfoResult> {
     const args = ['language-info'];

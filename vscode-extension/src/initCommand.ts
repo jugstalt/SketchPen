@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 
-// Verbatim from plot/basic/_.globals in the main repo -- a proven, working default rather than
-// an invented one.
+// Verbatim from plot/styles/default.globals in the main repo -- a proven, working default rather
+// than an invented one.
 const DEFAULT_GLOBALS = `// general globals
 globals.tryset(penColor, "#000");
 globals.tryset(outlinePenColor, "#000");
@@ -57,7 +57,8 @@ async function createIfMissing(filePath: string, content: string): Promise<boole
 
 /**
  * `SketchPen: Init` -- scaffolds everything a new icon-set folder needs to be immediately
- * usable: _.globals (always auto-included, see docs/SYNTAX.md), a templates/ folder with one
+ * usable: styles/default.globals (always auto-included from the local styles/ subfolder -- no
+ * .sketchpen.json needed for this common case, see docs/SYNTAX.md), a templates/ folder with one
  * example .spt (demonstrating #include), and a starter .sp that already renders something.
  * Never overwrites existing files -- each of the three is created independently and only if
  * missing, so re-running Init on a partially-set-up folder just fills in the gaps.
@@ -84,7 +85,10 @@ export function registerInitCommand(context: vscode.ExtensionContext): void {
 
             const record = (label: string, wasCreated: boolean) => (wasCreated ? created : skipped).push(label);
 
-            record('_.globals', await createIfMissing(path.join(targetDir, '_.globals'), DEFAULT_GLOBALS));
+            record(
+                'styles/default.globals',
+                await createIfMissing(path.join(targetDir, 'styles', 'default.globals'), DEFAULT_GLOBALS)
+            );
             record(
                 'templates/example.spt',
                 await createIfMissing(path.join(targetDir, 'templates', 'example.spt'), EXAMPLE_TEMPLATE)

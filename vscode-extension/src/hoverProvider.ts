@@ -5,8 +5,9 @@ import { SketchPenCompletionProvider } from './completionProvider';
 const VARIABLE_WORD = /@@[a-zA-Z_][a-zA-Z0-9_]*/;
 
 /**
- * Hovering `@@name` shows the value declared for it in the folder's `_.globals` (best-effort
- * text match, see completionProvider.ts's readDeclaredValues -- not a compiled/resolved value).
+ * Hovering `@@name` shows the value declared for it in the folder's styles folder
+ * `default.globals` (best-effort text match, see completionProvider.ts's readDeclaredValues --
+ * not a compiled/resolved value).
  */
 export class SketchPenHoverProvider implements vscode.HoverProvider {
     constructor(private readonly completionProvider: SketchPenCompletionProvider) {}
@@ -26,7 +27,7 @@ export class SketchPenHoverProvider implements vscode.HoverProvider {
 
         const markdown = new vscode.MarkdownString();
         markdown.appendCodeblock(`@@${name} = ${value}`, 'sketchpen');
-        markdown.appendMarkdown('Declared in this folder’s `_.globals`.');
+        markdown.appendMarkdown('Declared in this folder’s styles/`default.globals`.');
         return new vscode.Hover(markdown, range);
     }
 }

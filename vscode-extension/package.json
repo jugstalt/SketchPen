@@ -54,7 +54,7 @@
       },
       {
         "command": "sketchpen.init",
-        "title": "SketchPen: Init (scaffold _.globals, templates/, and a starter icon)"
+        "title": "SketchPen: Init (scaffold styles/default.globals, templates/, and a starter icon)"
       },
       {
         "command": "sketchpen.preview",
@@ -151,7 +151,7 @@
           {
             "id": "initProject",
             "title": "Scaffold an icon set",
-            "description": "Create a `_.globals`, a `templates/` folder, and a starter `icon.sp` in one step.",
+            "description": "Create a `styles/default.globals`, a `templates/` folder, and a starter `icon.sp` in one step.",
             "media": { "markdown": "media/walkthrough/init-project.md" },
             "completionEvents": ["onCommand:sketchpen.init"]
           },

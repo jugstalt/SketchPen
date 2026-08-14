@@ -1,0 +1,3 @@
+// example.spt -- a small reusable shape, included via #include "templates/example.spt"
+line.draw(-20,-20, 20,20);
+line.draw(-20,20, 20,-20);

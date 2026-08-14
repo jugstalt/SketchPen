@@ -8,7 +8,7 @@ export interface PreviewWebviewMessage {
     style: string;
 }
 
-const SVG_ROOT_SIZE = /<svg[^>]*\swidth="([\d.]+)"[^>]*\sheight="([\d.]+)"/;
+export const SVG_ROOT_SIZE = /<svg[^>]*\swidth="([\d.]+)"[^>]*\sheight="([\d.]+)"/;
 
 /**
  * Adds a `viewBox` to the rendered SVG's root element (derived from its existing width/height
@@ -16,9 +16,11 @@ const SVG_ROOT_SIZE = /<svg[^>]*\swidth="([\d.]+)"[^>]*\sheight="([\d.]+)"/;
  * directly in pixels at the requested reference size -- so without this, CSS-resizing the `<svg>`
  * element just changes its viewport rather than scaling the artwork, which is what actually made
  * the preview look small regardless of panel size. Falls back to the untouched SVG if the width/
- * height attributes can't be found (defensive only; every CLI-generated SVG has them).
+ * height attributes can't be found (defensive only; every CLI-generated SVG has them). Exported
+ * for reuse by setPreviewPanel.ts (whole-folder grid preview), which needs the exact same fix for
+ * each thumbnail.
  */
-function ensureViewBox(svg: string): string {
+export function ensureViewBox(svg: string): string {
     if (svg.includes('viewBox=')) {
         return svg;
     }

@@ -21,7 +21,8 @@
   "activationEvents": [
     "onLanguage:sketchpen",
     "onCommand:sketchpen.init",
-    "onCommand:sketchpen.installCli"
+    "onCommand:sketchpen.installCli",
+    "onCommand:sketchpen.previewSet"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -62,6 +63,10 @@
         "icon": "$(open-preview)"
       },
       {
+        "command": "sketchpen.previewSet",
+        "title": "SketchPen: Preview Set"
+      },
+      {
         "command": "sketchpen.exportSvg",
         "title": "SketchPen: Export as SVG"
       },
@@ -93,6 +98,11 @@
         {
           "submenu": "sketchpen.explorerSubmenu",
           "when": "resourceLangId == sketchpen && resourceExtname == .sp",
+          "group": "navigation"
+        },
+        {
+          "command": "sketchpen.previewSet",
+          "when": "explorerResourceIsFolder",
           "group": "navigation"
         }
       ],

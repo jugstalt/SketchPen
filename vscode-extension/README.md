@@ -46,6 +46,14 @@ on `PATH`, set `sketchpen.cliPath` in your VS Code settings.
   **Coordinates** toggle for a small `x,y` label at every grid intersection,
   and a **Style** dropdown to preview any named style from the icon's
   styles folder, not just the default.
+- **`SketchPen: Preview Set`** — right-click a folder in the Explorer (or run
+  from the Command Palette with an icon file open, which uses its containing
+  folder) to preview every `.sp` icon directly in it at once, as a scrollable
+  grid — checking whole-set visual consistency (pen weight, color style) at
+  a glance, rather than one icon in isolation. Renders the whole folder in
+  one CLI call (the classic root command, `sketchpen <folder> -format svg`,
+  not one `compose` call per icon), with its own **Style** dropdown and a
+  name filter box for large sets.
 - **Diagnostics** — compile errors surface as editor warnings, including
   inside `#include`d `.spt` files. Line-accurate; not column-accurate — see
   [docs/CLI.md](../docs/CLI.md#the-language-info-subcommand) for why.
@@ -79,6 +87,10 @@ on `PATH`, set `sketchpen.cliPath` in your VS Code settings.
   work correctly when the including `.sp` file is composed.
 - Diagnostics point at the correct **line**, not a precise column/token span
   — the underlying compiler doesn't track character offsets today.
+- `SketchPen: Preview Set` is **not recursive** — it renders only the `.sp`
+  files directly inside the chosen folder (matching the CLI's own root-command
+  behavior), not nested subfolders. It's also manual/on-demand, not
+  save-triggered like the single-icon preview — re-run it to refresh.
 
 ## Language reference
 

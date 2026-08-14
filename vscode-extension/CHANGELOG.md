@@ -4,6 +4,12 @@ All notable changes to the SketchPen VS Code extension are documented here.
 
 ## Unreleased
 
+- **`SketchPen: Preview Set`** — right-click a folder in the Explorer (or run
+  from the Command Palette with an icon open) to preview every icon in it at
+  once, as a grid: whole-set visual consistency at a glance instead of one
+  icon in isolation. One CLI process renders the whole folder (the classic
+  root command, not one `compose` call per icon), with its own style
+  dropdown and a client-side name filter for large sets.
 - **`AGENTS.md` scaffolding** — `SketchPen: Init` now also creates an
   `AGENTS.md` in the target folder: a self-contained syntax cheat sheet and
   workflow guide for AI coding agents (Claude Code, Copilot, Cursor, ...),

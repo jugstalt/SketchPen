@@ -45,6 +45,13 @@ export interface ComposeArgs {
     out: string;
 }
 
+export interface RenderArgs {
+    path: string;
+    outFolder: string;
+    style?: string;
+    format: 'svg' | 'png';
+}
+
 export class CliNotFoundError extends Error {
     constructor() {
         super('sketchpen CLI not found on PATH (or at the configured sketchpen.cliPath).');
@@ -164,6 +171,24 @@ export async function compose(args: ComposeArgs): Promise<ComposeJsonResult> {
     }
     if (args.resolutions) {
         cliArgs.push('--resolutions', args.resolutions);
+    }
+
+    const result = await run(cliArgs);
+    return JSON.parse(result.stdout) as ComposeJsonResult;
+}
+
+/**
+ * `sketchpen <path> -outfolder <dir> -format svg|png [-style <name>] --output json` -- the
+ * classic root command (not `compose`), which renders every `*.sp` file directly inside `path`
+ * (non-recursive) in one CLI process instead of one subprocess per icon. Used for the whole-set
+ * preview (see setPreviewPanel.ts) -- far cheaper than N separate `compose` calls for a folder
+ * with dozens/hundreds of icons. Its JSON shape (`{success, filesWritten, error, message}`) is
+ * identical to `compose`'s (see JsonConsoleReporter.cs / ComposeJsonResult), so it's reused as-is.
+ */
+export async function render(args: RenderArgs): Promise<ComposeJsonResult> {
+    const cliArgs = [args.path, '--outfolder', args.outFolder, '--format', args.format, '--output', 'json'];
+    if (args.style) {
+        cliArgs.push('--style', args.style);
     }
 
     const result = await run(cliArgs);

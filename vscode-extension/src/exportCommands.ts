@@ -3,6 +3,7 @@ import * as path from 'path';
 import { compose, ComposeJsonResult } from './cliClient';
 import { PreviewPanelManager } from './previewPanel';
 import { DiagnosticsManager } from './diagnosticsManager';
+import { listExportProfiles } from './stylesFolder';
 
 interface ComposerChoice {
     id: string;
@@ -145,6 +146,35 @@ async function exportPackage(uri?: vscode.Uri): Promise<void> {
     const spFilePath = resolveSpFilePath(uri);
     if (!spFilePath) {
         return;
+    }
+
+    // Named exportProfiles entries (see .sketchpen.json's schema) from the nearest ancestor
+    // config, offered as a one-click alternative to manually re-picking composer/sizes/styles/
+    // resolutions every time -- only shown when at least one exists, so folders without any
+    // profiles see the same flow as before. Profiles always target the whole folder (like every
+    // "batch" composer -- see ComposerChoice.batch), since that's what a reusable export preset
+    // is for; a profile naming a single-icon composer (png/svg) would need a single .sp file, and
+    // fails with that composer's own "needs exactly one --sizes value"-style error if misused.
+    const profiles = await listExportProfiles(path.dirname(spFilePath));
+    if (profiles.length > 0) {
+        const profileItems = profiles.map((name) => ({ label: `$(bookmark) ${name}`, description: 'Export profile', profile: name }));
+        const manualItem = { label: 'Choose composer manually…', profile: undefined };
+        const picked = await vscode.window.showQuickPick([...profileItems, manualItem], {
+            placeHolder: 'Choose an export profile, or pick a composer manually'
+        });
+        if (!picked) {
+            return;
+        }
+        if (picked.profile) {
+            const targetPath = path.dirname(spFilePath);
+            const defaultUri = vscode.Uri.file(path.join(targetPath, `${path.basename(targetPath)}-${picked.profile}.zip`));
+            const outUri = await vscode.window.showSaveDialog({ defaultUri });
+            if (!outUri) {
+                return;
+            }
+            reportResult(await compose({ path: targetPath, profile: picked.profile, out: outUri.fsPath }));
+            return;
+        }
     }
 
     const picked = await vscode.window.showQuickPick(

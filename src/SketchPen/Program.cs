@@ -154,6 +154,12 @@ var outOption = new Option<string?>("--out")
     Description = "Output file path (default: <name>.<composer-extension> in the current directory)"
 };
 
+var profileOption = new Option<string?>("--profile")
+{
+    Description = "Named exportProfiles entry from .sketchpen.json supplying composer/sizes/styles/" +
+                  "resolutions defaults — any of those given explicitly still wins over the profile's value"
+};
+
 // Short — this exact string is what shows up in the ROOT command's "Commands:" list
 // (System.CommandLine reuses Description for both purposes), so it must stay to the point.
 // The full walkthrough below is appended only when 'compose --help' is run directly (see
@@ -181,6 +187,11 @@ var composeExtraHelp = """
       SketchPen.exe compose plot/basic --composer svg-vars-zip --out basic-themeable.zip
       SketchPen.exe compose plot/basic --composer web-sprite-zip --sizes 16,32,64 --out basic-sprites.zip
       SketchPen.exe compose plot/basic/disk.sp --composer png --sizes 128 --output json
+      SketchPen.exe compose plot/basic --profile web --out basic-web.zip
+
+    --profile <name> reuses a named exportProfiles entry from .sketchpen.json
+    (composer/sizes/styles/resolutions) instead of repeating those flags —
+    see docs/SYNTAX.md > ".sketchpen.json" for the config shape.
 
     See docs/CLI.md for the full composer table and JSON output shape.
     """;
@@ -188,7 +199,7 @@ var composeExtraHelp = """
 var composeCommand = new Command("compose", composeDescription)
 {
     Arguments = { composePathArgument },
-    Options = { composerOption, sizesOption, stylesOption, resolutionsOption, outOption }
+    Options = { composerOption, sizesOption, stylesOption, resolutionsOption, outOption, profileOption }
 };
 
 // Append the full walkthrough (composer ids + examples) after the auto-generated help, but
@@ -212,6 +223,7 @@ composeCommand.SetAction(parseResult =>
         parseResult.GetValue(stylesOption),
         parseResult.GetValue(resolutionsOption),
         parseResult.GetValue(outOption),
+        parseResult.GetValue(profileOption),
         reporter);
 });
 

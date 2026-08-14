@@ -32,6 +32,7 @@ Reference implementation in code:
 - [Variables (`@@name`)](#variables-name)
 - [Arithmetic expressions](#arithmetic-expressions)
 - [`.globals` files and styling](#globals-files-and-styling)
+    - [`.sketchpen.json` schema](#sketchpenjson-schema)
 - [`#include`](#include)
 - [`repeat`](#repeat)
 - [Comments](#comments)
@@ -440,13 +441,55 @@ in sync when a style changes, instead of maintaining separate copies. An icon se
 that doesn't need sharing (e.g. [`plot/examples`](../plot/examples)) can skip
 `.sketchpen.json` entirely and just use its own local `styles/` subfolder.
 
-Order of assembly for a file (see `PreComplier`/`StylesFolderResolver`):
+**Inheritance.** A directory without its own `.sketchpen.json` inherits the
+*nearest ancestor's* in full (walking upward one directory at a time, same as
+`plot/basic`/`.sketchpen.json` resolves `../styles` relative to itself, not to
+whatever called into it) — there is no per-key merging across levels, the
+nearest config found wins entirely. This means a single `.sketchpen.json` placed
+higher up the tree (e.g. one `plot/.sketchpen.json` with `{"stylesPath": "./styles"}`)
+can supply defaults for every icon-set folder under it that doesn't define its own,
+so adding a new icon set can require zero config of its own.
+
+Order of assembly for a file (see `PreComplier`/`SketchPenConfigResolver`):
 
 ```
 1. <stylesFolder>/<stylename>.globals   (if given and present)
-2. <stylesFolder>/default.globals       (if present, unless the target file IS default.globals)
+2. <stylesFolder>/default.globals       (if present; not re-appended when the target file already is default.globals)
 3. <name>.sp / <name>.spt               (the actual file)
 ```
+
+### `.sketchpen.json` schema
+
+All keys are optional — an icon-set folder only sets the ones it wants to
+override, and every path-shaped value is resolved relative to wherever that
+particular `.sketchpen.json` lives (see inheritance above).
+
+```json
+{
+  "stylesPath": "../styles",
+  "defaultStyle": "dark",
+  "defaultSizes": [16, 32, 64],
+  "defaultResolutions": [1, 2],
+  "outFolder": "../music-img",
+  "styles": {
+    "dark": { "label": "Dark Mode" }
+  },
+  "exportProfiles": {
+    "web": { "composer": "svg-vars-zip" },
+    "app-icons": { "composer": "png-zip", "sizes": "16,32,64,128", "resolutions": "96,192" }
+  }
+}
+```
+
+| Key                | Applies to                            | Effect                                                                                                                 |
+| ------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `stylesPath`        | all rendering                          | Where `default.globals`/`<name>.globals` live (see above).                                                              |
+| `defaultStyle`       | root command                            | Used when `-style` isn't given explicitly; an explicit `-style` always wins.                                            |
+| `defaultSizes`       | root command (`-format png`)            | Used when `-sizes` isn't given explicitly (default: `16,26,32,64,128`).                                                 |
+| `defaultResolutions` | root command (`-format png`)            | Used when `-resolutions` isn't given explicitly (default: `1,2,3`).                                                     |
+| `outFolder`          | root command                            | Used when `-outfolder` isn't given explicitly.                                                                          |
+| `styles`             | tooling only (never the compiler)       | Display `label` per style name, shown by `language-info` and the VS Code extension's style dropdowns instead of the raw file name. |
+| `exportProfiles`     | `compose --profile <name>`              | Reusable composer/sizes/styles/resolutions preset — see [`compose --profile`](CLI.md#the-compose-subcommand); any of those flags given explicitly on the command line still wins over the profile's own value. |
 
 Example, based on [`plot/basic`](../plot/basic)'s `.sketchpen.json` → [`plot/styles`](../plot/styles):
 

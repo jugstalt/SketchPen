@@ -25,7 +25,7 @@ class PreComplier
         FileInfo fi = new FileInfo(fileName);
         DirectoryInfo di = fi.Directory;
 
-        string stylesFolder = StylesFolderResolver.Resolve(di.FullName);
+        string stylesFolder = SketchPenConfigResolver.ResolveStylesPath(di.FullName);
 
         if (!String.IsNullOrEmpty(customGlobalsName))
         {

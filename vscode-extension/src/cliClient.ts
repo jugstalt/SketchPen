@@ -38,10 +38,14 @@ export interface ComposeJsonResult {
 
 export interface ComposeArgs {
     path: string;
-    composer: string;
+    // Optional when `profile` supplies it instead (see `--profile` in the CLI: composer/sizes/
+    // styles/resolutions all come from .sketchpen.json's exportProfiles[profile] unless given
+    // here explicitly, in which case the explicit value still wins).
+    composer?: string;
     sizes?: string;
     styles?: string;
     resolutions?: string;
+    profile?: string;
     out: string;
 }
 
@@ -157,12 +161,20 @@ export async function getLanguageInfo(path?: string): Promise<LanguageInfoResult
 }
 
 /**
- * `sketchpen compose <path> --composer <id> ... --output json`. Used both for the dedicated
- * export commands and for the shared live-preview/diagnostics mechanism (see diagnosticsManager.ts).
+ * `sketchpen compose <path> [--composer <id>] [--profile <name>] ... --output json`. Used both
+ * for the dedicated export commands and for the shared live-preview/diagnostics mechanism (see
+ * diagnosticsManager.ts). `composer` is only required if `profile` isn't given (a profile can
+ * supply the composer id itself, see .sketchpen.json's `exportProfiles`).
  */
 export async function compose(args: ComposeArgs): Promise<ComposeJsonResult> {
-    const cliArgs = ['compose', args.path, '--composer', args.composer, '--out', args.out, '--output', 'json'];
+    const cliArgs = ['compose', args.path, '--out', args.out, '--output', 'json'];
 
+    if (args.composer) {
+        cliArgs.push('--composer', args.composer);
+    }
+    if (args.profile) {
+        cliArgs.push('--profile', args.profile);
+    }
     if (args.sizes) {
         cliArgs.push('--sizes', args.sizes);
     }

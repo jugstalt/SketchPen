@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { ensureViewBox } from './previewPanel';
+import { StyleOption } from './stylesFolder';
 
 export interface SetPreviewIcon {
     name: string;
@@ -34,7 +35,7 @@ export class SetPreviewPanelManager {
         this.messageHandler = handler;
     }
 
-    showPreview(folder: string, icons: SetPreviewIcon[], availableStyles: string[], selectedStyle: string): void {
+    showPreview(folder: string, icons: SetPreviewIcon[], availableStyles: StyleOption[], selectedStyle: string): void {
         const panel = this.getOrCreatePanel(folder);
         panel.webview.html = this.renderHtml(icons, availableStyles, selectedStyle);
     }
@@ -79,10 +80,9 @@ export class SetPreviewPanelManager {
         return panel;
     }
 
-    private renderHtml(icons: SetPreviewIcon[], availableStyles: string[], selectedStyle: string): string {
-        const styleOptions = ['', ...availableStyles]
-            .map((name) => {
-                const label = name === '' ? 'Default' : name;
+    private renderHtml(icons: SetPreviewIcon[], availableStyles: StyleOption[], selectedStyle: string): string {
+        const styleOptions = [{ name: '', label: 'Default' }, ...availableStyles]
+            .map(({ name, label }) => {
                 const selected = name === selectedStyle ? ' selected' : '';
                 return `<option value="${escapeHtml(name)}"${selected}>${escapeHtml(label)}</option>`;
             })

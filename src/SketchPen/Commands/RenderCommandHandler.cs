@@ -1,5 +1,6 @@
 using SketchPen.Output;
 using SketchPen.Plot;
+using SketchPen.Plot.Compile;
 using SketchPen.Plot.Exceptions;
 using SketchPen.Plot.Services;
 using System;
@@ -52,8 +53,21 @@ public class RenderCommandHandler
                 return 0;
             }
 
-            var sizeList = ParsePositiveInts(sizes, "-sizes") ?? DefaultSizes;
-            var resolutionList = ParsePositiveInts(resolutions, "-resolutions") ?? DefaultResolutions;
+            // .sketchpen.json defaults (nearest ancestor of <path>'s own directory) fill in
+            // whatever the caller didn't pass explicitly -- an explicit CLI flag always wins.
+            // Safe to resolve even if <path> turns out to be invalid: FindConfig just walks
+            // upward checking for a file at each level, no exception either way; the actual
+            // "does <path> exist" check below still raises its own clear error.
+            string configDir = new FileInfo(path).Exists ? new FileInfo(path).Directory!.FullName : path;
+            var resolvedConfig = SketchPenConfigResolver.FindConfig(configDir);
+
+            if (string.IsNullOrEmpty(styleName) && !string.IsNullOrWhiteSpace(resolvedConfig?.Config.DefaultStyle))
+            {
+                styleName = resolvedConfig!.Config.DefaultStyle!;
+            }
+
+            var sizeList = ParsePositiveInts(sizes, "-sizes") ?? resolvedConfig?.Config.DefaultSizes ?? DefaultSizes;
+            var resolutionList = ParsePositiveInts(resolutions, "-resolutions") ?? resolvedConfig?.Config.DefaultResolutions ?? DefaultResolutions;
 
             #region Collect filenames
 
@@ -72,6 +86,11 @@ public class RenderCommandHandler
             }
 
             #endregion
+
+            if (string.IsNullOrEmpty(outFolder) && !string.IsNullOrWhiteSpace(resolvedConfig?.Config.OutFolder))
+            {
+                outFolder = Path.GetFullPath(Path.Combine(resolvedConfig!.ConfigDirectory, resolvedConfig.Config.OutFolder!));
+            }
 
             if (!string.IsNullOrEmpty(outFolder))
             {

@@ -145,17 +145,21 @@ loading \`styles/<name>.globals\` first (its \`set\` calls win over
 
 ## Creating a new icon-set folder
 
-When asked to create a **new** icon-set folder (e.g. a fresh \`Music/\` folder
-of instrument icons in a project that may already have other icon sets),
-**always give it a \`.sketchpen.json\`** -- do not just rely on the implicit
-\`./styles\` fallback and skip writing the file.
+\`.sketchpen.json\` is **inherited**: a folder without its own config uses the
+*nearest ancestor's* in full (walking upward one directory at a time -- e.g.
+one \`.sketchpen.json\` at the project's icons root can cover every icon-set
+folder under it). Check this first, before deciding whether the new folder
+needs a config file of its own.
 
-1. First check whether the project already has other icon-set folders with
-   their own styles (a \`styles/\` subfolder, or an existing
-   \`.sketchpen.json\`). If so, point the new folder's \`.sketchpen.json\` at
-   that same shared location instead of creating a separate copy, so the
-   whole project stays visually consistent and a style change updates every
-   icon set at once:
+1. Walk up from the new folder's location (parent, grandparent, ...). If any
+   ancestor already has a \`.sketchpen.json\`, the new folder already
+   inherits it automatically -- **create no config file at all**, just the
+   new \`.sp\` icons.
+2. If no ancestor config covers it, but other icon-set folders elsewhere in
+   the project already have their own styles (a \`styles/\` subfolder or
+   \`.sketchpen.json\`), give the **new** folder its own \`.sketchpen.json\`
+   pointing at that shared location, so the whole project stays visually
+   consistent and a style change updates every icon set at once:
 
    \`\`\`json
    {
@@ -166,9 +170,9 @@ of instrument icons in a project that may already have other icon sets),
    (\`stylesPath\` is resolved relative to this \`.sketchpen.json\`'s own
    directory -- adjust the \`../...\` to wherever the shared folder actually
    is.)
-2. If this is the first icon-set folder in the project, still create a
-   \`.sketchpen.json\` -- just point it at a local \`styles/\` subfolder next
-   to the new \`.sp\` files:
+3. If this is the first icon-set folder in the project, create a
+   \`.sketchpen.json\` pointing at a local \`styles/\` subfolder next to the
+   new \`.sp\` files:
 
    \`\`\`json
    {
@@ -176,9 +180,15 @@ of instrument icons in a project that may already have other icon sets),
    }
    \`\`\`
 
-   This makes the styles location explicit and discoverable up front, so
-   any icon-set folder created later in the project can point straight at
-   it instead of duplicating \`default.globals\`.
+   This makes the styles location explicit and discoverable up front, so any
+   icon-set folder created later in the project either inherits it (step 1)
+   or points straight at it (step 2), instead of duplicating
+   \`default.globals\`.
+
+See docs/SYNTAX.md's \`.sketchpen.json\` schema for the other keys
+(\`defaultStyle\`, \`defaultSizes\`, \`defaultResolutions\`, \`outFolder\`,
+\`styles\` display labels, \`exportProfiles\`) -- all optional, set only what a
+given folder actually needs to override.
 
 ## Minimal worked example
 

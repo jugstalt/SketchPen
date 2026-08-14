@@ -40,7 +40,7 @@ public class LanguageInfoCommandHandler
             !new DirectoryInfo(path).Exists &&
             !new FileInfo(path).Exists)
         {
-            WriteJson(new LanguageInfoResult(false, null, null, $"Can't find part of the path '{path}'"));
+            WriteJson(new LanguageInfoResult(false, null, null, null, $"Can't find part of the path '{path}'"));
             return 1;
         }
 
@@ -55,7 +55,11 @@ public class LanguageInfoCommandHandler
             ? null
             : TryGetGlobalVariableNames(path);
 
-        WriteJson(new LanguageInfoResult(true, commands, globalVariables, null));
+        IEnumerable<StyleInfo>? styles = string.IsNullOrEmpty(path)
+            ? null
+            : GetAvailableStyles(path);
+
+        WriteJson(new LanguageInfoResult(true, commands, globalVariables, styles, null));
         return 0;
     }
 
@@ -71,7 +75,7 @@ public class LanguageInfoCommandHandler
     // the resulting Globals dictionary's keys. Any failure (missing/broken default.globals, or no
     // styles folder at all) yields an empty list, never an error for this command. The styles
     // folder is resolved the same way PreComplier resolves it for any .sp file in this directory
-    // (StylesFolderResolver: this directory's .sketchpen.json if present, else "./styles").
+    // (SketchPenConfigResolver: nearest ancestor .sketchpen.json if present, else "./styles").
     // appendGlobals: false because we're compiling the globals file itself, not a script that
     // needs it prepended.
     private IEnumerable<string> TryGetGlobalVariableNames(string path)
@@ -80,7 +84,7 @@ public class LanguageInfoCommandHandler
             ? path
             : new FileInfo(path).DirectoryName ?? path;
 
-        string stylesFolder = StylesFolderResolver.Resolve(directory);
+        string stylesFolder = SketchPenConfigResolver.ResolveStylesPath(directory);
         string globalsFile = Path.Combine(stylesFolder, "default.globals");
         if (!File.Exists(globalsFile))
         {
@@ -110,6 +114,38 @@ public class LanguageInfoCommandHandler
         }
     }
 
+    // Every named style's .globals file in the resolved styles folder (default.globals itself
+    // excluded -- it's not selectable via -style, it's always loaded), paired with its display
+    // label from the nearest ancestor .sketchpen.json's "styles" metadata if present, else just
+    // the style name itself. Same "never fail the command" spirit as TryGetGlobalVariableNames --
+    // a missing/empty styles folder just yields an empty list.
+    private IEnumerable<StyleInfo> GetAvailableStyles(string path)
+    {
+        string directory = new DirectoryInfo(path).Exists
+            ? path
+            : new FileInfo(path).DirectoryName ?? path;
+
+        var (stylesFolder, resolvedConfig) = SketchPenConfigResolver.ResolveStylesPathWithConfig(directory);
+        if (!Directory.Exists(stylesFolder))
+        {
+            return Array.Empty<StyleInfo>();
+        }
+
+        var labels = resolvedConfig?.Config.Styles;
+
+        return new DirectoryInfo(stylesFolder)
+            .GetFiles("*.globals")
+            .Select(fi => Path.GetFileNameWithoutExtension(fi.Name))
+            .Where(name => !string.Equals(name, "default", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
+            .Select(name => new StyleInfo(
+                name,
+                labels != null && labels.TryGetValue(name, out var meta) && !string.IsNullOrWhiteSpace(meta.Label)
+                    ? meta.Label!
+                    : name))
+            .ToArray();
+    }
+
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -124,5 +160,8 @@ public class LanguageInfoCommandHandler
         bool Success,
         IDictionary<string, IDictionary<string, IEnumerable<EditorCompletionModel>>>? Commands,
         IEnumerable<string>? GlobalVariables,
+        IEnumerable<StyleInfo>? Styles,
         string? Error);
+
+    private record StyleInfo(string Name, string Label);
 }

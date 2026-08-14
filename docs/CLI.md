@@ -92,12 +92,17 @@ Usage: SketchPen.exe path [options]
 | Argument | Required | Description |
 |---|---|---|
 | `<path>` (first, positional) | Yes | Either a single `.sp` file, or a directory containing `.sp` files. See [What gets rendered](#what-gets-rendered). |
-| `-outfolder <folder>` | No | Directory the generated PNGs are written to. Created automatically if it doesn't exist. Default: current working directory. |
-| `-style <stylename>` | No | Name of a style, without the `.globals` extension. Loads `<stylename>.globals` from the input files' styles folder (a local `styles/` subfolder by default, or wherever `.sketchpen.json`'s `stylesPath` points — see [docs/SYNTAX.md](SYNTAX.md#globals-files-and-styling)) in addition to the default `default.globals`. See [Styling](#styling) below. Default: no named style (only `default.globals`, if present). |
+| `-outfolder <folder>` | No | Directory the generated PNGs are written to. Created automatically if it doesn't exist. Default: `.sketchpen.json`'s `outFolder` (see [SYNTAX.md](SYNTAX.md#sketchpenjson-schema)) if set, else the current working directory. |
+| `-style <stylename>` | No | Name of a style, without the `.globals` extension. Loads `<stylename>.globals` from the input files' styles folder (a local `styles/` subfolder by default, or wherever `.sketchpen.json`'s `stylesPath` points — see [docs/SYNTAX.md](SYNTAX.md#globals-files-and-styling)) in addition to the default `default.globals`. See [Styling](#styling) below. Default: `.sketchpen.json`'s `defaultStyle` if set, else no named style (only `default.globals`, if present). |
 | `-format png\|svg` | No | Output format. `png` (default) renders the raster size/resolution matrix described below. `svg` renders one resolution-independent vector file per icon instead — see [Vector (SVG) output](#vector-svg-output). Default: `png`. |
-| `-sizes <csv>` | No | **PNG only.** Comma-separated list of positive integer sizes (logical/CSS pixels), e.g. `16,32,64`, replacing the default `16,26,32,64,128`. Ignored by `-format svg` (see [Vector (SVG) output](#vector-svg-output)). |
-| `-resolutions <csv>` | No | **PNG only.** Comma-separated list of positive integer `@<ratio>` pixel multipliers, e.g. `1,2,3`, replacing the default `1,2,3`. Ignored by `-format svg`. **Not DPI** — unlike `compose`'s `--resolutions` (see [The `compose` subcommand](#the-compose-subcommand)), these are plain multipliers matching the `@<ratio>` in the output filename, i.e. actual pixels = `size × ratio`. |
+| `-sizes <csv>` | No | **PNG only.** Comma-separated list of positive integer sizes (logical/CSS pixels), e.g. `16,32,64`, replacing the default. Ignored by `-format svg` (see [Vector (SVG) output](#vector-svg-output)). Default: `.sketchpen.json`'s `defaultSizes` if set, else `16,26,32,64,128`. |
+| `-resolutions <csv>` | No | **PNG only.** Comma-separated list of positive integer `@<ratio>` pixel multipliers, e.g. `1,2,3`, replacing the default. Ignored by `-format svg`. **Not DPI** — unlike `compose`'s `--resolutions` (see [The `compose` subcommand](#the-compose-subcommand)), these are plain multipliers matching the `@<ratio>` in the output filename, i.e. actual pixels = `size × ratio`. Default: `.sketchpen.json`'s `defaultResolutions` if set, else `1,2,3`. |
 | `--output text\|json` | No | Console output mode — see [Machine-readable output](#machine-readable-output---output-json). Default: `text` (today's exact console output). |
+
+`.sketchpen.json` defaults (`defaultStyle`/`defaultSizes`/`defaultResolutions`/
+`outFolder`) come from the nearest ancestor config of `<path>`'s own directory
+(see [SYNTAX.md's inheritance](SYNTAX.md#globals-files-and-styling)) — an
+explicit flag on the command line always wins over its config default.
 
 Every option accepts both its original single-dash spelling (`-outfolder`,
 `-style`, `-format`, `-sizes`, `-resolutions`) and a newer
@@ -255,6 +260,7 @@ reference size (see [Vector (SVG) output](#vector-svg-output)).
 | `--styles <csv>` | No | Comma-separated style names; an empty entry means the default style. Omitted = default style only, matching `--styles ""`. Multiple styles only make sense with the batch (`*-zip`) composers. |
 | `--resolutions <csv>` | No | Comma-separated DPI values, e.g. `96,144,192`. Only meaningful for `png-zip`/`web-sprite-zip`; ignored by the SVG composers (vector output is resolution-independent). |
 | `--out <file>` | No | Output file path. Default: `<name>.<extension>` in the current directory, where `<name>` is the last path segment of `<path>` and `<extension>` is the composer's own file extension. |
+| `--profile <name>` | No | Named `exportProfiles` entry from `.sketchpen.json` (see [SYNTAX.md](SYNTAX.md#sketchpenjson-schema)) supplying `--composer`/`--sizes`/`--styles`/`--resolutions` defaults. Any of those given explicitly still wins over the profile's own value for that setting. Required if `--composer` isn't given directly. |
 
 Composer ids (see [README.md](../README.md#export-composers) for the full
 description of each, including the CSS-variable mechanism and its
@@ -284,6 +290,9 @@ SketchPen.exe compose plot/basic --composer svg-vars-zip --out basic-themeable.z
 
 # CSS sprite sheet + generated CSS + a demo HTML page, all in one ZIP
 SketchPen.exe compose plot/basic --composer web-sprite-zip --sizes 16,32,64 --out basic-sprites.zip
+
+# Reuse a named exportProfiles preset from .sketchpen.json instead of repeating flags
+SketchPen.exe compose plot/basic --profile web --out basic-web.zip
 ```
 
 An unknown `--composer` id fails with a clear error listing the valid ids
@@ -334,12 +343,13 @@ completion, without the extension needing to duplicate any compiler logic:
     "template": { /* same shape, only keywords valid in .spt files */ },
     "globals":  { /* same shape, only keywords valid in .globals files: pen/brush/gradientbrush/globals */ }
   },
-  "globalVariables": null  // or e.g. ["penColor","brushColor",...] when [path] was given
+  "globalVariables": null,  // or e.g. ["penColor","brushColor",...] when [path] was given
+  "styles": null            // or e.g. [{"name":"bg-dark","label":"Dark Mode"}, ...] when [path] was given
 }
 ```
 
-- With no `[path]`: `globalVariables` is `null`, `commands` is always present
-  (it's static — the same grammar regardless of any project).
+- With no `[path]`: `globalVariables` and `styles` are `null`, `commands` is
+  always present (it's static — the same grammar regardless of any project).
 - With `[path]` (a directory, or a `.sp` file inside one): additionally
   compiles and executes that directory's `default.globals` (resolved via its
   styles folder, see [docs/SYNTAX.md](SYNTAX.md#globals-files-and-styling)),
@@ -348,9 +358,15 @@ completion, without the extension needing to duplicate any compiler logic:
   command failure — `default.globals` is optional everywhere else in the
   language too, so this command never fails just because a project doesn't
   have one (yet).
+- `styles` lists every named style (`.globals` file in the resolved styles
+  folder besides `default.globals` itself) with a `label` — either from
+  `.sketchpen.json`'s `styles` metadata (see
+  [SYNTAX.md](SYNTAX.md#sketchpenjson-schema)) or, if unset, the style name
+  itself. An empty/missing styles folder yields `styles: []`, same
+  never-fail spirit as `globalVariables`.
 - The only failure mode is a `[path]` that doesn't exist: `{"success": false,
-  "commands": null, "globalVariables": null, "error": "Can't find part of the
-  path '...'"}`, exit code `1`.
+  "commands": null, "globalVariables": null, "styles": null, "error": "Can't
+  find part of the path '...'"}`, exit code `1`.
 
 ## Convenience scripts (`plot.bat` / `plot.sh`)
 

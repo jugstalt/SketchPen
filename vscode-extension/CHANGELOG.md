@@ -4,6 +4,21 @@ All notable changes to the SketchPen VS Code extension are documented here.
 
 ## Unreleased
 
+- **Expanded `.sketchpen.json`** — the config file now supports:
+  - **Inheritance** — a folder without its own `.sketchpen.json` uses the
+    nearest ancestor's in full (walking upward), so one config placed higher
+    in the tree can cover every icon-set folder under it that doesn't define
+    its own.
+  - **`defaultStyle`/`defaultSizes`/`defaultResolutions`/`outFolder`** — root
+    command defaults, used whenever the matching `-style`/`-sizes`/
+    `-resolutions`/`-outfolder` flag isn't given explicitly.
+  - **`styles` display labels** — human-readable names for cryptic style
+    filenames, shown in place of the raw name in every style dropdown (live
+    preview, Preview Set) and in `language-info`'s output.
+  - **`exportProfiles`** — named, reusable composer/sizes/styles/resolutions
+    presets. `Export Package…` offers them as a one-click alternative to
+    manually re-picking a composer and re-typing sizes/styles/resolutions
+    every time.
 - **`SketchPen: Preview Set`** — right-click a folder in the Explorer (or run
   from the Command Palette with an icon open) to preview every icon in it at
   once, as a grid: whole-set visual consistency at a glance instead of one

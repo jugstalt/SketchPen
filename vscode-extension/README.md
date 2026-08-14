@@ -75,6 +75,10 @@ on `PATH`, set `sketchpen.cliPath` in your VS Code settings.
   - `Export Package…` exposes `--resolutions` (DPI values, e.g.
     `96,144,192`) for the two composers where it applies (`png-zip`,
     `web-sprite-zip`).
+  - If the icon's `.sketchpen.json` defines `exportProfiles`,
+    `Export Package…` offers them first as a one-click alternative to
+    manually re-picking a composer and re-typing sizes/styles/resolutions —
+    see [docs/SYNTAX.md](../docs/SYNTAX.md#sketchpenjson-schema).
 - **Getting Started walkthrough** (VS Code's own "Get Started" page) — walks
   through installing the CLI, scaffolding a project, previewing, and
   exporting.

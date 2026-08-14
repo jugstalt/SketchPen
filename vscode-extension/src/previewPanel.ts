@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs/promises';
+import { StyleOption } from './stylesFolder';
 
 /** Message a webview can post back to the extension. Currently just the style switcher. */
 export interface PreviewWebviewMessage {
@@ -136,7 +137,7 @@ export class PreviewPanelManager {
     async showPreview(
         sourceFile: string,
         svgFilePath: string,
-        availableStyles: string[],
+        availableStyles: StyleOption[],
         selectedStyle: string
     ): Promise<void> {
         const panel = this.getOrCreatePanel(sourceFile);
@@ -188,16 +189,15 @@ export class PreviewPanelManager {
         return panel;
     }
 
-    private renderHtml(svgContent: string, availableStyles: string[], selectedStyle: string): string {
+    private renderHtml(svgContent: string, availableStyles: StyleOption[], selectedStyle: string): string {
         const sized = ensureViewBox(svgContent);
         const dimensionMatch = sized.match(SVG_ROOT_SIZE);
         const width = dimensionMatch ? parseFloat(dimensionMatch[1]) : 100;
         const height = dimensionMatch ? parseFloat(dimensionMatch[2]) : 100;
         const gridOverlay = buildGridOverlay(width, height);
 
-        const styleOptions = ['', ...availableStyles]
-            .map((name) => {
-                const label = name === '' ? 'Default' : name;
+        const styleOptions = [{ name: '', label: 'Default' }, ...availableStyles]
+            .map(({ name, label }) => {
                 const selected = name === selectedStyle ? ' selected' : '';
                 return `<option value="${name}"${selected}>${label}</option>`;
             })

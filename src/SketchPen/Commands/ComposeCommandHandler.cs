@@ -1,5 +1,6 @@
 using SketchPen.Compose.Services.Absraction;
 using SketchPen.Output;
+using SketchPen.Plot.Compile;
 using SketchPen.Plot.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ public class ComposeCommandHandler
     }
 
     public int Execute(string? path, string? composerId, string? sizes, string? styles, string? resolutions,
-                       string? outFile, IConsoleReporter reporter)
+                       string? outFile, string? profileName, IConsoleReporter reporter)
     {
         try
         {
@@ -35,11 +36,32 @@ public class ComposeCommandHandler
                     "e.g. 'SketchPen.exe compose plot/webgis --composer svg-zip' — not before it. " +
                     "Run 'SketchPen.exe compose --help' for the full syntax and examples.");
             }
+
+            // --profile <name> supplies composer/sizes/styles/resolutions defaults from the
+            // nearest ancestor .sketchpen.json's exportProfiles[name] -- any of --composer/--sizes/
+            // --styles/--resolutions given explicitly on the command line still wins over the
+            // profile's own value for that same setting.
+            if (!string.IsNullOrEmpty(profileName))
+            {
+                string profileLookupDir = new FileInfo(path).Exists ? new FileInfo(path).Directory!.FullName : path;
+                var resolvedConfig = SketchPenConfigResolver.FindConfig(profileLookupDir);
+                var profile = resolvedConfig?.Config.ExportProfiles != null &&
+                              resolvedConfig.Config.ExportProfiles.TryGetValue(profileName, out var found)
+                    ? found
+                    : throw new Exception($"Unknown --profile '{profileName}' — no exportProfiles entry with that name in .sketchpen.json for '{path}'.");
+
+                composerId = string.IsNullOrEmpty(composerId) ? profile.Composer : composerId;
+                sizes = string.IsNullOrEmpty(sizes) ? profile.Sizes : sizes;
+                styles = string.IsNullOrEmpty(styles) ? profile.Styles : styles;
+                resolutions = string.IsNullOrEmpty(resolutions) ? profile.Resolutions : resolutions;
+            }
+
             if (string.IsNullOrEmpty(composerId))
             {
                 throw new Exception(
-                    "Missing required --composer <id>. Run 'SketchPen.exe compose --help' to see " +
-                    "the list of valid ids and example commands.");
+                    "Missing required --composer <id> (or --profile <name> naming an exportProfiles " +
+                    "entry that sets one). Run 'SketchPen.exe compose --help' to see the list of " +
+                    "valid ids and example commands.");
             }
 
             var composer = _composers.FirstOrDefault(c => string.Equals(c.Id, composerId, StringComparison.OrdinalIgnoreCase));

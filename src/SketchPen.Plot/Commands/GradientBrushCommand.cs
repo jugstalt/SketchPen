@@ -25,9 +25,12 @@ class GradientBrushCommand : GeneralPlotCommand
                 // skips the first *point* to reach the second one. The previous Skip(2) skipped
                 // both points (there are only 2), so GradientBrushPoint2 silently became
                 // default(CanvasPoint) (0,0) regardless of the x2,y2 actually given.
+                // The points are given in logical units like every other coordinate, so they are
+                // projected to pixels here -- the context's own defaults (the canvas corners) are
+                // already pixels. Without this the gradient axis depended on the render size.
                 var points = parameters.ToPoints();
-                context.GradientBrushPoint1 = points.FirstOrDefault();
-                context.GradientBrushPoint2 = points.Skip(1).FirstOrDefault();
+                context.GradientBrushPoint1 = context.Project(points.FirstOrDefault());
+                context.GradientBrushPoint2 = context.Project(points.Skip(1).FirstOrDefault());
                 break;
             default:
                 throw new Exception($"Unknown method: {Method}");

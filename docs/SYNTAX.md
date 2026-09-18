@@ -597,6 +597,11 @@ Line comments with `//`, to the end of the line:
 pen.color("#000");  // color: black
 ```
 
+Everything after `//` up to the end of the line is free-form text and is never
+interpreted as code, so apostrophes, quotes, and semicolons are fine in comments
+(`// don't panic`). *(Older versions failed the compilation with "Invalid char
+constant" on an apostrophe in a comment.)*
+
 ## Full example
 
 `cash.spt` – a dollar sign as a path made of two arcs ("S" shape) plus two vertical

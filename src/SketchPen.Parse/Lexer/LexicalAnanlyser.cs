@@ -22,8 +22,44 @@ public class LexicalAnalyser
         {
             var token = GetNextLexicalAtom(ref text);
             tokens.Add(token);
+
+            // Comment text is free-form -- it must never be lexed as code, or a stray ' or "
+            // in a comment ("don't") fails compilation. So once the comment marker is out, the
+            // rest of the line becomes one single token instead of being taken apart.
+            if (token.TokenType == TokenType.Identifier && CheckComments(token.TokenValue))
+            {
+                var body = TakeCommentBody(ref text);
+                if (body.Length > 0)
+                {
+                    tokens.Add(new Token(TokenType.Identifier, body));
+                }
+            }
         }
         return tokens;
+    }
+
+    /// <summary>
+    /// Cuts the text of a line comment (everything up to the end of the line) off the front of
+    /// <paramref name="text"/> and returns it. A statement separator ending the line (the
+    /// PreComplier terminates every line with ";") stays in <paramref name="text"/> so it is still
+    /// lexed as the separator token that GetStatements/NextStatement expect after a comment.
+    /// </summary>
+    private string TakeCommentBody(ref string text)
+    {
+        int end = text.IndexOfAny(new[] { '\r', '\n' });
+        if (end < 0)
+        {
+            end = text.Length;
+        }
+
+        if (end > 0 && Array.IndexOf(_syntax.Separator, text[end - 1].ToString()) > -1)
+        {
+            end--;
+        }
+
+        var body = text.Substring(0, end);
+        text = text.Substring(end);
+        return body;
     }
 
     private Token Parse(string item)

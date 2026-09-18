@@ -1,24 +1,28 @@
 // Like (thumbs up, hand seen from the side)
-#include "../styles/default.globals"
 transform.reset();
 
+// wrist / forearm stub on the left, drawn first so the fist overlaps it
+transform.translate(-18, 21);
+rect.fill(36, 22, 6, @@brushColor);
+rect.draw(36, 22, 6, @@outlinePenColor);
+transform.reset();
+
+// fist with raised thumb
 path.begin();
-path.addpoint(-26, 32);
-path.addlines(-26, 32, -26, 4);
-path.addcubic(-29, -8, -29, -20, -25, -28);
-path.addcubic(-21, -37, -8, -37, -5, -28);
-path.addcubic(-3, -22, -4, -17, -2, -12);
-path.addcubic(7, -20, 20, -20, 25, -13);
-path.addcubic(27, -11, 28, -9, 28, -4);
-path.addlines(28, -4, 28, 28);
-path.addcubic(28, 35, 24, 38, 18, 38);
-path.addlines(18, 38, -20, 38);
-path.addcubic(-24, 38, -26, 36, -26, 32);
+path.addpoint(-8, 32);
+path.addlines(-8, 32, -8, -20);
+path.addcubic(-8, -30, -3, -35, 3, -35);
+path.addcubic(9, -35, 12, -30, 12, -21);
+path.addlines(12, -21, 12, -15);
+path.addcubic(16, -20, 20, -21, 24, -20);
+path.addcubic(28, -19, 30, -15, 30, -10);
+path.addlines(30, -10, 30, 25);
+path.addcubic(30, 30, 27, 32, 22, 32);
 path.close();
 path.fill(@@brushColor);
 path.draw(@@outlinePenColor);
 
-// curled fingers
-line.draw(-12, 1, 28, 1, @@outlinePenColor);
-line.draw(-12, 13, 28, 13, @@outlinePenColor);
-line.draw(-12, 25, 28, 25, @@outlinePenColor);
+// curled fingers (short folds on the knuckle side)
+line.draw(4, 1, 30, 1, @@outlinePenColor);
+line.draw(4, 12, 30, 12, @@outlinePenColor);
+line.draw(4, 23, 30, 23, @@outlinePenColor);

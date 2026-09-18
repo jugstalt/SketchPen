@@ -1,5 +1,4 @@
 // Like (heart)
-#include "../styles/default.globals"
 transform.reset();
 
 path.begin();

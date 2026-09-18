@@ -1,5 +1,4 @@
 // Comment (chat bubble)
-#include "../styles/default.globals"
 transform.reset();
 
 path.begin();

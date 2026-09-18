@@ -1,5 +1,4 @@
 // Share (connected nodes)
-#include "../styles/default.globals"
 transform.reset();
 
 line.draw(-24, 0, 22, -28, @@outlinePenColor);

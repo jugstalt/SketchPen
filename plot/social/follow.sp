@@ -1,5 +1,4 @@
 // Follow (add user)
-#include "../styles/default.globals"
 transform.reset();
 transform.translate(-8, 0);
 

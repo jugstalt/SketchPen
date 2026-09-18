@@ -21,7 +21,7 @@
     <ToolCommandName>sketchpen</ToolCommandName>
     <PackageId>SketchPen.Cli</PackageId>
     <!-- CI overrides this via `dotnet pack -p:Version=X.Y.Z` from the pushed git tag; this is only the fallback for ad-hoc local `dotnet pack` runs. -->
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Authors>jugstalt</Authors>
     <Description>Renders .sp icon scripts to PNG/SVG. Compose any registered export mode (PNG, SVG, ZIP batches, themeable CSS-variable HTML) via the 'compose' subcommand.</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

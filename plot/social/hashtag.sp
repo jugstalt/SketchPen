@@ -1,5 +1,4 @@
 // Hashtag
-#include "../styles/default.globals"
 transform.reset();
 
 pen.width(9);

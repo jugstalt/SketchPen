@@ -108,7 +108,7 @@ command list) **→ `IPlotContext` implementation** (raster `PlotContext` or vec
 - [.NET SDK 10](https://dotnet.microsoft.com/) (see `TargetFramework net10.0` in the
   CLI's `.csproj`) — needed to build/run the CLI, or just install it as a
   global tool (see below), no SDK required for that.
-- Node.js 20+ and `npm` — only if you want to rebuild the VS Code extension
+- Node.js 22+ and `npm` — only if you want to rebuild the VS Code extension
   from source; not needed to install the pre-built `.vsix`.
 
 ## Command-line tool (`SketchPen.exe`)

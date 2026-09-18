@@ -1,0 +1,10 @@
+globals.tryset(penColor, "#222222");
+globals.tryset(brushColor, "#4a90d9");
+globals.tryset(penWidth, 4);
+globals.tryset(percent, 65);
+globals.tryset(x, 40);
+
+pen.color(@@penColor);
+pen.width(@@penWidth);
+pen.cap("round");
+brush.color(@@brushColor);

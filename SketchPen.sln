@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SketchPen.Plot.Skia", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SketchPen.Compose", "src\SketchPen.Compose\SketchPen.Compose.csproj", "{750284FC-5A17-4AEE-AC58-279C8E673621}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SketchPen.Tests", "tests\SketchPen.Tests\SketchPen.Tests.csproj", "{F484821B-6510-4EA2-A320-352513D69010}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +45,10 @@ Global
 		{750284FC-5A17-4AEE-AC58-279C8E673621}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{750284FC-5A17-4AEE-AC58-279C8E673621}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{750284FC-5A17-4AEE-AC58-279C8E673621}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F484821B-6510-4EA2-A320-352513D69010}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F484821B-6510-4EA2-A320-352513D69010}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F484821B-6510-4EA2-A320-352513D69010}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F484821B-6510-4EA2-A320-352513D69010}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,6 +59,7 @@ Global
 		{15C792DD-E24A-4D0E-8AF5-02C284443BA3} = {D4581E81-EC37-417B-8CD4-4B2F0B165E3A}
 		{C8D2A23E-DF72-4F2A-89DB-06A4DF52C6DB} = {D4581E81-EC37-417B-8CD4-4B2F0B165E3A}
 		{750284FC-5A17-4AEE-AC58-279C8E673621} = {D4581E81-EC37-417B-8CD4-4B2F0B165E3A}
+		{F484821B-6510-4EA2-A320-352513D69010} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F053F483-D2B4-4BE7-8E31-3ECFE77E146E}

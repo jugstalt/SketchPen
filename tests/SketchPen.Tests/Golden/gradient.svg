@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128">
+	<defs>
+		<linearGradient id="gradient_0" gradientUnits="userSpaceOnUse" x1="-38.399998" y1="-38.399998" x2="38.399998" y2="38.399998">
+			<stop offset="0" stop-color="white"/>
+			<stop offset="1" stop-color="#4A90D9"/>
+		</linearGradient>
+	</defs>
+	<ellipse fill="url(#gradient_0)" transform="translate(64 64)" cx="0" cy="0" rx="38.399998" ry="38.399998"/>
+	<ellipse fill="none" stroke="#222" stroke-width="5.1199999" stroke-linecap="round" stroke-linejoin="round" transform="translate(64 64)" cx="0" cy="0" rx="38.399998" ry="38.399998"/>
+</svg>

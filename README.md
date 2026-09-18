@@ -93,6 +93,7 @@ src/
                            SketchPen.sln), kept in the repo for reference only
 vscode-extension/          VS Code extension (TypeScript, not part of SketchPen.sln) -- see
                            "VS Code extension" below and vscode-extension/README.md
+tests/SketchPen.Tests      xUnit tests: lexer, pre-compiler, config, CLI handlers, golden renders
 docs/SYNTAX.md              Language reference for .sp / .spt / .globals
 docs/CLI.md                 SketchPen.exe command-line reference
 ```
@@ -233,6 +234,28 @@ code --install-extension sketchpen-0.1.0.vsix
 
 Full feature list, known limitations, and settings:
 **[vscode-extension/README.md](vscode-extension/README.md)**.
+
+## Development
+
+```bash
+dotnet build SketchPen.sln -c Release
+dotnet test tests/SketchPen.Tests/SketchPen.Tests.csproj -c Release
+```
+
+The tests cover the lexer, the pre-compiler (`#include`, `repeat`, globals),
+`.sketchpen.json` handling, both CLI commands (root and `compose`), and regression
+tests for bugs that occurred once. [`tests/SketchPen.Tests/Golden`](tests/SketchPen.Tests/Golden)
+holds golden-master renderings (`<name>.sp` → expected `<name>.svg`); when a change
+to the rendered output is intended, regenerate the expectations with
+`UPDATE_GOLDEN=1 dotnet test tests/SketchPen.Tests/SketchPen.Tests.csproj` and review
+the SVG diff before committing.
+
+CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) builds and tests on Linux
+and Windows on every push and pull request, and compiles the VS Code extension.
+For a broader check, re-render the icon sets of
+[sketchpen-iconset](https://github.com/jugstalt/sketchpen-iconset) into a scratch folder
+and compare with its committed `icons/` — icons containing `text.draw` can differ by a
+few anti-aliased pixels between machines, everything else should be byte-identical.
 
 ## Further reading
 

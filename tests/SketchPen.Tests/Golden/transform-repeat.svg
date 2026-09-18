@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128">
+	<path fill="none" stroke="#222" stroke-width="5.1199999" stroke-linecap="round" stroke-linejoin="round" transform="translate(64 64)" d="M0 -25.6L0 -51.2"/>
+	<path fill="none" stroke="#222" stroke-width="5.1199999" stroke-linecap="round" stroke-linejoin="round" transform="matrix(0.707107 0.707107 -0.707107 0.707107 64 64)" d="M0 -25.6L0 -51.2"/>
+	<path fill="none" stroke="#222" stroke-width="5.1199999" stroke-linecap="round" stroke-linejoin="round" transform="matrix(0 1 -1 0 64 64)" d="M0 -25.6L0 -51.2"/>
+	<path fill="none" stroke="#222" stroke-width="5.1199999" stroke-linecap="round" stroke-linejoin="round" transform="matrix(-0.707107 0.707107 -0.707107 -0.707107 64 64)" d="M0 -25.6L0 -51.2"/>
+	<path fill="none" stroke="#222" stroke-width="5.1199999" stroke-linecap="round" stroke-linejoin="round" transform="matrix(-1 0 0 -1 64 64)" d="M0 -25.6L0 -51.2"/>
+	<path fill="none" stroke="#222" stroke-width="5.1199999" stroke-linecap="round" stroke-linejoin="round" transform="matrix(-0.707107 -0.707107 0.707107 -0.707107 64 64)" d="M0 -25.6L0 -51.2"/>
+	<path fill="none" stroke="#222" stroke-width="5.1199999" stroke-linecap="round" stroke-linejoin="round" transform="matrix(0 -1 1 0 64 64)" d="M0 -25.6L0 -51.2"/>
+	<path fill="none" stroke="#222" stroke-width="5.1199999" stroke-linecap="round" stroke-linejoin="round" transform="matrix(0.707107 -0.707107 0.707107 0.707107 64 64)" d="M0 -25.6L0 -51.2"/>
+	<ellipse fill="#4A90D9" transform="matrix(0.4 0 0 0.4 64 64)" cx="0" cy="0" rx="38.399998" ry="38.399998"/>
+	<ellipse fill="none" stroke="#222" stroke-width="5.1199999" stroke-linecap="round" stroke-linejoin="round" transform="matrix(0.4 0 0 0.4 64 64)" cx="0" cy="0" rx="38.399998" ry="38.399998"/>
+	<rect fill="none" stroke="#222" stroke-width="5.1199999" stroke-linecap="round" stroke-linejoin="round" transform="matrix(0.866025 0.5 -0.5 0.866025 80.2297 54.6297)" x="-6.3999996" y="-6.3999996" width="12.799999" height="12.799999"/>
+</svg>

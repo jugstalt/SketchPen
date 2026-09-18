@@ -23,14 +23,16 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "10.0.x"
-          # Remove once .NET 10 has a stable release available to setup-dotnet.
-          dotnet-quality: "preview"
 
       - name: Derive package version from tag
         run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
 
       - name: Restore
         run: dotnet restore src/SketchPen/SketchPen.csproj
+
+      - name: Test
+        # Never publish a build that fails its tests (same suite as ci.yml).
+        run: dotnet test tests/SketchPen.Tests/SketchPen.Tests.csproj -c Release
 
       - name: Pack SketchPen.Cli
         # `dotnet pack` builds implicitly; only src/SketchPen and its own

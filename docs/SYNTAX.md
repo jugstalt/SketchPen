@@ -42,7 +42,7 @@ Reference implementation in code:
 
 | Extension  | Type                   | Purpose                                                                                                                   |
 | ---------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `.sp`      | **Code file** (icon)   | A finished, independently renderable icon. One `.sp` file per `plot` directory corresponds to exactly one generated PNG.  |
+| `.sp`      | **Code file** (icon)   | A finished, independently renderable icon. One `.sp` file corresponds to exactly one icon (one generated PNG per size/resolution).  |
 | `.spt`     | **Template**           | A reusable snippet (e.g. a shape) included via `#include` into `.sp` or other `.spt` files. Not rendered directly.        |
 | `.globals` | **Globals/style file** | Defines named variables (colors, pen widths, …) referenced via `@@name`. Controls the "theme"/color style of an icon set. |
 
@@ -55,8 +55,9 @@ Every command "knows" via `[PlotCommandSupportedFileTypes]` in which file types 
 allowed (e.g. `globals.set(...)` is only valid in `.globals` files, `text.draw(...)`
 only in `.sp`/`.spt`).
 
-An icon set lives in its own directory under `plot/`, e.g.
-[`plot/basic`](../plot/basic) or [`plot/webgis`](../plot/webgis). By convention,
+An icon set lives in its own directory, e.g.
+[`src/basic`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/basic) or [`src/webgis`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/webgis)
+in the [sketchpen-iconset](https://github.com/jugstalt/sketchpen-iconset) repository. By convention,
 templates live in a `templates/` subfolder inside that directory.
 
 ## Basic syntax
@@ -258,7 +259,7 @@ circle.arc(200, 140, 80, 80, 0, 50);       // arc from 200° over 140°, 80x80, 
 circle.pie(0, -180, 90, 90, 0, 0);         // filled segment
 ```
 
-`circle-pie-*.sp` in [`plot/basic`](../plot/basic) demonstrates quarter/half/full
+`circle-pie-*.sp` in [`src/basic`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/basic) (sketchpen-iconset) demonstrates quarter/half/full
 circle fill levels via `path.addarc` + `path.fill` as an alternative to `circle.pie`.
 
 **Known limitation — numeric R,G,B(,A) trailing colors are ambiguous with a
@@ -347,7 +348,7 @@ transform.rotate(22);
 
 `transform` is typically used to include a template multiple times at different
 positions/sizes/rotation angles within a composite icon (see
-[`admin.sp`](../plot/basic/admin.sp)).
+[`admin.sp`](https://github.com/jugstalt/sketchpen-iconset/blob/main/src/basic/admin.sp)).
 
 ### `globals`
 
@@ -433,22 +434,24 @@ Every icon-set directory has a **styles folder**, where its `.globals` files liv
 
 `stylesPath` is resolved relative to `.sketchpen.json`'s own directory (the same way
 `#include` resolves relative paths) and can point anywhere — including a single
-location **shared by several icon sets**. This is exactly how
-[`plot/basic`](../plot/basic), [`plot/webgis`](../plot/webgis), and
-[`plot/gview`](../plot/gview) work: each has its own `.sketchpen.json` pointing
-`stylesPath` at one shared [`plot/styles`](../plot/styles), so all three sets stay
-in sync when a style changes, instead of maintaining separate copies. An icon set
-that doesn't need sharing (e.g. [`plot/examples`](../plot/examples)) can skip
-`.sketchpen.json` entirely and just use its own local `styles/` subfolder.
+location **shared by several icon sets**. This is exactly how the
+[sketchpen-iconset](https://github.com/jugstalt/sketchpen-iconset) repository works:
+all its sets (`src/basic`, `src/webgis`, `src/gview`, ...) share one
+[`src/styles`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/styles)
+folder, so they all stay in sync when a style changes, instead of maintaining
+separate copies. An icon set that doesn't need sharing (like that repository's
+[`src/examples`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/examples))
+can skip the shared config and just use its own local `styles/` subfolder.
 
 **Inheritance.** A directory without its own `.sketchpen.json` inherits the
-*nearest ancestor's* in full (walking upward one directory at a time, same as
-`plot/basic`/`.sketchpen.json` resolves `../styles` relative to itself, not to
-whatever called into it) — there is no per-key merging across levels, the
-nearest config found wins entirely. This means a single `.sketchpen.json` placed
-higher up the tree (e.g. one `plot/.sketchpen.json` with `{"stylesPath": "./styles"}`)
-can supply defaults for every icon-set folder under it that doesn't define its own,
-so adding a new icon set can require zero config of its own.
+*nearest ancestor's* in full (walking upward one directory at a time; path values
+such as `stylesPath` are resolved relative to the directory the config file
+actually lives in, not relative to the folder that inherited it) — there is no
+per-key merging across levels, the nearest config found wins entirely. This means a
+single `.sketchpen.json` placed higher up the tree (e.g. one `src/.sketchpen.json`
+with `{"stylesPath": "./styles"}`, as in the icon-set repository) can supply defaults
+for every icon-set folder under it that doesn't define its own, so adding a new
+icon set requires zero config of its own.
 
 Order of assembly for a file (see `PreComplier`/`SketchPenConfigResolver`):
 
@@ -470,7 +473,7 @@ particular `.sketchpen.json` lives (see inheritance above).
   "defaultStyle": "dark",
   "defaultSizes": [16, 32, 64],
   "defaultResolutions": [1, 2],
-  "outFolder": "../music-img",
+  "outFolder": "../icons/music",
   "styles": {
     "dark": { "label": "Dark Mode" }
   },
@@ -491,10 +494,10 @@ particular `.sketchpen.json` lives (see inheritance above).
 | `styles`             | tooling only (never the compiler)       | Display `label` per style name, shown by `language-info` and the VS Code extension's style dropdowns instead of the raw file name. |
 | `exportProfiles`     | `compose --profile <name>`              | Reusable composer/sizes/styles/resolutions preset — see [`compose --profile`](CLI.md#the-compose-subcommand); any of those flags given explicitly on the command line still wins over the profile's own value. |
 
-Example, based on [`plot/basic`](../plot/basic)'s `.sketchpen.json` → [`plot/styles`](../plot/styles):
+Example, based on the [sketchpen-iconset](https://github.com/jugstalt/sketchpen-iconset) repository, where `src/basic` inherits `src/.sketchpen.json` → [`src/styles`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/styles):
 
 ```csharp
-// plot/styles/default.globals – base values
+// src/styles/default.globals – base values
 globals.tryset(penColor, "#000");
 globals.tryset(outlinePenColor, "#000");
 globals.tryset(brushColor, "#fff");
@@ -503,23 +506,23 @@ pen.color(@@penColor);
 pen.width(@@penWidth);
 brush.color(@@brushColor);
 
-// plot/styles/bg-dark.globals – dark-mode style
+// src/styles/bg-dark.globals – dark-mode style
 globals.set(penColor, "#4cc2ff");
 globals.set(outlinePenColor, "#fefefe");
 globals.set(brushColor, "#444");
 ```
 
-If `plot/basic/admin.sp` is rendered with the `bg-dark` style (`-style bg-dark`), the
+If `src/basic/admin.sp` is rendered with the `bg-dark` style (`-style bg-dark`), the
 effective result is:
 
 ```csharp
-// from plot/styles/bg-dark.globals
+// from src/styles/bg-dark.globals
 globals.set(penColor, "#4cc2ff");
 globals.set(outlinePenColor, "#fefefe");
 globals.set(brushColor, "#444");
 // ... (further values from bg-dark.globals)
 
-// from plot/styles/default.globals (tryset has no effect here anymore, values are already set)
+// from src/styles/default.globals (tryset has no effect here anymore, values are already set)
 globals.tryset(penColor, "#000");     // no-op, penColor is already "#4cc2ff"
 ...
 pen.color(@@penColor);                // -> "#4cc2ff"
@@ -624,6 +627,8 @@ Included via an associated `.sp` file, e.g.:
 #include "templates/cash.spt"
 ```
 
-More real-world examples: [`plot/basic`](../plot/basic) (general UI icons),
-[`plot/webgis`](../plot/webgis) (GIS-specific icons),
-[`plot/gview`](../plot/gview) (axis/coordinate system symbols).
+More real-world examples, all in the [sketchpen-iconset](https://github.com/jugstalt/sketchpen-iconset) repository:
+[`src/basic`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/basic) (general UI icons),
+[`src/webgis`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/webgis) (GIS-specific icons),
+[`src/gview`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/gview) (axis/coordinate system symbols), and
+[`src/examples`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/examples) (one commented file per language feature).

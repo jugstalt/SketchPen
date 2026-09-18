@@ -33,7 +33,7 @@ public class ComposeCommandHandler
             {
                 throw new Exception(
                     "Missing required <path> argument. Note: <path> goes right after 'compose', " +
-                    "e.g. 'SketchPen.exe compose plot/webgis --composer svg-zip' — not before it. " +
+                    "e.g. 'SketchPen.exe compose src/webgis --composer svg-zip' — not before it. " +
                     "Run 'SketchPen.exe compose --help' for the full syntax and examples.");
             }
 

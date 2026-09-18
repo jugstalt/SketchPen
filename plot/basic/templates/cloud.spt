@@ -1,9 +1,0 @@
-path.begin();
-
-path.addarc(90,177, 45,45, -22,10);
-path.addarc(196, 158, 50,50, 0, -5);
-path.addarc(270,180, 40,40, 25, 12);
-path.close();
-
-path.fill();
-path.draw(@@outlinePenColor);

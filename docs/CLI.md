@@ -148,9 +148,9 @@ admin_26@3.png    (78×78 px)
 admin_32@1.png … admin_128@3.png (384×384 px)
 ```
 
-This is exactly the naming scheme used for the pre-rendered
-[`plot/basic-img`](../plot/basic-img) and [`plot/webgis-img`](../plot/webgis-img)
-folders, and matches common `@1x`/`@2x`/`@3x` asset-catalog conventions (iOS,
+This is exactly the naming scheme used for the pre-rendered PNGs in the
+[`icons/`](https://github.com/jugstalt/sketchpen-iconset/tree/main/icons) folder of the
+[sketchpen-iconset](https://github.com/jugstalt/sketchpen-iconset) repository, and matches common `@1x`/`@2x`/`@3x` asset-catalog conventions (iOS,
 Android, Electron, …). `-format svg` produces one `<iconname>.svg` per icon
 instead — see [Vector (SVG) output](#vector-svg-output).
 
@@ -163,7 +163,7 @@ layout, see [the `compose` subcommand](#the-compose-subcommand)).
 ## Vector (SVG) output
 
 ```bash
-SketchPen.exe plot/basic/disk.sp -outfolder out -format svg
+SketchPen.exe src/basic/disk.sp -outfolder out -format svg
 ```
 
 writes a single `disk.svg` to `out/` — **one file per icon**, not one per
@@ -193,9 +193,9 @@ from. To render several styles with the root command, invoke the CLI once per st
 with a different output folder or filename convention, e.g.:
 
 ```bash
-SketchPen.exe plot/basic -outfolder plot/basic-img
-SketchPen.exe plot/basic -outfolder plot/basic-img-dark -style bg-dark
-SketchPen.exe plot/basic -outfolder plot/basic-img-e    -style e
+SketchPen.exe src/basic -outfolder icons/basic
+SketchPen.exe src/basic -outfolder icons/basic-bg-dark -style bg-dark
+SketchPen.exe src/basic -outfolder icons/basic-e       -style e
 ```
 
 (The [`compose`](#the-compose-subcommand) subcommand, in contrast, accepts a
@@ -204,29 +204,32 @@ one run — see the examples there.)
 
 ## Examples
 
-Render every icon in `plot/basic` into `plot/basic-img` with the default style:
+The paths below (`src/basic`, `icons/basic`, ...) refer to a checkout of the
+[sketchpen-iconset](https://github.com/jugstalt/sketchpen-iconset) repository as the working directory.
+
+Render every icon in `src/basic` into `icons/basic` with the default style:
 
 ```bash
-SketchPen.exe plot/basic -outfolder plot/basic-img
+SketchPen.exe src/basic -outfolder icons/basic
 ```
 
-Same, but with the `bg-dark` color style (`plot/styles/bg-dark.globals`):
+Same, but with the `bg-dark` color style (`src/styles/bg-dark.globals`):
 
 ```bash
-SketchPen.exe plot/basic -outfolder plot/basic-img -style bg-dark
+SketchPen.exe src/basic -outfolder icons/basic-bg-dark -style bg-dark
 ```
 
 Render the `webgis` set:
 
 ```bash
-SketchPen.exe plot/webgis -outfolder plot/webgis-img
+SketchPen.exe src/webgis -outfolder icons/webgis
 ```
 
 Only the sizes/resolutions you actually need, e.g. for a web app that only
 ever uses 32px and 64px icons at `@1x`/`@2x`:
 
 ```bash
-SketchPen.exe plot/basic -outfolder out -sizes 32,64 -resolutions 1,2
+SketchPen.exe src/basic -outfolder out -sizes 32,64 -resolutions 1,2
 ```
 
 ## The `compose` subcommand
@@ -243,8 +246,8 @@ the command line, or want a different SVG size than the root command's fixed
 reference size (see [Vector (SVG) output](#vector-svg-output)).
 
 > **Common mistake:** `<path>` must come right **after** `compose`, not before
-> it — `SketchPen.exe compose plot/webgis --composer svg-zip` is correct,
-> `SketchPen.exe plot/webgis compose --composer svg-zip` is **not**. The root
+> it — `SketchPen.exe compose src/webgis --composer svg-zip` is correct,
+> `SketchPen.exe src/webgis compose --composer svg-zip` is **not**. The root
 > command (see [Usage](#usage)) also accepts a `<path>` argument; if it appears
 > before `compose`, the root command consumes it and `compose` is left without
 > one, failing with `Missing required <path> argument`. Everything *after* the
@@ -280,19 +283,19 @@ Examples:
 
 ```bash
 # One SVG at a custom reference size (the root command's -format svg always uses 128)
-SketchPen.exe compose plot/basic/disk.sp --composer svg --sizes 64 --out disk.svg
+SketchPen.exe compose src/basic/disk.sp --composer svg --sizes 64 --out disk.svg
 
 # Whole set, two styles, as individual SVGs in a zip
-SketchPen.exe compose plot/webgis --composer svg-zip --styles ",bg-dark" --out webgis-svg.zip
+SketchPen.exe compose src/webgis --composer svg-zip --styles ",bg-dark" --out webgis-svg.zip
 
 # Whole set as themeable CSS-variable HTML pages
-SketchPen.exe compose plot/basic --composer svg-vars-zip --out basic-themeable.zip
+SketchPen.exe compose src/basic --composer svg-vars-zip --out basic-themeable.zip
 
 # CSS sprite sheet + generated CSS + a demo HTML page, all in one ZIP
-SketchPen.exe compose plot/basic --composer web-sprite-zip --sizes 16,32,64 --out basic-sprites.zip
+SketchPen.exe compose src/basic --composer web-sprite-zip --sizes 16,32,64 --out basic-sprites.zip
 
 # Reuse a named exportProfiles preset from .sketchpen.json instead of repeating flags
-SketchPen.exe compose plot/basic --profile web --out basic-web.zip
+SketchPen.exe compose src/basic --profile web --out basic-web.zip
 ```
 
 An unknown `--composer` id fails with a clear error listing the valid ids
@@ -370,9 +373,9 @@ completion, without the extension needing to duplicate any compiler logic:
 
 ## Convenience scripts (`plot.bat` / `plot.sh`)
 
-[`plot/plot.bat`](../plot/plot.bat) (Windows) and [`plot/plot.sh`](../plot/plot.sh)
-(Linux/macOS, via `dotnet SketchPen.dll`) are thin wrappers that call the CLI with
-`%1`/`$1` as the set name and `%2`/`$2` as an optional style name:
+The thin render wrappers `plot.bat` (Windows) and `plot.sh` (Linux/macOS) live in the
+[sketchpen-iconset](https://github.com/jugstalt/sketchpen-iconset) repository, next to the icon sets they render. They call the
+installed `sketchpen` tool with the set name and an optional style name:
 
 ```bash
 # Windows
@@ -382,10 +385,7 @@ plot.bat basic bg-dark
 ./plot.sh basic bg-dark
 ```
 
-which is equivalent to `SketchPen.exe plot/basic -outfolder plot/basic-img
--style bg-dark`. Both scripts currently hard-code an absolute path to
-the built executable/DLL (a leftover `net6.0` path in `plot.sh`) — adjust it to
-match your local build output (`net10.0`) and machine before using them as-is.
+which is equivalent to `sketchpen src/basic -outfolder icons/basic-bg-dark -style bg-dark`.
 
 ## Exit codes and error output
 
@@ -398,7 +398,7 @@ On a script syntax error, the tool prints the offending file and the exact
 statement that failed, e.g.:
 
 ```
-plot/basic/admin.sp
+src/basic/admin.sp
 ERROR: Unknown method: fil
 >>
 >> circle.fil(50,50, 0,-15);

@@ -1,1 +1,0 @@
-#include "templates/favorites-outline.spt"

@@ -1,4 +1,0 @@
-path.begin();
-path.addlines(-20,-45, 20,-45, 20,45, -20,45);
-path.close();
-path.draw();

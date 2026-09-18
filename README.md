@@ -63,15 +63,22 @@ an ASP.NET Core MVC app) — it has been replaced by the VS Code extension and
 is no longer part of the build (its source is still in the repo under
 `src/SketchPen.Code/`, unbuilt, for reference only).
 
-Ready-made example icon sets live under [`plot/`](plot):
+This repository contains only the software. The ready-made icon sets, the shared
+color styles, the rendered PNGs, and the language showcase live in their own
+repository, **[sketchpen-iconset](https://github.com/jugstalt/sketchpen-iconset)**:
 
-| Directory                        | Content                                                                                                                                  |
-| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| [`plot/basic`](plot/basic)       | ~180 general UI icons (account, arrows, folder, trash can, …) incl. templates and color styles                                           |
-| [`plot/webgis`](plot/webgis)     | GIS/map-specific icons (markers, measuring, construction tools, …)                                                                       |
-| [`plot/gview`](plot/gview)       | Axis/coordinate system symbols                                                                                                           |
-| [`plot/examples`](plot/examples) | Language syntax showcase — one heavily-commented `.sp` file per feature (existing and newly added), see [docs/SYNTAX.md](docs/SYNTAX.md) |
-| `plot/*-img`                     | Pre-rendered PNG output of the respective sets (example output of the CLI tool)                                                          |
+| Directory (in `sketchpen-iconset`)                                                     | Content                                                                                                  |
+| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [`src/basic`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/basic)       | ~200 general UI icons (account, arrows, folder, trash can, …) incl. templates                            |
+| [`src/webgis`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/webgis)     | GIS/map-specific icons (markers, measuring, construction tools, …)                                       |
+| [`src/gview`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/gview)       | Axis/coordinate system symbols                                                                           |
+| [`src/music`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/music), [`src/social`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/social) | Instruments/notes and social-action icons                                            |
+| [`src/styles`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/styles)     | Shared color styles (`default.globals`, `bg-dark.globals`, …) used by every set                          |
+| [`src/examples`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/examples) | Language syntax showcase — one heavily-commented `.sp` file per feature, see [docs/SYNTAX.md](docs/SYNTAX.md) |
+| [`icons/<set>`](https://github.com/jugstalt/sketchpen-iconset/tree/main/icons)         | Pre-rendered PNG output of each set                                                                      |
+
+Paths such as `src/basic/disk.sp` in the examples of this README and of the
+docs refer to a checkout of that repository as the working directory.
 
 ## Project structure
 
@@ -86,7 +93,6 @@ src/
                            SketchPen.sln), kept in the repo for reference only
 vscode-extension/          VS Code extension (TypeScript, not part of SketchPen.sln) -- see
                            "VS Code extension" below and vscode-extension/README.md
-plot/                      Example icon sets (scripts, templates, styles, rendered PNGs)
 docs/SYNTAX.md              Language reference for .sp / .spt / .globals
 docs/CLI.md                 SketchPen.exe command-line reference
 ```
@@ -143,16 +149,18 @@ SketchPen.exe <directory> [-outfolder <path>] [-style <stylename>] [-format png|
 ```
 
 ```bash
-SketchPen.exe plot/basic -outfolder plot/basic-img
-SketchPen.exe plot/basic -outfolder plot/basic-img -style bg-dark
-SketchPen.exe plot/basic -outfolder plot/basic-svg -format svg
-SketchPen.exe plot/basic -outfolder out -sizes 32,64 -resolutions 1,2
+SketchPen.exe src/basic -outfolder icons/basic
+SketchPen.exe src/basic -outfolder icons/basic-bg-dark -style bg-dark
+SketchPen.exe src/basic -outfolder icons/basic-svg -format svg
+SketchPen.exe src/basic -outfolder out -sizes 32,64 -resolutions 1,2
 ```
 
 By default, renders every `*.sp` file in `<directory>` to PNGs in the default
 sizes (`16, 26, 32, 64, 128` px) and resolutions (`@1`/`@2`/`@3`), named
 `<iconname>_<size>@<resolution>.png` — exactly the scheme that produces
-[`plot/basic-img`](plot/basic-img) from [`plot/basic`](plot/basic). Both lists
+[`icons/basic`](https://github.com/jugstalt/sketchpen-iconset/tree/main/icons/basic)
+from [`src/basic`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/basic)
+in the icon-set repository. Both lists
 are overridable via `-sizes`/`-resolutions` (PNG only). With `-format svg`, it
 instead renders one resolution-independent `<iconname>.svg` per icon. This
 makes it straightforward to script icon generation or wire it into CI.
@@ -166,8 +174,8 @@ single/batch SVG, web sprites, themeable CSS-variable HTML), selected by a
 short id:
 
 ```bash
-SketchPen.exe compose plot/basic/disk.sp --composer svg --sizes 64 --out disk.svg
-SketchPen.exe compose plot/webgis --composer svg-vars-zip --styles ",bg-dark" --out webgis-themeable.zip
+SketchPen.exe compose src/basic/disk.sp --composer svg --sizes 64 --out disk.svg
+SketchPen.exe compose src/webgis --composer svg-vars-zip --styles ",bg-dark" --out webgis-themeable.zip
 ```
 
 Both the root command and `compose` accept `--output json` to emit one
@@ -238,7 +246,11 @@ Full feature list, known limitations, and settings:
   – features, settings, known limitations.
 - **Releasing**: [docs/RELEASING.md](docs/RELEASING.md) – how to test the
   packaged CLI locally and how to cut a release.
-- **Syntax showcase**: [`plot/examples`](plot/examples) – one commented `.sp`
-  file per language feature, the fastest way to learn the syntax by reading.
-- **Real-world examples**: [`plot/basic`](plot/basic), [`plot/webgis`](plot/webgis),
-  [`plot/gview`](plot/gview) – actual icon sets to read.
+- **Examples** (in the [sketchpen-iconset](https://github.com/jugstalt/sketchpen-iconset)
+  repository): [`src/examples`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/examples)
+  is a syntax showcase — one commented `.sp` file per language feature, the
+  fastest way to learn the syntax by reading — and
+  [`src/basic`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/basic),
+  [`src/webgis`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/webgis),
+  [`src/gview`](https://github.com/jugstalt/sketchpen-iconset/tree/main/src/gview)
+  are actual icon sets to read.

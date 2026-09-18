@@ -1,1 +1,0 @@
-#include "templates/globe2.spt"

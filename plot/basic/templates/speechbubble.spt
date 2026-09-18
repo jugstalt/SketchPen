@@ -1,3 +1,0 @@
-#include "speechbubble-path.spt"
-
-path.draw();

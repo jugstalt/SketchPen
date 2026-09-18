@@ -14,7 +14,7 @@
     portable tool package already resolves SkiaSharp's per-platform native
     assets correctly on Windows/Linux/macOS via NuGet's normal
     runtimes/{rid}/native restore mechanism (the same one that already makes
-    `dotnet run`/plot.sh work on Linux). See docs/CLI.md for install instructions.
+    `dotnet run` works on Linux). See docs/CLI.md for install instructions.
   -->
   <PropertyGroup>
     <PackAsTool>true</PackAsTool>

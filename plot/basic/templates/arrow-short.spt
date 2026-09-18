@@ -1,7 +1,0 @@
-pen.width(@@penWidthBold);
-
-line.draw(-13, 0, 13, 0);
-line.draw(-13, 0, -1,-12);
-line.draw(-13, 0, -1, 12);
-
-pen.width(@@penWidth);

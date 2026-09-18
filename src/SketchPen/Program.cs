@@ -85,11 +85,11 @@ var rootDescription = """
                     [-sizes <csv>] [-resolutions <csv>]
 
     Examples:
-      SketchPen.exe plot/basic/disk.sp -outfolder out
-      SketchPen.exe plot/basic -outfolder out -style bg-dark
-      SketchPen.exe plot/basic/disk.sp -outfolder out -format svg
-      SketchPen.exe plot/basic -outfolder out --output json
-      SketchPen.exe plot/basic/disk.sp -outfolder out -sizes 32,64 -resolutions 1,2
+      SketchPen.exe src/basic/disk.sp -outfolder out
+      SketchPen.exe src/basic -outfolder out -style bg-dark
+      SketchPen.exe src/basic/disk.sp -outfolder out -format svg
+      SketchPen.exe src/basic -outfolder out --output json
+      SketchPen.exe src/basic/disk.sp -outfolder out -sizes 32,64 -resolutions 1,2
 
     -sizes/-resolutions only apply to -format png (default 16,26,32,64,128 x
     @1/@2/@3, unchanged if omitted); -format svg always renders one
@@ -170,8 +170,8 @@ var composeDescription =
 var composeExtraHelp = """
 
     IMPORTANT: <path> goes right after 'compose', not before it, e.g.
-    'SketchPen.exe compose plot/webgis --composer svg-zip' — NOT
-    'SketchPen.exe plot/webgis compose ...'.
+    'SketchPen.exe compose src/webgis --composer svg-zip' — NOT
+    'SketchPen.exe src/webgis compose ...'.
 
     Composer ids:
       png             single PNG (needs exactly one --sizes value)
@@ -182,12 +182,12 @@ var composeExtraHelp = """
       svg-vars-zip    ZIP with themeable CSS-variable HTML pages, one per icon
 
     Examples:
-      SketchPen.exe compose plot/basic/disk.sp --composer svg --sizes 64 --out disk.svg
-      SketchPen.exe compose plot/webgis --composer svg-zip --styles ,bg-dark --out webgis-svg.zip
-      SketchPen.exe compose plot/basic --composer svg-vars-zip --out basic-themeable.zip
-      SketchPen.exe compose plot/basic --composer web-sprite-zip --sizes 16,32,64 --out basic-sprites.zip
-      SketchPen.exe compose plot/basic/disk.sp --composer png --sizes 128 --output json
-      SketchPen.exe compose plot/basic --profile web --out basic-web.zip
+      SketchPen.exe compose src/basic/disk.sp --composer svg --sizes 64 --out disk.svg
+      SketchPen.exe compose src/webgis --composer svg-zip --styles ,bg-dark --out webgis-svg.zip
+      SketchPen.exe compose src/basic --composer svg-vars-zip --out basic-themeable.zip
+      SketchPen.exe compose src/basic --composer web-sprite-zip --sizes 16,32,64 --out basic-sprites.zip
+      SketchPen.exe compose src/basic/disk.sp --composer png --sizes 128 --output json
+      SketchPen.exe compose src/basic --profile web --out basic-web.zip
 
     --profile <name> reuses a named exportProfiles entry from .sketchpen.json
     (composer/sizes/styles/resolutions) instead of repeating those flags —

@@ -1,7 +1,0 @@
-transform.reset();
-transform.rotate(-45);
-#include "templates/pen-redlining.spt"
-
-transform.reset();
-
-line.draw(-45,40, 45,40);

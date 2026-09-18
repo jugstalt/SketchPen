@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 
-// Verbatim from plot/styles/default.globals in the main repo -- a proven, working default rather
+// Verbatim from src/styles/default.globals in the sketchpen-iconset repo -- a proven, working default rather
 // than an invented one.
 const DEFAULT_GLOBALS = `// general globals
 globals.tryset(penColor, "#000");

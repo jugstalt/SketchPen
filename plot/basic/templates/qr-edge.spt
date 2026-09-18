@@ -1,5 +1,0 @@
-path.begin();
-path.addlines(-10,-10, 10,-10, 10,10, -10,10);
-path.close();
-path.fill();
-path.draw(@@outlinePenColor);

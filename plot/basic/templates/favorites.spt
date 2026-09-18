@@ -1,4 +1,0 @@
-#include "favorites-path.spt"
-
-path.fill();
-path.draw(@@outlinePenColor);

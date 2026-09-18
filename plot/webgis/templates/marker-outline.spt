@@ -1,6 +1,0 @@
-#include "marker.spt"
-path.fill("#fefefe");
-path.draw(@@outlinePenColor);
-
-#include "marker-hole.spt"
-path.draw();

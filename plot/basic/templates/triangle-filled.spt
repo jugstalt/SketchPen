@@ -1,4 +1,0 @@
-path.begin();
-path.addlines( 0, -21, 42, 21,-42, 21, 0, -21);
-path.fill(@@outlinePenColor);
-path.draw(@@outlinePenColor);

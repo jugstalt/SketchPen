@@ -1,1 +1,0 @@
-#include "templates/position.spt"

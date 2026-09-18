@@ -90,8 +90,8 @@ public sealed class ResolvedConfig
 /// <c>styles</c>/<c>globals</c> file locations. Every icon-set directory may carry its own
 /// <c>.sketchpen.json</c>; a directory without one inherits the nearest ancestor's instead (the
 /// same folder walked up by <c>#include</c>-style relative resolution, one level at a time) --
-/// e.g. a single <c>plot/.sketchpen.json</c> can supply defaults for every icon set under
-/// <c>plot/</c> that doesn't define its own. The nearest config wins in full; there is no
+/// e.g. a single <c>src/.sketchpen.json</c> can supply defaults for every icon set under
+/// <c>src/</c> that doesn't define its own. The nearest config wins in full; there is no
 /// per-key merging across levels.
 /// </summary>
 public static class SketchPenConfigResolver

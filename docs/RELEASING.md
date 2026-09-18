@@ -23,12 +23,14 @@ dotnet tool install -g --add-source ./local-nupkg SketchPen.Cli
 ```
 
 Then, from **outside** the repo folder (so you're not accidentally picking up
-a source-tree file instead of the installed tool):
+a source-tree file instead of the installed tool), using any icon script — e.g.
+from a checkout of the [sketchpen-iconset](https://github.com/jugstalt/sketchpen-iconset)
+repository, which holds the icon sets (this repository contains no `.sp` files):
 
 ```bash
 sketchpen --help
-sketchpen plot/basic/disk.sp -outfolder out
-sketchpen compose plot/basic/disk.sp --composer svg --sizes 64 --out disk.svg
+sketchpen src/basic/disk.sp -outfolder out
+sketchpen compose src/basic/disk.sp --composer svg --sizes 64 --out disk.svg
 ```
 
 After changing code, repack and re-install to pick up the change (`dotnet

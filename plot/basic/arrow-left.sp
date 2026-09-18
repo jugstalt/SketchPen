@@ -1,4 +1,0 @@
-transform.rotate(0);
-
-transform.rotate(0);
-#include "templates/arrow.spt"

@@ -217,7 +217,7 @@ static public class TokenExtensions
                 // skip it instead of adding an empty group, matching the pre-Tier-3 flat
                 // CollectParameters, which stripped every comma unconditionally without grouping
                 // and so never produced a placeholder for a missing value either (some existing
-                // .sp files, e.g. plot/webgis/construct-ortho-close.sp, rely on this).
+                // .sp files, e.g. src/webgis/construct-ortho-close.sp in the sketchpen-iconset repo, rely on this).
                 if (current.Count > 0)
                 {
                     parameterGroups.Add(current);
